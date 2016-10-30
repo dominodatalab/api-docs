@@ -1,0 +1,642 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Domino Data Lab APIs",
+        "version": "",
+        "description": "Domino has two types of APIs: **API Endpoints** which let you publish your code as a low-latency web service without any API design experience and the **Domino API** which lets you allow you to interact with your project's files and runs.\n\n"
+    },
+    "host": "api.dominodatalab.com",
+    "basePath": "/",
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "/v1/{username}/{project_name}/endpoint": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {},
+                        "examples": {
+                            "application/json": {
+                                "release": {
+                                    "commitId": "e1dfab96a6c6014767e9561059224a3153cb6de6",
+                                    "file": "predict.R",
+                                    "function": "predictQuality",
+                                    "version": 14
+                                },
+                                "requestId": "NMEOMGVJURWVPOQF",
+                                "result": {
+                                    "a_random_number": 103
+                                }
+                            }
+                        },
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "release": {
+                                    "type": "object",
+                                    "properties": {
+                                        "commitId": {
+                                            "type": "string",
+                                            "description": "The commit your API endpoint is bound to"
+                                        },
+                                        "file": {
+                                            "type": "string",
+                                            "description": "The file your API endpoint is bound to"
+                                        },
+                                        "function": {
+                                            "type": "string",
+                                            "description": "The function your API endpoint is bound to"
+                                        },
+                                        "version": {
+                                            "type": "number",
+                                            "description": "The version of your API that was used"
+                                        }
+                                    },
+                                    "description": "An object of key/value pairs describing the version of your API endpoint that responded to your request"
+                                },
+                                "requestId": {
+                                    "type": "string",
+                                    "description": "A unique request ID assigned to your API request"
+                                },
+                                "result": {
+                                    "type": "object",
+                                    "properties": {
+                                        "a_random_number": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "description": "The result of the function you bound to your API Endpoint. Will be either a JSON object/dictionary or array depending on what your function returns."
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Your awesome model",
+                "description": "Your API Endpoint is a wrapper on top of a function in your Domino-hosted code. The arguments to the API are the arguments to your function; the response from the API includes the return value from your function in the `result` object.\n\nLearn more about API Endpoint and Model Development\n\n",
+                "tags": [
+                    "API Endpoints"
+                ],
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "description": "The project owner's username",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "project_name",
+                        "in": "path",
+                        "description": "The project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$schema": "http://json-schema.org/draft-04/schema#",
+                            "type": "object",
+                            "properties": {
+                                "parameters": {
+                                    "type": "array",
+                                    "description": "An array of objects which directly map to the parameters of the function powering your API endpoint.\n\nFor example, if your API endpoint is powered by the following function:\n \n\n```python\n    def random_number(start = 10, stop = 100):\n      return random.uniform(start, stop)\n```\n \n\nYou would pass two number objects in to `parameters`, for example:\n \n\n```\n    {\"parameters\": [20, 200] }\n```\n"
+                                }
+                            },
+                            "required": [
+                                "parameters"
+                            ]
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ]
+            }
+        },
+        "/v1/projects/{username}/{project_name}/runs": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {},
+                        "examples": {
+                            "application/json": {
+                                "objectType": "list",
+                                "uri": "",
+                                "data": [
+                                    {
+                                        "id": "57dafe43317467e7b0ef5276",
+                                        "projectId": "54c17e92e4b0bc49e27d9398",
+                                        "number": 5,
+                                        "startingUserId": "57a28b28961401f240812caf",
+                                        "queued": 1473969731915,
+                                        "started": 1473969754283,
+                                        "completed": 1473969762970,
+                                        "status": "Succeeded",
+                                        "commitId": "1c6e8aa47951e39f9a905f0077af9355c35b712b",
+                                        "executor": "us-west-2:i-007942020ce7baeb5",
+                                        "outputCommitId": "73fe9481fe635bada713246c3c739beefa424e8c",
+                                        "title": "Run with great R^2 of 1!",
+                                        "isArchived": false,
+                                        "postProcessedTimestamp": 1473969767822,
+                                        "diagnoisticStatistics": {
+                                            "isError": false,
+                                            "data": [
+                                                {
+                                                    "key": "R^2",
+                                                    "value": "1.000"
+                                                }
+                                            ]
+                                        },
+                                        "isCompleted": true,
+                                        "hardwareTierId": "gpu"
+                                    }
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "objectType": {
+                                    "type": "string",
+                                    "description": "The type of object the API returned"
+                                },
+                                "uri": {
+                                    "type": "string",
+                                    "description": "The URI that responded to your request"
+                                },
+                                "data": {
+                                    "type": "array",
+                                    "description": "Array of run statuses",
+                                    "items": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "List of Runs",
+                "description": "Get a list of runs\n\n",
+                "tags": [
+                    "Project Runs and Files"
+                ],
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "description": "The project owner's username",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "project_name",
+                        "in": "path",
+                        "description": "The project name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {},
+                        "examples": {
+                            "application/json": {
+                                "runId": "553af271e4b0364c0f717b24",
+                                "message": "Run for project <username>/<project_name> started. You can view progress here: https://app.dominodatalab.com/<username>/<project_name/runs/553af271e4b0364c0f717b24"
+                            }
+                        },
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "runId": {
+                                    "type": "string",
+                                    "description": "The unique ID for the run that was just started"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "description": "A human-readable message with a full link to view the status of your run"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Start Run",
+                "description": "Start a run of a given script or command\n\n",
+                "tags": [
+                    "Project Runs and Files"
+                ],
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "description": "The project owner's username",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "project_name",
+                        "in": "path",
+                        "description": "The project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$schema": "http://json-schema.org/draft-04/schema#",
+                            "type": "object",
+                            "properties": {
+                                "command": {
+                                    "description": "Array of strings making up your command. For example:\n\n```python\n        [\"model.py\", \"dataset\", \"--sample\", \"2000\"]\n```\n"
+                                },
+                                "isDirect": {
+                                    "type": "boolean",
+                                    "description": "A direct command is interpretted as a shell command; Domino doesn't try to infer a program to match your file type"
+                                },
+                                "title": {
+                                    "type": "string",
+                                    "description": "An optional title for your run"
+                                },
+                                "tier": {
+                                    "type": "string",
+                                    "description": "Identifier of the hardware tier to use"
+                                },
+                                "commitId": {
+                                    "type": "string",
+                                    "description": "Tevision at which to start the run"
+                                },
+                                "publishApiEndpoint": {
+                                    "type": "boolean",
+                                    "description": "If true, the results of a successful run will be deployed to the project's active API Endpoint, if one exists"
+                                }
+                            },
+                            "required": [
+                                "command",
+                                "isDirect"
+                            ]
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ]
+            }
+        },
+        "/v1/projects/{username}/{project_name}/runs/{run_id}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {},
+                        "examples": {
+                            "application/json": {
+                                "id": "57dafe43317467e7b0ef5276",
+                                "projectId": "54c17e92e4b0bc49e27d9398",
+                                "number": 5,
+                                "startingUserId": "57a28b28961401f240812caf",
+                                "queued": 1473969731915,
+                                "started": 1473969754283,
+                                "completed": 1473969762970,
+                                "status": "Succeeded",
+                                "commitId": "1c6e8aa47951e39f9a905f0077af9355c35b712b",
+                                "executor": "us-west-2:i-007942020ce7baeb5",
+                                "outputCommitId": "73fe9481fe635bada713246c3c739beefa424e8c",
+                                "title": "Run with great R^2 of 1!",
+                                "isArchived": false,
+                                "postProcessedTimestamp": 1473969767822,
+                                "diagnoisticStatistics": {
+                                    "isError": false,
+                                    "data": [
+                                        {
+                                            "key": "R^2",
+                                            "value": "1.000"
+                                        }
+                                    ]
+                                },
+                                "isCompleted": true,
+                                "hardwareTierId": "gpu"
+                            }
+                        },
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string",
+                                    "description": "The unique ID for the run"
+                                },
+                                "projectId": {
+                                    "type": "string",
+                                    "description": "The ID of the project"
+                                },
+                                "number": {
+                                    "type": "number",
+                                    "description": "The auto-increment number associated with the run"
+                                },
+                                "startingUserId": {
+                                    "type": "string",
+                                    "description": "The ID of the user who started the run"
+                                },
+                                "queued": {
+                                    "type": "number",
+                                    "description": "Milliseconds epoch time the run was added to the queue"
+                                },
+                                "started": {
+                                    "type": "number",
+                                    "description": "Milliseconds epoch time the run started executing"
+                                },
+                                "completed": {
+                                    "type": "number",
+                                    "description": "Milliseconds epoch time the run completed running"
+                                },
+                                "status": {
+                                    "type": "string",
+                                    "description": "The status of the run"
+                                },
+                                "commitId": {
+                                    "type": "string",
+                                    "description": "The commit hash of the project used to create the run"
+                                },
+                                "executor": {
+                                    "type": "string",
+                                    "description": "The unique ID of the executor (compute node) the run was executed on"
+                                },
+                                "outputCommitId": {
+                                    "type": "string",
+                                    "description": "The commit hash of the project post-run (look at files with this hash for the results)"
+                                },
+                                "title": {
+                                    "type": "string",
+                                    "description": "Title of the run, if it was renamed"
+                                },
+                                "isArchived": {
+                                    "type": "boolean",
+                                    "description": "Boolean denoting if the run was archived (hidden from the web interface)"
+                                },
+                                "postProcessedTimestamp": {
+                                    "type": "number",
+                                    "description": "Milliseconds epoch time the run finished processing (this happens after the run has completed and includes saving the results back to the main project repo)"
+                                },
+                                "diagnoisticStatistics": {
+                                    "type": "object",
+                                    "properties": {
+                                        "isError": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {}
+                                        }
+                                    },
+                                    "description": "Object containing information about the run's [Diagnostic Statistics aka dominostats.json](http://support.dominodatalab.com/hc/en-us/articles/204348169-Run-Diagnostic-Statistics)"
+                                },
+                                "isCompleted": {
+                                    "type": "boolean",
+                                    "description": "A boolean to denote if the run has completed or is still run. See `status` for success/failure status."
+                                },
+                                "hardwareTierId": {
+                                    "type": "string",
+                                    "description": "The hardware tier the run exectued on (new in v1.42)"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Run Status",
+                "description": "Get the status of a run\n\n",
+                "tags": [
+                    "Project Runs and Files"
+                ],
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "description": "The project owner's username",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "project_name",
+                        "in": "path",
+                        "description": "The project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "run_id",
+                        "in": "path",
+                        "description": "The unique ID for the run",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ]
+            }
+        },
+        "/v1/projects/{username}/{project_name}/files/{commit_id}/{path}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {},
+                        "examples": {}
+                    }
+                },
+                "summary": "List files",
+                "description": "Get a list of files in a commit\n\n",
+                "tags": [
+                    "Project Runs and Files"
+                ],
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "description": "The project owner's username",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "project_name",
+                        "in": "path",
+                        "description": "The project name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "/v1/projects/{username}/{project_name}/blobs/{blob_id}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {},
+                        "examples": {}
+                    }
+                },
+                "summary": "Get a file",
+                "description": "Get the contents of a file from the project\n\n",
+                "tags": [
+                    "Project Runs and Files"
+                ],
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "description": "The project owner's username",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "project_name",
+                        "in": "path",
+                        "description": "The project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "blob_id",
+                        "in": "path",
+                        "description": "The unique ID of the blob",
+                        "required": true,
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "/v1/projects/{username}/{project_name}/{path}": {
+            "put": {
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "headers": {},
+                        "examples": {
+                            "application/json": {
+                                "path": "data/randomNumbers.rdata",
+                                "lastModified": 1475878612000,
+                                "size": 32690,
+                                "key": "5c28ab880e29953e41b91e351f786a833fbf18a5",
+                                "url": "https://app.dominodatalab.com/v1/projects/marks/quick-start/blobs/5c28ab880e29953e41b91e351f786a833fbf18a5"
+                            }
+                        },
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "path": {
+                                    "type": "string",
+                                    "description": "Path within the project your file was saved to"
+                                },
+                                "lastModified": {
+                                    "type": "number",
+                                    "description": "Milliseconds epoch time the file was last modified"
+                                },
+                                "size": {
+                                    "type": "number",
+                                    "description": "The size of the file you just uploaded, in bytes"
+                                },
+                                "key": {
+                                    "type": "string",
+                                    "description": "The blob ID for the file. Used by the 'Get a file' API"
+                                },
+                                "url": {
+                                    "type": "string",
+                                    "description": "The full URL to the blob (this can be used to re-download the file)"
+                                }
+                            },
+                            "required": [
+                                "path",
+                                "lastModified",
+                                "size",
+                                "key",
+                                "url"
+                            ]
+                        }
+                    }
+                },
+                "summary": "Upload a file",
+                "description": "Upload a file to your project\n\n",
+                "tags": [
+                    "Project Runs and Files"
+                ],
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "description": "The project owner's username",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "project_name",
+                        "in": "path",
+                        "description": "The project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "description": "Where you want the file to be saved. (You can include forward slashes to upload files into folders that exist)",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ]
+            }
+        },
+        "/v1/search": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {},
+                        "examples": {}
+                    }
+                },
+                "summary": "Search",
+                "description": "Execute a search\n\n",
+                "tags": [
+                    "Search"
+                ],
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "The phrase to search",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "area",
+                        "in": "query",
+                        "description": "The type of object to search. Valid values are `project`, `run`, `file`, and `comment`",
+                        "required": true,
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "Your awesome model": {},
+        "List of Runs": {},
+        "Start Run": {},
+        "Run Status": {},
+        "List files": {},
+        "Get a file": {},
+        "Upload a file": {},
+        "Search": {}
+    }
+}
