@@ -12,7 +12,7 @@ Need help? Email us at support@dominodatalab.com
 ## Build Instructions
 
 ### Input:
-* `apiary.apib` is our API documented using the [API Blueprint](https://apiblueprint.org) standard
+* `api_blueprint.apib` is our API documented using the [API Blueprint](https://apiblueprint.org) standard
 
 ### Output from running `convert.sh`:
 * `index.html` are our human-readable web documentation converted from the API Blueprint file using [aglio](https://github.com/danielgtaylor/aglio)
