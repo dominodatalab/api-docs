@@ -231,8 +231,11 @@ mixin ContentTriple()
             h1#top!= self.api.name || 'API Documentation'
 
     .right
-        h5 API Endpoint
-        a(href=self.api.host)= self.api.host
+        h4 Need help?
+        p
+            | Visit our 
+            a(href="https://support.dominodatalab.com" style="color: white;text-decoration: underline;") support site
+            | &nbsp;or email support@dominodatalab.com
     .middle
         if self.api.descriptionHtml
             != self.api.descriptionHtml
