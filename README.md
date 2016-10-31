@@ -1,6 +1,6 @@
 # Domino API Documentation
 
-This repository includes our [**web-based API documentation**](https://dominodatalab.github.io/api-docs) and machine-readable versions in [API Blueprint](apiary.apib) and [Swagger 2.0](swagger_2.0.json) formats.
+This repository includes our [**web-based API documentation**](https://dominodatalab.github.io/api-docs) and machine-readable versions in [API Blueprint](api_blueprint.apib) and [Swagger 2.0](swagger_2.0.json) formats.
 
 Need help? Email us at support@dominodatalab.com
 
@@ -12,7 +12,7 @@ Need help? Email us at support@dominodatalab.com
 ## Build Instructions
 
 ### Input:
-* `apiary.apib` is our API documented using the [API Blueprint](https://apiblueprint.org) standard and Apiary online editor
+* `apiary.apib` is our API documented using the [API Blueprint](https://apiblueprint.org) standard
 
 ### Output from running `convert.sh`:
 * `index.html` are our human-readable web documentation converted from the API Blueprint file using [aglio](https://github.com/danielgtaylor/aglio)
