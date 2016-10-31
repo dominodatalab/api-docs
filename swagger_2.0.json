@@ -3,7 +3,7 @@
     "info": {
         "title": "Domino Data Lab APIs",
         "version": "",
-        "description": "Domino has two types of APIs: **API Endpoints** which let you publish your code as a low-latency web service without any API design experience and the **Domino API** which lets you allow you to interact with your project's files and runs.\n\nTwo important notes:\n\n1. Your API base URL will depend on your deployment of Domino. Replace the URL with the URL of your private Domino deployment (the site you visit in your browser when you use Domino)\n\n2. To authenticate your requests, simply include your API Key (which you can find on your account page) with the header `X-Domino-Api-Key`\n\n\nIf you need help, please email support@dominodatalab.com\n\n"
+        "description": "Domino has two types of APIs: **API Endpoints** which let you publish your code as a low-latency web service without any API design experience and the **Domino API** which lets you allow you to interact with your project's files and runs.\n\nTwo important notes:\n\n1. Your API base URL will depend on your deployment of Domino. Replace the URL with the URL of your private Domino deployment (the site you visit in your browser when you use Domino)\n\n2. To authenticate your requests, include your API Key (which you can find on your account page) with the header `X-Domino-Api-Key` .\n\n\n"
     },
     "host": "api.dominodatalab.com",
     "basePath": "/",

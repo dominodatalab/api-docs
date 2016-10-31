@@ -5,10 +5,9 @@
 <p>Your API base URL will depend on your deployment of Domino. Replace the URL with the URL of your private Domino deployment (the site you visit in your browser when you use Domino)</p>
 </li>
 <li>
-<p>To authenticate your requests, simply include your API Key (which you can find on your account page) with the header <code>X-Domino-Api-Key</code></p>
+<p>To authenticate your requests, include your API Key (which you can find on your account page) with the header <code>X-Domino-Api-Key</code> .</p>
 </li>
 </ol>
-<p>If you need help, please email <a href="mailto:support@dominodatalab.com">support@dominodatalab.com</a></p>
 </div><div class="middle"><section id="api-endpoints" class="resource-group"><h2 class="group-heading">API Endpoints <a href="#api-endpoints" class="permalink">&para;</a></h2><p><a href="http://support.dominodatalab.com/hc/en-us/articles/204173149-API-Endpoints-Model-Deployment">API Endpoints</a> help you deploy and operationalize your models as APIs without any web development knowledge.</p>
 </section></div><div class="middle"><div id="api-endpoints-your-awesome-model" class="resource"><h3 class="resource-heading">Your awesome model <a href="#api-endpoints-your-awesome-model" class="permalink">&para;</a></h3></div></div><div class="right"><div class="definition"><span class="method post">POST</span>&nbsp;<span class="uri"><span class="hostname">https://api.dominodatalab.com</span>/v1/<span class="hljs-attribute" title="username">nick</span>/<span class="hljs-attribute" title="project_name">winequality</span>/endpoint</span></div><div class="tabs"><div class="example-names"><span>Requests</span><span class="tab-button">example 1</span></div><div class="tab"><div><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span><br><span class="hljs-attribute">X-Domino-Api-Key</span>: <span class="hljs-string">YOUR_DOMINO_API_KEY</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
   "<span class="hljs-attribute">parameters</span>": <span class="hljs-value">[
