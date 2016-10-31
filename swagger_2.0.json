@@ -3,7 +3,7 @@
     "info": {
         "title": "Domino Data Lab APIs",
         "version": "",
-        "description": "Domino has two types of APIs: **API Endpoints** which let you publish your code as a low-latency web service without any API design experience and the **Domino API** which lets you allow you to interact with your project's files and runs.\n\n"
+        "description": "Domino has two types of APIs: **API Endpoints** which let you publish your code as a low-latency web service without any API design experience and the **Domino API** which lets you allow you to interact with your project's files and runs.\n\nTo authenticate your requests, simply include your API Key (which you can find on your account page) with the header `X-Domino-Api-Key`\n\nThis documentation is broken up into three sections: API Endpoints, Project Runs and Files, and Search. If you need help, please email support@dominodatalab.com\n\n"
     },
     "host": "api.dominodatalab.com",
     "basePath": "/",
@@ -74,7 +74,7 @@
                     }
                 },
                 "summary": "Your awesome model",
-                "description": "Your API Endpoint is a wrapper on top of a function in your Domino-hosted code. The arguments to the API are the arguments to your function; the response from the API includes the return value from your function in the `result` object.\n\nLearn more about API Endpoint and Model Development\n\n",
+                "description": "Your API Endpoint is a wrapper on top of a function in your Domino-hosted code. The arguments to the API are the arguments to your function; the response from the API includes the return value from your function in the `result` object.\n\n[Learn more about API Endpoint and Model Development](http://support.dominodatalab.com/hc/en-us/articles/204173149-API-Endpoints-Model-Deployment)\n\n",
                 "tags": [
                     "API Endpoints"
                 ],
