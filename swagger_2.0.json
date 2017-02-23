@@ -3,7 +3,7 @@
     "info": {
         "title": "Domino Data Lab APIs",
         "version": "",
-        "description": "Domino has two types of APIs: **API Endpoints** which let you publish your code as a low-latency web service without any API design experience and the **Domino API** which lets you allow you to interact with your project's files and runs.\n\nTwo important notes:\n\n1. Your API base URL will depend on your deployment of Domino. Replace the URL with the URL of your private Domino deployment (the site you visit in your browser when you use Domino)\n\n2. To authenticate your requests, include your API Key (which you can find on your account page) with the header `X-Domino-Api-Key` .\n\n\n"
+        "description": "Domino has two types of APIs: **API Endpoints** which let you publish your code as a low-latency web service without any API design experience and the **Domino API** which lets you allow you to interact with your project's files and runs.\n\nTwo important notes:\n\n1. Your API base URL will depend on your deployment of Domino. Replace the URL with the URL of your private Domino deployment (the site you visit in your browser when you use Domino)\n\n2. To authenticate your requests, include your API Key (which you can find on your account page) with the header `X-Domino-Api-Key` ."
     },
     "host": "api.dominodatalab.com",
     "basePath": "/",
@@ -74,7 +74,7 @@
                     }
                 },
                 "summary": "Your awesome model",
-                "description": "Your API Endpoint is a wrapper on top of a function in your Domino-hosted code. The arguments to the API are the arguments to your function; the response from the API includes the return value from your function in the `result` object.\n\n[Learn more about API Endpoint and Model Development](http://support.dominodatalab.com/hc/en-us/articles/204173149-API-Endpoints-Model-Deployment)\n\n",
+                "description": "Your API Endpoint is a wrapper on top of a function in your Domino-hosted code. The arguments to the API are the arguments to your function; the response from the API includes the return value from your function in the `result` object.\n\n[Learn more about API Endpoint and Model Development](http://support.dominodatalab.com/hc/en-us/articles/204173149-API-Endpoints-Model-Deployment)",
                 "tags": [
                     "API Endpoints"
                 ],
@@ -102,7 +102,7 @@
                             "properties": {
                                 "parameters": {
                                     "type": "array",
-                                    "description": "An array of objects which directly map to the parameters of the function powering your API endpoint.\n\nFor example, if your API endpoint is powered by the following function:\n \n\n```python\n    def random_number(start = 10, stop = 100):\n      return random.uniform(start, stop)\n```\n \n\nYou would pass two number objects in to `parameters`, for example:\n \n\n```\n    {\"parameters\": [20, 200] }\n```\n"
+                                    "description": "An array of objects which directly map to the parameters of the function powering your API endpoint.\n\nFor example, if your API endpoint is powered by the following function:\n\n```python\n    def random_number(start = 10, stop = 100):\n      return random.uniform(start, stop)\n```\n\nYou would pass two number objects in to `parameters`, for example:\n\n```\n    {\"parameters\": [20, 200] }\n```"
                                 }
                             },
                             "required": [
@@ -178,7 +178,7 @@
                     }
                 },
                 "summary": "List of Runs",
-                "description": "Get a list of runs\n\n",
+                "description": "Get a list of runs",
                 "tags": [
                     "Project Runs and Files"
                 ],
@@ -229,7 +229,7 @@
                     }
                 },
                 "summary": "Start Run",
-                "description": "Start a run of a given script or command\n\n",
+                "description": "Start a run of a given script or command",
                 "tags": [
                     "Project Runs and Files"
                 ],
@@ -256,7 +256,7 @@
                             "type": "object",
                             "properties": {
                                 "command": {
-                                    "description": "Array of strings making up your command. For example:\n\n```python\n        [\"model.py\", \"dataset\", \"--sample\", \"2000\"]\n```\n"
+                                    "description": "Array of strings making up your command. For example:\n\n```python\n        [\"model.py\", \"dataset\", \"--sample\", \"2000\"]\n```"
                                 },
                                 "isDirect": {
                                     "type": "boolean",
@@ -411,7 +411,7 @@
                     }
                 },
                 "summary": "Run Status",
-                "description": "Get the status of a run\n\n",
+                "description": "Get the status of a run",
                 "tags": [
                     "Project Runs and Files"
                 ],
@@ -453,7 +453,7 @@
                     }
                 },
                 "summary": "List files",
-                "description": "Get a list of files in a commit\n\n",
+                "description": "Get a list of files in a commit",
                 "tags": [
                     "Project Runs and Files"
                 ],
@@ -471,6 +471,20 @@
                         "description": "The project name",
                         "required": true,
                         "type": "string"
+                    },
+                    {
+                        "name": "commit_id",
+                        "in": "path",
+                        "description": "The commit ID of the version of the project you want files for",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "description": "The path for which you want files for",
+                        "required": true,
+                        "type": "string"
                     }
                 ]
             }
@@ -485,7 +499,7 @@
                     }
                 },
                 "summary": "Get a file",
-                "description": "Get the contents of a file from the project\n\n",
+                "description": "Get the contents of a file from the project",
                 "tags": [
                     "Project Runs and Files"
                 ],
@@ -564,7 +578,7 @@
                     }
                 },
                 "summary": "Upload a file",
-                "description": "Upload a file to your project\n\n",
+                "description": "Upload a file to your project",
                 "tags": [
                     "Project Runs and Files"
                 ],
@@ -606,7 +620,7 @@
                     }
                 },
                 "summary": "Search",
-                "description": "Execute a search\n\n",
+                "description": "Execute a search",
                 "tags": [
                     "Search"
                 ],
