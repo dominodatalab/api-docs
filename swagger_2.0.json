@@ -97,7 +97,6 @@
                         "name": "body",
                         "in": "body",
                         "schema": {
-                            "$schema": "http://json-schema.org/draft-04/schema#",
                             "type": "object",
                             "properties": {
                                 "parameters": {
@@ -252,7 +251,6 @@
                         "name": "body",
                         "in": "body",
                         "schema": {
-                            "$schema": "http://json-schema.org/draft-04/schema#",
                             "type": "object",
                             "properties": {
                                 "command": {
@@ -272,7 +270,7 @@
                                 },
                                 "commitId": {
                                     "type": "string",
-                                    "description": "Tevision at which to start the run"
+                                    "description": "Revision at which to start the run"
                                 },
                                 "publishApiEndpoint": {
                                     "type": "boolean",
