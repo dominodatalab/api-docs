@@ -20,4 +20,4 @@ Need help? Email us at support@dominodatalab.com
 
 ### Dependencies
 
-- `npm install -g apib2swagger aglio`
+- `npm install -g apib2swagger aglio api-spec-converter`
