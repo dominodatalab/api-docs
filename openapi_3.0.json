@@ -5,6 +5,214 @@
     "version": ""
   },
   "paths": {
+    "/v1/environments": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "response": {
+                    "value": {
+                      "data": [
+                        {
+                          "id": "57dafe43317467e7b0ef5276",
+                          "name": "Wine Quality Model",
+                          "visibility": "Global"
+                        }
+                      ],
+                      "objectType": "list"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "description": "Array of environments",
+                      "items": {},
+                      "type": "array"
+                    },
+                    "objectType": {
+                      "description": "The type of object the API returned",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {}
+          }
+        },
+        "tags": [
+          "Environments"
+        ],
+        "description": "Get a list of all v2 environments",
+        "summary": "Get environments"
+      }
+    },
+    "/v1/models": {
+      "post": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "response": {
+                    "value": {
+                      "id": "57dafe43317467e7b0ef5276"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The unique ID for the new model",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {}
+          }
+        },
+        "tags": [
+          "Models"
+        ],
+        "description": "Publish a new model",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "commitId": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "environmentId": {
+                    "type": "string"
+                  },
+                  "excludeFiles[]": {
+                    "items": {},
+                    "type": "array"
+                  },
+                  "file": {
+                    "type": "string"
+                  },
+                  "function": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "projectId": {
+                    "type": "string"
+                  },
+                  "replicas": {
+                    "type": "number"
+                  },
+                  "resourceQuotaId": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "summary": "Publish a new model"
+      }
+    },
+    "/v1/models/{model_id}/versions": {
+      "post": {
+        "parameters": [
+          {
+            "description": "The unique id of the model to version.",
+            "in": "path",
+            "name": "model_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "response": {
+                    "value": {
+                      "id": "57dafe43317467e7b0ef5276",
+                      "number": 2
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The unique ID for the new model",
+                      "type": "string"
+                    },
+                    "number": {
+                      "description": "The new version number",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {}
+          }
+        },
+        "tags": [
+          "Models"
+        ],
+        "description": "Publish a new model version",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "commitId": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "environmentId": {
+                    "type": "string"
+                  },
+                  "excludeFiles[]": {
+                    "items": {},
+                    "type": "array"
+                  },
+                  "file": {
+                    "type": "string"
+                  },
+                  "function": {
+                    "type": "string"
+                  },
+                  "projectId": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "summary": "Publish a new model version"
+      }
+    },
     "/v1/projects/{username}/{project_name}/blobs/{blob_id}": {
       "get": {
         "parameters": [
@@ -100,6 +308,72 @@
         ],
         "description": "Get a list of files in a commit",
         "summary": "List files"
+      }
+    },
+    "/v1/projects/{username}/{project_name}/models": {
+      "get": {
+        "parameters": [
+          {
+            "description": "The project owner's username",
+            "in": "path",
+            "name": "username",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The project name",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "response": {
+                    "value": {
+                      "data": [
+                        {
+                          "id": "57dafe43317467e7b0ef5276",
+                          "name": "Wine Quality Model"
+                        }
+                      ],
+                      "objectType": "list"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "description": "Array of models",
+                      "items": {},
+                      "type": "array"
+                    },
+                    "objectType": {
+                      "description": "The type of object the API returned",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {}
+          }
+        },
+        "tags": [
+          "Models"
+        ],
+        "description": "Get a list of models for a project",
+        "summary": "Get models"
       }
     },
     "/v1/projects/{username}/{project_name}/runs": {
@@ -268,7 +542,7 @@
                     "type": "boolean"
                   },
                   "publishApiEndpoint": {
-                    "description": "If true, the results of a successful run will be deployed to the project's active API Endpoint, if one exists",
+                    "description": "This field will be deprecated in future versions. If true, the results of a successful run will be deployed to the project's active API Endpoint, if one exists",
                     "type": "boolean"
                   },
                   "tier": {
@@ -697,8 +971,12 @@
   "components": {
     "schemas": {
       "Get_a_file": {},
+      "Get_environments": {},
+      "Get_models": {},
       "List_files": {},
       "List_of_Runs": {},
+      "Publish_a_new_model": {},
+      "Publish_a_new_model_version": {},
       "Run_Status": {},
       "Search": {},
       "Start_Run": {},

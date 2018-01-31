@@ -150,7 +150,7 @@ Start a run of a given script or command
         + title: `This one should work!` (string) - An optional title for your run
         + tier: `gpu` (string) - Identifier of the hardware tier to use
         + commitId: `1c6e8aa47951e39f9a905f0077af9355c35b712b` (string) - Revision at which to start the run
-        + publishApiEndpoint: `false` (boolean) - If true, the results of a successful run will be deployed to the project's active API Endpoint, if one exists 
+        + publishApiEndpoint: `false` (boolean) - This field will be deprecated in future versions. If true, the results of a successful run will be deployed to the project's active API Endpoint, if one exists
 
     + Headers
 
@@ -296,3 +296,116 @@ Execute a search
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
 
 + Response 200 (application/json)
+
+## Group Models
+
+These APIs allow you to interact with your project's models.
+
+### Get models [GET /v1/projects/{username}/{project_name}/models]
+
+Get a list of models for a project
+
++ Parameters
+    + username: `nick` (string, required) - The project owner's username
+    + project_name: `winequality` (string, required) - The project name
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+
+        + objectType: `list` (string) - The type of object the API returned
+        + data (array) - Array of models
+            - (object)
+                + id: `57dafe43317467e7b0ef5276` (string) - The unique ID for the run
+                + name: `Wine Quality Model` (string) - The model name
+
+### Publish a new model [POST /v1/models]
+
+Publish a new model
+
++ Request
+
+    + Attributes
+
+        + name: `Wine Quality Model` (string) - The name of the new model.
+        + description: `A model of wine quality` (string) - The description of the new model.
+        + projectId: `57dafe43317467e7b0ef5276` (string) - The unique id of the project the model will be bound to.
+        + commitId: `57dafe43317467e7b0ef5276` (string) - The unique id of the commit for the model to use.
+        + environmentId: `57dafe43317467e7b0ef5276` (string) - The unique id of the environment for the model to use.
+        + file: `predict.R` (string) - The name of the file for the model to use.
+        + function: `predictQuality` (string) - The name of the function for the model to use.
+        + excludeFiles[]: `['foo.py', 'bar.py', 'baz.py']` (array[string]) - List of file names for the model to exclude.
+        + replicas: (number) - Optional. The number of model instances to start for any model version.
+        + resourceQuotaId: `57dafe43317467e7b0ef5276` (string) - Optional. the uniqueId of the resource quota the model will be bound to.
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+
+        + id: `57dafe43317467e7b0ef5276` (string) - The unique ID for the new model
+
+### Publish a new model version [POST /v1/models/{model_id}/versions]
+
+Publish a new model version
+
++ Parameters
+
+    + model_id: `57dafe43317467e7b0ef5276` (string, required) - The unique id of the model to version.
+
++ Request
+
+    + Attributes
+
+        + projectId: `57dafe43317467e7b0ef5276` (string) - The unique id of the project the model will be bound to.
+        + commitId: `57dafe43317467e7b0ef5276` (string) - The unique id of the project commit to use. Defaults to the latest commit of the project.
+        + environmentId: `57dafe43317467e7b0ef5276` (string) - The unique id of the environment for the model to use. Defaults to the environment used in the latest version of the model.
+        + description: `A model of wine quality` (string) - Summary of the changes in the new version.
+        + file: `predict.R` (string) - Path to the file containing the model code. Defaults to the file used in the latest version of the model.
+        + function: `predictQuality` (string) - Defaults to the function used in the latest version of the model.
+        + excludeFiles[]: `['foo.py', 'bar.py', 'baz.py']` (array[string]) - List of file names for the version to exclude.
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+
+        + id: `57dafe43317467e7b0ef5276` (string) - The unique ID for the new model
+        + number: `2` (number) - The new version number
+
+## Group Environments
+
+These APIs allow you to interact with your environments.
+
+### Get environments [GET /v1/environments]
+
+Get a list of all v2 environments
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+
+        + objectType: `list` (string) - The type of object the API returned
+        + data (array) - Array of environments
+            - (object)
+                + id: `57dafe43317467e7b0ef5276` (string) - The unique ID for the run
+                + name: `Wine Quality Model` (string) - The model name
+                + visibility: `Global` (string) - One of "Private", "Organization", or "Global".
