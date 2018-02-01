@@ -274,7 +274,7 @@
                                 },
                                 "publishApiEndpoint": {
                                     "type": "boolean",
-                                    "description": "This field will be deprecated in future versions. If true, the results of a successful run will be deployed to the project's active API Endpoint, if one exists"
+                                    "description": "__This field will be deprecated in future versions.__ If true, the results of a successful run will be deployed to the project's active API Endpoint, if one exists"
                                 }
                             },
                             "required": [
@@ -679,11 +679,11 @@
                             "properties": {
                                 "objectType": {
                                     "type": "string",
-                                    "description": "The type of object the API returned"
+                                    "description": "The type of object the API returned."
                                 },
                                 "data": {
                                     "type": "array",
-                                    "description": "Array of models",
+                                    "description": "Array of models.",
                                     "items": {}
                                 }
                             }
@@ -691,7 +691,7 @@
                     }
                 },
                 "summary": "Get models",
-                "description": "Get a list of models for a project",
+                "description": "Get a list of models for a project.",
                 "tags": [
                     "Models"
                 ],
@@ -699,14 +699,14 @@
                     {
                         "name": "username",
                         "in": "path",
-                        "description": "The project owner's username",
+                        "description": "The project owner's username.",
                         "required": true,
                         "type": "string"
                     },
                     {
                         "name": "project_name",
                         "in": "path",
-                        "description": "The project name",
+                        "description": "The project name.",
                         "required": true,
                         "type": "string"
                     }
@@ -724,7 +724,7 @@
                         "headers": {},
                         "examples": {
                             "application/json": {
-                                "id": "57dafe43317467e7b0ef5276"
+                                "id": "5a73a6b86278f5c536008832"
                             }
                         },
                         "schema": {
@@ -732,14 +732,14 @@
                             "properties": {
                                 "id": {
                                     "type": "string",
-                                    "description": "The unique ID for the new model"
+                                    "description": "The unique ID for the new model."
                                 }
                             }
                         }
                     }
                 },
-                "summary": "Publish a new model",
-                "description": "Publish a new model",
+                "summary": "Create a model",
+                "description": "Publish a new model.",
                 "tags": [
                     "Models"
                 ],
@@ -771,7 +771,7 @@
                                 "function": {
                                     "type": "string"
                                 },
-                                "excludeFiles[]": {
+                                "excludeFiles": {
                                     "type": "array",
                                     "items": {}
                                 },
@@ -798,7 +798,7 @@
                         "headers": {},
                         "examples": {
                             "application/json": {
-                                "id": "57dafe43317467e7b0ef5276",
+                                "id": "5a73a72189c5b2635de7ac5d",
                                 "number": 2
                             }
                         },
@@ -807,18 +807,18 @@
                             "properties": {
                                 "id": {
                                     "type": "string",
-                                    "description": "The unique ID for the new model"
+                                    "description": "The unique ID for the new model."
                                 },
                                 "number": {
                                     "type": "number",
-                                    "description": "The new version number"
+                                    "description": "The new version number."
                                 }
                             }
                         }
                     }
                 },
-                "summary": "Publish a new model version",
-                "description": "Publish a new model version",
+                "summary": "Create a model version",
+                "description": "Publish a new model version.",
                 "tags": [
                     "Models"
                 ],
@@ -854,7 +854,7 @@
                                 "function": {
                                     "type": "string"
                                 },
-                                "excludeFiles[]": {
+                                "excludeFiles": {
                                     "type": "array",
                                     "items": {}
                                 }
@@ -878,8 +878,8 @@
                                 "objectType": "list",
                                 "data": [
                                     {
-                                        "id": "57dafe43317467e7b0ef5276",
-                                        "name": "Wine Quality Model",
+                                        "id": "5a73a6906ece7a7aed984654",
+                                        "name": "Wine Quality Environment",
                                         "visibility": "Global"
                                     }
                                 ]
@@ -890,11 +890,11 @@
                             "properties": {
                                 "objectType": {
                                     "type": "string",
-                                    "description": "The type of object the API returned"
+                                    "description": "The type of object the API returned."
                                 },
                                 "data": {
                                     "type": "array",
-                                    "description": "Array of environments",
+                                    "description": "Array of environments.",
                                     "items": {}
                                 }
                             }
@@ -902,7 +902,7 @@
                     }
                 },
                 "summary": "Get environments",
-                "description": "Get a list of all v2 environments",
+                "description": "Get a list of all v2 environments.",
                 "tags": [
                     "Environments"
                 ],
@@ -923,8 +923,8 @@
         "Upload a file": {},
         "Search": {},
         "Get models": {},
-        "Publish a new model": {},
-        "Publish a new model version": {},
+        "Create a model": {},
+        "Create a model version": {},
         "Get environments": {}
     }
 }

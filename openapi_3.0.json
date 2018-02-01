@@ -16,8 +16,8 @@
                     "value": {
                       "data": [
                         {
-                          "id": "57dafe43317467e7b0ef5276",
-                          "name": "Wine Quality Model",
+                          "id": "5a73a6906ece7a7aed984654",
+                          "name": "Wine Quality Environment",
                           "visibility": "Global"
                         }
                       ],
@@ -28,12 +28,12 @@
                 "schema": {
                   "properties": {
                     "data": {
-                      "description": "Array of environments",
+                      "description": "Array of environments.",
                       "items": {},
                       "type": "array"
                     },
                     "objectType": {
-                      "description": "The type of object the API returned",
+                      "description": "The type of object the API returned.",
                       "type": "string"
                     }
                   },
@@ -48,7 +48,7 @@
         "tags": [
           "Environments"
         ],
-        "description": "Get a list of all v2 environments",
+        "description": "Get a list of all v2 environments.",
         "summary": "Get environments"
       }
     },
@@ -61,14 +61,14 @@
                 "examples": {
                   "response": {
                     "value": {
-                      "id": "57dafe43317467e7b0ef5276"
+                      "id": "5a73a6b86278f5c536008832"
                     }
                   }
                 },
                 "schema": {
                   "properties": {
                     "id": {
-                      "description": "The unique ID for the new model",
+                      "description": "The unique ID for the new model.",
                       "type": "string"
                     }
                   },
@@ -83,7 +83,7 @@
         "tags": [
           "Models"
         ],
-        "description": "Publish a new model",
+        "description": "Publish a new model.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -98,7 +98,7 @@
                   "environmentId": {
                     "type": "string"
                   },
-                  "excludeFiles[]": {
+                  "excludeFiles": {
                     "items": {},
                     "type": "array"
                   },
@@ -126,7 +126,7 @@
             }
           }
         },
-        "summary": "Publish a new model"
+        "summary": "Create a model"
       }
     },
     "/v1/models/{model_id}/versions": {
@@ -149,7 +149,7 @@
                 "examples": {
                   "response": {
                     "value": {
-                      "id": "57dafe43317467e7b0ef5276",
+                      "id": "5a73a72189c5b2635de7ac5d",
                       "number": 2
                     }
                   }
@@ -157,11 +157,11 @@
                 "schema": {
                   "properties": {
                     "id": {
-                      "description": "The unique ID for the new model",
+                      "description": "The unique ID for the new model.",
                       "type": "string"
                     },
                     "number": {
-                      "description": "The new version number",
+                      "description": "The new version number.",
                       "type": "number"
                     }
                   },
@@ -176,7 +176,7 @@
         "tags": [
           "Models"
         ],
-        "description": "Publish a new model version",
+        "description": "Publish a new model version.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -191,7 +191,7 @@
                   "environmentId": {
                     "type": "string"
                   },
-                  "excludeFiles[]": {
+                  "excludeFiles": {
                     "items": {},
                     "type": "array"
                   },
@@ -210,7 +210,7 @@
             }
           }
         },
-        "summary": "Publish a new model version"
+        "summary": "Create a model version"
       }
     },
     "/v1/projects/{username}/{project_name}/blobs/{blob_id}": {
@@ -314,7 +314,7 @@
       "get": {
         "parameters": [
           {
-            "description": "The project owner's username",
+            "description": "The project owner's username.",
             "in": "path",
             "name": "username",
             "required": true,
@@ -323,7 +323,7 @@
             }
           },
           {
-            "description": "The project name",
+            "description": "The project name.",
             "in": "path",
             "name": "project_name",
             "required": true,
@@ -352,12 +352,12 @@
                 "schema": {
                   "properties": {
                     "data": {
-                      "description": "Array of models",
+                      "description": "Array of models.",
                       "items": {},
                       "type": "array"
                     },
                     "objectType": {
-                      "description": "The type of object the API returned",
+                      "description": "The type of object the API returned.",
                       "type": "string"
                     }
                   },
@@ -372,7 +372,7 @@
         "tags": [
           "Models"
         ],
-        "description": "Get a list of models for a project",
+        "description": "Get a list of models for a project.",
         "summary": "Get models"
       }
     },
@@ -542,7 +542,7 @@
                     "type": "boolean"
                   },
                   "publishApiEndpoint": {
-                    "description": "This field will be deprecated in future versions. If true, the results of a successful run will be deployed to the project's active API Endpoint, if one exists",
+                    "description": "__This field will be deprecated in future versions.__ If true, the results of a successful run will be deployed to the project's active API Endpoint, if one exists",
                     "type": "boolean"
                   },
                   "tier": {
@@ -987,13 +987,13 @@
   },
   "components": {
     "schemas": {
+      "Create_a_model": {},
+      "Create_a_model_version": {},
       "Get_a_file": {},
       "Get_environments": {},
       "Get_models": {},
       "List_files": {},
       "List_of_Runs": {},
-      "Publish_a_new_model": {},
-      "Publish_a_new_model_version": {},
       "Run_Status": {},
       "Search": {},
       "Start_Run": {},
