@@ -303,7 +303,7 @@ These APIs allow you to interact with your project's models.
 
 ### Get models [GET /v1/projects/{username}/{project_name}/models]
 
-Get a list of models for a project.
+Get a list of models published by a project.
 
 + Parameters
     + username: `nick` (string, required) - The project owner's username.
@@ -325,28 +325,13 @@ Get a list of models for a project.
                 + id: `57dafe43317467e7b0ef5276` (string) - The unique ID for the run.
                 + name: `Wine Quality Model` (string) - The model name.
 
-### Create a model [POST /v1/models]
+### Publish a model [POST /v1/models]
 
 Publish a new model.
 
 + Request
 
-    + Attributes
-
-        + name: `Wine Quality Model` (string) - The name of the new model.
-        + description: `A model of wine quality` (string) - The description of the new model.
-        + projectId: `5a73a66cd4632584f7b0ed8d` (string) - The unique id of the project the model will be bound to.
-        + commitId: `5a73a67e941923efd202c17d` (string) - The unique id of the commit for the model to use.
-        + environmentId: `5a73a6906ece7a7aed984654` (string) - The unique id of the environment for the model to use.
-        + file: `predict.R` (string) - The name of the file for the model to use.
-        + function: `predictQuality` (string) - The name of the function for the model to use.
-        + excludeFiles: (array) - List of file names for the model to exclude. For example:
-
-            ```python
-                    ["foo.py", "bar.py", "baz.py"]
-            ```
-        + replicas: (number) - Optional. The number of model instances to start for any model version.
-        + resourceQuotaId: `5a73a6906ece7a7aed984654` (string) - Optional. the uniqueId of the resource quota the model will be bound to.
+    + Attributes (Model Create)
 
     + Headers
 
@@ -358,7 +343,7 @@ Publish a new model.
 
         + id: `5a73a6b86278f5c536008832` (string) - The unique ID for the new model.
 
-### Create a model version [POST /v1/models/{model_id}/versions]
+### Publish a model version [POST /v1/models/{model_id}/versions]
 
 Publish a new model version.
 
@@ -368,19 +353,7 @@ Publish a new model version.
 
 + Request
 
-    + Attributes
-
-        + projectId: `5a73a66cd4632584f7b0ed8d` (string) - The unique id of the project the model will be bound to.
-        + commitId: `5a73a67e941923efd202c17d` (string) - The unique id of the project commit to use. Defaults to the latest commit of the project.
-        + environmentId: `5a73a6906ece7a7aed984654` (string) - The unique id of the environment for the model to use. Defaults to the environment used in the latest version of the model.
-        + description: `A model of wine quality` (string) - Summary of the changes in the new version.
-        + file: `predict.R` (string) - Path to the file containing the model code. Defaults to the file used in the latest version of the model.
-        + function: `predictQuality` (string) - Defaults to the function used in the latest version of the model.
-        + excludeFiles: (array) - List of file names for the version to exclude. For example:
-
-            ```python
-                    ["foo.py", "bar.py", "baz.py"]
-            ```
+    + Attributes (Model Base)
 
     + Headers
 
@@ -417,3 +390,27 @@ Get a list of all v2 environments.
                 + id: `5a73a6906ece7a7aed984654` (string) - The unique ID for the environment.
                 + name: `Wine Quality Environment` (string) - The environment name.
                 + visibility: `Global` (enum) - One of `Private`, `Organization`, or `Global`.
+
+# Data Structures
+
+## Model Base (object)
+
++ projectId: `5a73a66cd4632584f7b0ed8d` (string) - (required) The unique id of the project the model will be bound to.
++ commitId: `5a73a67e941923efd202c17d` (string) - The unique id of the project commit to use. Defaults to the latest commit of the project.
++ environmentId: `5a73a6906ece7a7aed984654` (string) - The unique id of the environment for the model to use. Defaults to the environment used in the latest version of the model.
++ description: `A model of wine quality` (string) - Summary of the changes in the new version.
++ file: `predict.R` (string) - (required) Path to the file containing the model code. Defaults to the file used in the latest version of the model.
++ function: `predictQuality` (string) - (required) Defaults to the function used in the latest version of the model.
++ excludeFiles: (array) - List of file names for the version to exclude. For example:
+
+    ```python
+            ["foo.py", "bar.py", "baz.py"]
+    ```
+
+## Model Create (Model Base)
+
++ name: Wine Quality Model (string) - (required) The name of the new model.
++ replicas: 2 (number) - The number of model instances to start for any model version.
++ resourceQuotaId: `5a73a6906ece7a7aed984654` (string) - The uniqueId of the resource quota the model will be bound to.
+
+

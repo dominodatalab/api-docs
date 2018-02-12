@@ -88,45 +88,12 @@
           "content": {
             "application/json": {
               "schema": {
-                "properties": {
-                  "commitId": {
-                    "type": "string"
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "environmentId": {
-                    "type": "string"
-                  },
-                  "excludeFiles": {
-                    "items": {},
-                    "type": "array"
-                  },
-                  "file": {
-                    "type": "string"
-                  },
-                  "function": {
-                    "type": "string"
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "projectId": {
-                    "type": "string"
-                  },
-                  "replicas": {
-                    "type": "number"
-                  },
-                  "resourceQuotaId": {
-                    "type": "string"
-                  }
-                },
-                "type": "object"
+                "$ref": "#/components/schemas/Model_Create"
               }
             }
           }
         },
-        "summary": "Create a model"
+        "summary": "Publish a model"
       }
     },
     "/v1/models/{model_id}/versions": {
@@ -181,36 +148,12 @@
           "content": {
             "application/json": {
               "schema": {
-                "properties": {
-                  "commitId": {
-                    "type": "string"
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "environmentId": {
-                    "type": "string"
-                  },
-                  "excludeFiles": {
-                    "items": {},
-                    "type": "array"
-                  },
-                  "file": {
-                    "type": "string"
-                  },
-                  "function": {
-                    "type": "string"
-                  },
-                  "projectId": {
-                    "type": "string"
-                  }
-                },
-                "type": "object"
+                "$ref": "#/components/schemas/Model_Base"
               }
             }
           }
         },
-        "summary": "Create a model version"
+        "summary": "Publish a model version"
       }
     },
     "/v1/projects/{username}/{project_name}/blobs/{blob_id}": {
@@ -372,7 +315,7 @@
         "tags": [
           "Models"
         ],
-        "description": "Get a list of models for a project.",
+        "description": "Get a list of models published by a project.",
         "summary": "Get models"
       }
     },
@@ -952,7 +895,6 @@
                 "properties": {
                   "parameters": {
                     "description": "An array of objects which directly map to the parameters of the function powering your API endpoint.\n\nFor example, if your API endpoint is powered by the following function:\n\n```python\n    def random_number(start = 10, stop = 100):\n      return random.uniform(start, stop)\n```\n\nYou would pass two number objects in to `parameters`, for example:\n\n```\n    {\"parameters\": [20, 200] }\n```",
-                    "items": {},
                     "type": "array"
                   }
                 },
@@ -970,13 +912,61 @@
   },
   "components": {
     "schemas": {
-      "Create_a_model": {},
-      "Create_a_model_version": {},
       "Get_a_file": {},
       "Get_environments": {},
       "Get_models": {},
       "List_files": {},
       "List_of_Runs": {},
+      "Model_Base": {
+        "properties": {
+          "commitId": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "environmentId": {
+            "type": "string"
+          },
+          "excludeFiles": {
+            "items": {},
+            "type": "array"
+          },
+          "file": {
+            "type": "string"
+          },
+          "function": {
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Model_Create": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Model_Base"
+          },
+          {
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "replicas": {
+                "type": "number"
+              },
+              "resourceQuotaId": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "Publish_a_model": {},
+      "Publish_a_model_version": {},
       "Run_Status": {},
       "Search": {},
       "Start_Run": {},

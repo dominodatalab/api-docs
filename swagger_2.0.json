@@ -674,7 +674,7 @@
                     }
                 },
                 "summary": "Get models",
-                "description": "Get a list of models for a project.",
+                "description": "Get a list of models published by a project.",
                 "tags": [
                     "Models"
                 ],
@@ -721,7 +721,7 @@
                         }
                     }
                 },
-                "summary": "Create a model",
+                "summary": "Publish a model",
                 "description": "Publish a new model.",
                 "tags": [
                     "Models"
@@ -731,40 +731,7 @@
                         "name": "body",
                         "in": "body",
                         "schema": {
-                            "type": "object",
-                            "properties": {
-                                "name": {
-                                    "type": "string"
-                                },
-                                "description": {
-                                    "type": "string"
-                                },
-                                "projectId": {
-                                    "type": "string"
-                                },
-                                "commitId": {
-                                    "type": "string"
-                                },
-                                "environmentId": {
-                                    "type": "string"
-                                },
-                                "file": {
-                                    "type": "string"
-                                },
-                                "function": {
-                                    "type": "string"
-                                },
-                                "excludeFiles": {
-                                    "type": "array",
-                                    "items": {}
-                                },
-                                "replicas": {
-                                    "type": "number"
-                                },
-                                "resourceQuotaId": {
-                                    "type": "string"
-                                }
-                            }
+                            "$ref": "#/definitions/Model Create"
                         }
                     }
                 ],
@@ -800,7 +767,7 @@
                         }
                     }
                 },
-                "summary": "Create a model version",
+                "summary": "Publish a model version",
                 "description": "Publish a new model version.",
                 "tags": [
                     "Models"
@@ -817,31 +784,7 @@
                         "name": "body",
                         "in": "body",
                         "schema": {
-                            "type": "object",
-                            "properties": {
-                                "projectId": {
-                                    "type": "string"
-                                },
-                                "commitId": {
-                                    "type": "string"
-                                },
-                                "environmentId": {
-                                    "type": "string"
-                                },
-                                "description": {
-                                    "type": "string"
-                                },
-                                "file": {
-                                    "type": "string"
-                                },
-                                "function": {
-                                    "type": "string"
-                                },
-                                "excludeFiles": {
-                                    "type": "array",
-                                    "items": {}
-                                }
-                            }
+                            "$ref": "#/definitions/Model Base"
                         }
                     }
                 ],
@@ -906,8 +849,56 @@
         "Upload a file": {},
         "Search": {},
         "Get models": {},
-        "Create a model": {},
-        "Create a model version": {},
-        "Get environments": {}
+        "Publish a model": {},
+        "Publish a model version": {},
+        "Get environments": {},
+        "Model Base": {
+            "type": "object",
+            "properties": {
+                "projectId": {
+                    "type": "string"
+                },
+                "commitId": {
+                    "type": "string"
+                },
+                "environmentId": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "file": {
+                    "type": "string"
+                },
+                "function": {
+                    "type": "string"
+                },
+                "excludeFiles": {
+                    "type": "array",
+                    "items": {}
+                }
+            }
+        },
+        "Model Create": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Model Base"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "replicas": {
+                            "type": "number"
+                        },
+                        "resourceQuotaId": {
+                            "type": "string"
+                        }
+                    }
+                }
+            ]
+        }
     }
 }
