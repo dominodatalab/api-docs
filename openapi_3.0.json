@@ -5,6 +5,53 @@
     "version": ""
   },
   "paths": {
+    "/project": {
+      "post": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/text": {
+                "examples": {
+                  "response": {
+                    "value": "The string \"Created project {owner}/{projectName} successfully.\"\n"
+                  }
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {}
+          }
+        },
+        "tags": [
+          "Project Runs and Files"
+        ],
+        "description": "Create a new Project",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "ownerOverrideUsername": {
+                    "type": "string"
+                  },
+                  "projectName": {
+                    "type": "string"
+                  },
+                  "useDefaultIgnoreFile": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "projectName"
+                ],
+                "type": "object"
+              }
+            }
+          }
+        },
+        "summary": "Create a new Project"
+      }
+    },
     "/v1/projects/{username}/{project_name}/blobs/{blob_id}": {
       "get": {
         "parameters": [
@@ -100,6 +147,84 @@
         ],
         "description": "Get a list of files in a commit",
         "summary": "List files"
+      }
+    },
+    "/v1/projects/{username}/{project_name}/run/{run_id}/stdout?{previewNumberOfLines}": {
+      "get": {
+        "parameters": [
+          {
+            "description": "The project owner's username",
+            "in": "path",
+            "name": "username",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The project name",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The unique ID for the run",
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Take the last _N_ lines of the log output",
+            "in": "path",
+            "name": "previewNumberOfLines",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "response": {
+                    "value": {
+                      "setup": "Downloading blobs\\n0 of 1 transferred...\\n",
+                      "stdout": "Hello, World!\\n"
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "setup": {
+                      "description": "Logs output during the setup of the run",
+                      "type": "string"
+                    },
+                    "stdout": {
+                      "description": "Logs outputted from user code during the run.  Note that this field also include stderr logs as well.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {}
+          }
+        },
+        "tags": [
+          "Project Runs and Files"
+        ],
+        "description": "Get the logs for a run",
+        "summary": "Get Run logs"
       }
     },
     "/v1/projects/{username}/{project_name}/runs": {
@@ -678,7 +803,6 @@
                 "properties": {
                   "parameters": {
                     "description": "An array of objects which directly map to the parameters of the function powering your API endpoint.\n\nFor example, if your API endpoint is powered by the following function:\n\n```python\n    def random_number(start = 10, stop = 100):\n      return random.uniform(start, stop)\n```\n\nYou would pass two number objects in to `parameters`, for example:\n\n```\n    {\"parameters\": [20, 200] }\n```",
-                    "items": {},
                     "type": "array"
                   }
                 },
@@ -696,6 +820,8 @@
   },
   "components": {
     "schemas": {
+      "Create_a_new_Project": {},
+      "Get_Run_logs": {},
       "Get_a_file": {},
       "List_files": {},
       "List_of_Runs": {},
