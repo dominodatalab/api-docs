@@ -485,6 +485,73 @@
                 ]
             }
         },
+        "/v1/projects/{username}/{project_name}/run/{run_id}/stdout?{previewNumberOfLines}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {},
+                        "examples": {
+                            "application/json": {
+                                "setup": "Downloading blobs\\n0 of 1 transferred...\\n",
+                                "stdout": "Hello, World!\\n"
+                            }
+                        },
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "setup": {
+                                    "type": "string",
+                                    "description": "Logs output during the setup of the run"
+                                },
+                                "stdout": {
+                                    "type": "string",
+                                    "description": "Logs outputted from user code during the run.  Note that this field also include stderr logs as well."
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get Run logs",
+                "description": "Get the logs for a run",
+                "tags": [
+                    "Project Runs and Files"
+                ],
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "description": "The project owner's username",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "project_name",
+                        "in": "path",
+                        "description": "The project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "run_id",
+                        "in": "path",
+                        "description": "The unique ID for the run",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "previewNumberOfLines",
+                        "in": "path",
+                        "description": "Take the last _N_ lines of the log output",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ]
+            }
+        },
         "/v1/projects/{username}/{project_name}/files/{commit_id}/{path}": {
             "get": {
                 "responses": {
@@ -691,6 +758,7 @@
         "List of Runs": {},
         "Start Run": {},
         "Run Status": {},
+        "Get Run logs": {},
         "List files": {},
         "Get a file": {},
         "Upload a file": {},
