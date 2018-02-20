@@ -79,6 +79,27 @@ Your API Endpoint is a wrapper on top of a function in your Domino-hosted code. 
 
 These APIs allow you to interact with your project's files and runs
 
+### Create a new Project [POST /project]
+
+Create a new Project
+
++ Request (application/x-www-form-urlencoded)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Attributes
+        + projectName: `winequality` (string, required) - The name of the project to create
+        + ownerOverrideUsername: `domino` (string, optional) - The owner to create the project for, typically for an
+          Organization you are a member of.  If not provided, the owner is the user making the creation request.
+        + useDefaultIgnoreFile: `true` (boolean, optional) -  If true, use the Domino application's default `.dominoignore`
+          file in the project. Otherwise, the project is not created with a `.dominoignore` file.
+
++ Response 200 (application/text)
+
+        The string "Created project {owner}/{projectName} successfully."
+
 
 ### List of Runs [GET /v1/projects/{username}/{project_name}/runs]
 
@@ -94,7 +115,7 @@ Get a list of runs
     + Headers
 
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
-            
+
 + Response 200 (application/json)
 
     + Attributes

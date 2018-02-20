@@ -115,6 +115,50 @@
                 ]
             }
         },
+        "/project": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {},
+                        "examples": {
+                            "application/text": "The string \"Created project {owner}/{projectName} successfully.\"\n"
+                        }
+                    }
+                },
+                "summary": "Create a new Project",
+                "description": "Create a new Project",
+                "tags": [
+                    "Project Runs and Files"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "projectName"
+                            ],
+                            "properties": {
+                                "projectName": {
+                                    "type": "string"
+                                },
+                                "ownerOverrideUsername": {
+                                    "type": "string"
+                                },
+                                "useDefaultIgnoreFile": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/text"
+                ]
+            }
+        },
         "/v1/projects/{username}/{project_name}/runs": {
             "get": {
                 "responses": {
@@ -643,6 +687,7 @@
     },
     "definitions": {
         "Your awesome model": {},
+        "Create a new Project": {},
         "List of Runs": {},
         "Start Run": {},
         "Run Status": {},

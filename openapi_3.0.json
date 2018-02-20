@@ -5,6 +5,53 @@
     "version": ""
   },
   "paths": {
+    "/project": {
+      "post": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/text": {
+                "examples": {
+                  "response": {
+                    "value": "The string \"Created project {owner}/{projectName} successfully.\"\n"
+                  }
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {}
+          }
+        },
+        "tags": [
+          "Project Runs and Files"
+        ],
+        "description": "Create a new Project",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "ownerOverrideUsername": {
+                    "type": "string"
+                  },
+                  "projectName": {
+                    "type": "string"
+                  },
+                  "useDefaultIgnoreFile": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "projectName"
+                ],
+                "type": "object"
+              }
+            }
+          }
+        },
+        "summary": "Create a new Project"
+      }
+    },
     "/v1/projects/{username}/{project_name}/blobs/{blob_id}": {
       "get": {
         "parameters": [
@@ -678,7 +725,6 @@
                 "properties": {
                   "parameters": {
                     "description": "An array of objects which directly map to the parameters of the function powering your API endpoint.\n\nFor example, if your API endpoint is powered by the following function:\n\n```python\n    def random_number(start = 10, stop = 100):\n      return random.uniform(start, stop)\n```\n\nYou would pass two number objects in to `parameters`, for example:\n\n```\n    {\"parameters\": [20, 200] }\n```",
-                    "items": {},
                     "type": "array"
                   }
                 },
@@ -696,6 +742,7 @@
   },
   "components": {
     "schemas": {
+      "Create_a_new_Project": {},
       "Get_a_file": {},
       "List_files": {},
       "List_of_Runs": {},
