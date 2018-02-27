@@ -61,15 +61,82 @@
                 "examples": {
                   "response": {
                     "value": {
-                      "id": "5a73a6b86278f5c536008832"
+                      "_id": "5a73a6b86278f5c536008832",
+                      "accessConfiguration": {
+                        "accessTokens": [],
+                        "isPublic": false
+                      },
+                      "collaboratorSettings": {
+                        "EveryoneRef": "Hidden",
+                        "UserRef": "Owner"
+                      },
+                      "description": "A model of wine quality",
+                      "isArchived": false,
+                      "metadata": {
+                        "created": 78655832,
+                        "createdBy": "5a73a6b86278f5c536008832"
+                      },
+                      "name": "Wine Quality Model",
+                      "replicas": 2
                     }
                   }
                 },
                 "schema": {
                   "properties": {
-                    "id": {
-                      "description": "The unique ID for the new model.",
+                    "_id": {
+                      "description": "The unique ID for the model.",
                       "type": "string"
+                    },
+                    "accessConfiguration": {
+                      "properties": {
+                        "accessTokens": {
+                          "description": "List of access tokens for the model."
+                        },
+                        "isPublic": {
+                          "type": "boolean"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "collaboratorSettings": {
+                      "properties": {
+                        "EveryoneRef": {
+                          "type": "string"
+                        },
+                        "UserRef": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "description": {
+                      "description": "Summary of the changes in the new version.",
+                      "type": "string"
+                    },
+                    "isArchived": {
+                      "description": "Status of model.",
+                      "type": "boolean"
+                    },
+                    "metadata": {
+                      "properties": {
+                        "created": {
+                          "description": "The datetime when the model was created.",
+                          "type": "number"
+                        },
+                        "createdBy": {
+                          "description": "The unique ID of the user who created the model.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "name": {
+                      "description": "(required) The name of the model.",
+                      "type": "string"
+                    },
+                    "replicas": {
+                      "description": "The number of model instances to start for any model version.",
+                      "type": "number"
                     }
                   },
                   "type": "object"
@@ -97,6 +164,70 @@
       }
     },
     "/v1/models/{model_id}/versions": {
+      "get": {
+        "parameters": [
+          {
+            "description": "The unique id of the model to version.",
+            "in": "path",
+            "name": "model_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "response": {
+                    "value": {
+                      "data": [
+                        {
+                          "_id": "5a73a6b86278f5c536008832",
+                          "commitId": "5a73a67e941923efd202c17d",
+                          "description": "A model of wine quality",
+                          "excludeFiles": [],
+                          "file": "predict.R",
+                          "function": "predictQuality",
+                          "metadata": {
+                            "builds": [],
+                            "created": 3862360832,
+                            "createdBy": "5a73a6b86278f5c536008832",
+                            "number": 2
+                          },
+                          "modelId": {
+                            "value": "5a73a72189c5b2635de7ac5d"
+                          },
+                          "projectId": "5a73a66cd4632584f7b0ed8d"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "description": "Array of model versions.",
+                      "items": {},
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {}
+          }
+        },
+        "tags": [
+          "Models"
+        ],
+        "description": "Get the latest versions of a model.",
+        "summary": "Get model versions"
+      },
       "post": {
         "parameters": [
           {
@@ -124,7 +255,7 @@
                 "schema": {
                   "properties": {
                     "id": {
-                      "description": "The unique ID for the new model.",
+                      "description": "The unique ID for the model version.",
                       "type": "string"
                     },
                     "number": {
@@ -148,7 +279,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Model_Base"
+                "$ref": "#/components/schemas/Model_Version_Create"
               }
             }
           }
@@ -284,7 +415,7 @@
                     "value": {
                       "data": [
                         {
-                          "id": "57dafe43317467e7b0ef5276",
+                          "_id": "5a73a6b86278f5c536008832",
                           "name": "Wine Quality Model"
                         }
                       ],
@@ -929,19 +1060,8 @@
   },
   "components": {
     "schemas": {
-      "Get_a_file": {},
-      "Get_environments": {},
-      "Get_models": {},
-      "List_files": {},
-      "List_of_Runs": {},
-      "Model_Base": {
+      "Create_Base": {
         "properties": {
-          "commitId": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
           "environmentId": {
             "type": "string"
           },
@@ -961,26 +1081,149 @@
         },
         "type": "object"
       },
+      "Environment_List_Item": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "visibility": {
+            "enum": [
+              "Global"
+            ],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Get_a_file": {},
+      "Get_environments": {},
+      "Get_model_versions": {},
+      "Get_models": {},
+      "List_files": {},
+      "List_of_Runs": {},
+      "Model_Base": {
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
       "Model_Create": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/Model_Base"
+            "$ref": "#/components/schemas/Create_Base"
           },
           {
             "properties": {
-              "name": {
+              "description": {
                 "type": "string"
               },
-              "replicas": {
-                "type": "number"
-              },
-              "resourceQuotaId": {
+              "name": {
                 "type": "string"
               }
             },
             "type": "object"
           }
         ]
+      },
+      "Model_Response": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Model_Base"
+          },
+          {
+            "properties": {
+              "accessConfiguration": {
+                "type": "object"
+              },
+              "collaboratorSettings": {
+                "type": "object"
+              },
+              "description": {
+                "type": "string"
+              },
+              "isArchived": {
+                "type": "boolean"
+              },
+              "metadata": {
+                "type": "object"
+              },
+              "replicas": {
+                "type": "number"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "Model_Version_Create": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Create_Base"
+          },
+          {
+            "properties": {
+              "commitId": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "Model_Version_List_Item": {
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "commitId": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "excludeFiles": {
+            "items": {},
+            "type": "array"
+          },
+          "file": {
+            "type": "string"
+          },
+          "function": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "modelId": {
+            "type": "object"
+          },
+          "projectId": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Model_Version_Response": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "number": {
+            "type": "number"
+          }
+        },
+        "type": "object"
       },
       "Publish_a_model": {},
       "Publish_a_model_version": {},
