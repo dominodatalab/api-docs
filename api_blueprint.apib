@@ -321,9 +321,7 @@ Get a list of models published by a project.
 
         + objectType: `list` (string) - The type of object the API returned.
         + data (array) - Array of models.
-            - (object)
-                + id: `57dafe43317467e7b0ef5276` (string) - The unique ID for the run.
-                + name: `Wine Quality Model` (string) - The model name.
+            - (Model Base)
 
 ### Publish a model [POST /v1/models]
 
@@ -339,9 +337,28 @@ Publish a new model.
 
 + Response 200 (application/json)
 
-    + Attributes
+    + Attributes (Model Response)
 
-        + id: `5a73a6b86278f5c536008832` (string) - The unique ID for the new model.
+
+### Get model versions [GET /v1/models/{model_id}/versions]
+
+Get the latest versions of a model.
+
++ Parameters
+
+    + model_id: `5a73a6b86278f5c536008832` (string, required) - The unique id of the model to version.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+        + data (array) - Array of model versions.
+            - (Model Version List Item)
 
 ### Publish a model version [POST /v1/models/{model_id}/versions]
 
@@ -353,7 +370,7 @@ Publish a new model version.
 
 + Request
 
-    + Attributes (Model Base)
+    + Attributes (Model Version Create)
 
     + Headers
 
@@ -361,10 +378,7 @@ Publish a new model version.
 
 + Response 200 (application/json)
 
-    + Attributes
-
-        + id: `5a73a72189c5b2635de7ac5d` (string) - The unique ID for the new model.
-        + number: `2` (number) - The new version number.
+    + Attributes (Model Version Response)
 
 ## Group Environments
 
@@ -386,19 +400,16 @@ Get a list of all v2 environments.
 
         + objectType: `list` (string) - The type of object the API returned.
         + data (array) - Array of environments.
-            - (object)
-                + id: `5a73a6906ece7a7aed984654` (string) - The unique ID for the environment.
-                + name: `Wine Quality Environment` (string) - The environment name.
-                + visibility: `Global` (enum) - One of `Private`, `Organization`, or `Global`.
+            - (Environment List Item)
 
 # Data Structures
 
-## Model Base (object)
+## Model Base
++ _id: `5a73a6b86278f5c536008832` (string) - The unique ID for the model.
++ name: Wine Quality Model (string) - (required) The name of the model.
 
+## Create Base
 + projectId: `5a73a66cd4632584f7b0ed8d` (string) - (required) The unique id of the project the model will be bound to.
-+ commitId: `5a73a67e941923efd202c17d` (string) - The unique id of the project commit to use. Defaults to the latest commit of the project.
-+ environmentId: `5a73a6906ece7a7aed984654` (string) - The unique id of the environment for the model to use. Defaults to the environment used in the latest version of the model.
-+ description: `A model of wine quality` (string) - Summary of the changes in the new version.
 + file: `predict.R` (string) - (required) Path to the file containing the model code. Defaults to the file used in the latest version of the model.
 + function: `predictQuality` (string) - (required) Defaults to the function used in the latest version of the model.
 + excludeFiles: (array) - List of file names for the version to exclude. For example:
@@ -406,11 +417,56 @@ Get a list of all v2 environments.
     ```python
             ["foo.py", "bar.py", "baz.py"]
     ```
++ environmentId: `5a73a6906ece7a7aed984654` (string) - The unique id of the environment for the model to use. Defaults to the environment used in the latest version of the model.
 
-## Model Create (Model Base)
-
-+ name: Wine Quality Model (string) - (required) The name of the new model.
+## Model Response (Model Base)
++ description: `A model of wine quality` (string) - Summary of the changes in the new version.
++ isArchived: `false` (boolean) - Status of model.
 + replicas: 2 (number) - The number of model instances to start for any model version.
-+ resourceQuotaId: `5a73a6906ece7a7aed984654` (string) - The uniqueId of the resource quota the model will be bound to.
++ metadata: (object)
+    + createdBy: `5a73a6b86278f5c536008832` (string) - The unique ID of the user who created the model.
+    + created: 78655832 (number) - The datetime when the model was created.
++ collaboratorSettings: (object)
+    + UserRef: `Owner` (string)
+    + EveryoneRef: `Hidden` (string)
++ accessConfiguration: (object)
+    + isPublic: false (boolean)
+    + accessTokens: (array) - List of access tokens for the model.
+
+## Model Create (Create Base)
++ name: Wine Quality Model (string) - (required) The name of the new model.
++ description: `A model of wine quality` (string) - (required) Summary of the changes in the new version.
+
+## Model Version Create (Create Base)
++ commitId: `5a73a67e941923efd202c17d` (string) - The unique id of the project commit to use. Defaults to the latest commit of the project.
++ description: `A model of wine quality` (string) - Summary of the changes in the new version.
+
+## Model Version Response
++ id: `5a73a72189c5b2635de7ac5d` (string) - The unique ID for the model version.
++ number: `2` (number) - The new version number.
+
+## Model Version List Item
++ _id: `5a73a6b86278f5c536008832` (string) - The unique ID of the model version.
++ modelId: (object)
+    + value: `5a73a72189c5b2635de7ac5d` (string) - The unique id of the model.
++ projectId: `5a73a66cd4632584f7b0ed8d` (string) - The unique id of the project the model will be bound to.
++ commitId: `5a73a67e941923efd202c17d` (string) - The unique id of the project commit to use. Defaults to the latest commit of the project.
++ description: `A model of wine quality` (string) - Summary of the changes in the new version.
++ file: `predict.R` (string) - Path to the file containing the model code. Defaults to the file used in the latest version of the model.
++ function: `predictQuality` (string) - Defaults to the function used in the latest version of the model.
++ excludeFiles: (array) - List of file names for the version to exclude. For example:
+
+    ```python
+            ["foo.py", "bar.py", "baz.py"]
+    ```
++ metadata: (object)
+    + createdBy: `5a73a6b86278f5c536008832` (string) - The unique ID of the user who created the model.
+    + created: 3862360832 (number) - The datetime when the model was created.
+    + number: `2` (number) - The version number.
+    + builds: (array) - List of builds for the model version.
 
 
+## Environment List Item
++ id: `5a73a6906ece7a7aed984654` (string) - The unique ID for the environment.
++ name: `Wine Quality Environment` (string) - The environment name.
++ visibility: `Global` (enum) - One of `Private`, `Organization`, or `Global`.
