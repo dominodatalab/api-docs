@@ -35,22 +35,22 @@ Your API Endpoint is a wrapper on top of a function in your Domino-hosted code. 
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
 
     + Attributes
-    
-        + parameters: 20, 200 (array[string], required) - An array of objects which directly map to the parameters of the function powering your API endpoint. 
-        
+
+        + parameters: 20, 200 (array[string], required) - An array of objects which directly map to the parameters of the function powering your API endpoint.
+
             For example, if your API endpoint is powered by the following function:
-            
+
             ```python
                 def random_number(start = 10, stop = 100):
                   return random.uniform(start, stop)
             ```
-            
+
             You would pass two number objects in to `parameters`, for example:
-            
+
             ```
                 {"parameters": [20, 200] }
             ```
-            
+
     + Body
 
             {"parameters": [20, 200] }
@@ -58,13 +58,13 @@ Your API Endpoint is a wrapper on top of a function in your Domino-hosted code. 
 + Response 200 (application/json)
 
     + Headers
-    
+
             Domino-Deserialization-Time: 1
             Domino-User-Code-Time: 10
             Domino-Serialization-Time: 2
 
     + Attributes
-    
+
         + release (object) - An object of key/value pairs describing the version of your API endpoint that responded to your request
             + commitId: `e1dfab96a6c6014767e9561059224a3153cb6de6` (string) - The commit your API endpoint is bound to
             + file: `predict.R` (string) - The file your API endpoint is bound to
@@ -94,11 +94,11 @@ Get a list of runs
     + Headers
 
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
-            
+
 + Response 200 (application/json)
 
     + Attributes
-    
+
         + objectType: `list` (string) - The type of object the API returned
         + uri (string) - The URI that responded to your request
         + data (array) - Array of run statuses
@@ -121,7 +121,7 @@ Get a list of runs
                     + isError: `false` (boolean)
                     + data (array)
                         - (object)
-                            + key: `R^2` (string): 
+                            + key: `R^2` (string):
                             + value: `1.000`
                 + isCompleted: `true` (boolean) - A boolean to denote if the run has completed or is still run. See `status` for success/failure status.
                 + hardwareTierId: `gpu` (string) - The hardware tier the run exectued on (new in v1.42)
@@ -139,18 +139,18 @@ Start a run of a given script or command
 + Request (application/json)
 
     + Attributes
-    
+
         + command (array, required) - Array of strings making up your command. For example:
-        
+
             ```python
                     ["model.py", "dataset", "--sample", "2000"]
             ```
-        
+
         + isDirect: `false` (boolean, required) - A direct command is interpretted as a shell command; Domino doesn't try to infer a program to match your file type
         + title: `This one should work!` (string) - An optional title for your run
         + tier: `gpu` (string) - Identifier of the hardware tier to use
         + commitId: `1c6e8aa47951e39f9a905f0077af9355c35b712b` (string) - Revision at which to start the run
-        + publishApiEndpoint: `false` (boolean) - If true, the results of a successful run will be deployed to the project's active API Endpoint, if one exists 
+        + publishApiEndpoint: `false` (boolean) - If true, the results of a successful run will be deployed to the project's active API Endpoint, if one exists
 
     + Headers
 
@@ -170,18 +170,18 @@ Get the status of a run
 
     + username: `nick` (string, required) - The project owner's username
     + project_name: `winequality` (string, required) - The project name
-    + run_id (string, required) - The unique ID for the run 
+    + run_id (string, required) - The unique ID for the run
 
 + Request
 
     + Headers
 
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
-        
+
 + Response 200 (application/json)
 
     + Attributes
-    
+
         + id: `57dafe43317467e7b0ef5276` (string) - The unique ID for the run
         + projectId: `54c17e92e4b0bc49e27d9398` (string) - The ID of the project
         + number: `5` (number) - The auto-increment number associated with the run
@@ -189,7 +189,23 @@ Get the status of a run
         + queued: `1473969731915`  (number) - Milliseconds epoch time the run was added to the queue
         + started: `1473969754283` (number) - Milliseconds epoch time the run started executing
         + completed: `1473969762970` (number) - Milliseconds epoch time the run completed running
-        + status: `Succeeded` (string) - The status of the run
+        + status: `Succeeded` (enum[string]) - The status of the run
+            + Members
+              + `Queued` - Waiting to be assigned to an executor. All runs start in this state.
+              + `Scheduled` - Executor assigned, about to begin startup process.
+              + `Preparing` - Getting the executor ready for environment build.
+              + `Building` - Building default environment.
+              + `Pulling` - Pulling the Docker image with project-specific environment.
+              + `Running` - Executing specified project code.
+              + `Serving` - Serving requests via a published port.
+              + `StopRequested` - Stop was requested by the user.
+              + `StopAndDiscardRequested` - User requested to stop and to discard changes
+              + `Stopping` - In the process of being stopped by user request.
+              + `Finishing` - Uploading results.
+              + `Stopped` - Run ended by user request.
+              + `Succeeded` - Run terminated on its own without error after executing requested operations.
+              + `Failed` - Run terminated due to error.
+              + `Error` - Run failed due to system error, not related to project code.
         + commitId: `1c6e8aa47951e39f9a905f0077af9355c35b712b` (string) - The commit hash of the project used to create the run
         + executor: `us-west-2:i-007942020ce7baeb5` (string) - The unique ID of the executor (compute node) the run was executed on
         + outputCommitId: `73fe9481fe635bada713246c3c739beefa424e8c` (string) - The commit hash of the project post-run (look at files with this hash for the results)
@@ -200,7 +216,7 @@ Get the status of a run
             + isError: `false` (boolean)
             + data (array)
                 - (object)
-                    + key: `R^2` (string): 
+                    + key: `R^2` (string):
                     + value: `1.000`
         + isCompleted: `true` (boolean) - A boolean to denote if the run has completed or is still run. See `status` for success/failure status.
         + hardwareTierId: `gpu` (string) - The hardware tier the run exectued on (new in v1.42)
@@ -216,10 +232,10 @@ Get a list of files in a commit
     + commit_id: `8f5622ad68829da47ab9be2660c962a56df6003e` (string, required) - The commit ID of the version of the project you want files for
     + path: `/` (string, required) - The path for which you want files for
 
-+ Request 
++ Request
 
     + Headers
-    
+
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
 
 + Response 200 (application/json)
@@ -237,13 +253,13 @@ Get the contents of a file from the project
 + Request
 
     + Headers
-    
+
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
 
 + Response 200
 
 ### Upload a file [PUT /v1/projects/{username}/{project_name}/{path}]
- 
+
 Upload a file to your project
 
 + Parameters
@@ -255,17 +271,17 @@ Upload a file to your project
 + Request
 
     + Headers
-    
+
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
-            
+
     + Body
-    
+
             <CONTENTS_OF_YOUR_FILE>
 
 + Response 201 (application/json)
 
     + Headers
-    
+
             Location: https://app.dominodatalab.com/v1/projects/marks/quick-start/blobs/5c28ab880e29953e41b91e351f786a833fbf18a5
             Transfer-Encoding: chunked
 
@@ -289,10 +305,10 @@ Execute a search
     + query: `shiny` (string, required) - The phrase to search
     + area: `projects` (string, required) - The type of object to search. Valid values are `project`, `run`, `file`, and `comment`
 
-+ Request 
++ Request
 
     + Headers
-    
+
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
 
 + Response 200 (application/json)
