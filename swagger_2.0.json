@@ -357,6 +357,23 @@
                                 },
                                 "status": {
                                     "type": "string",
+                                    "enum": [
+                                        "Queued",
+                                        "Scheduled",
+                                        "Preparing",
+                                        "Building",
+                                        "Pulling",
+                                        "Running",
+                                        "Serving",
+                                        "StopRequested",
+                                        "StopAndDiscardRequested",
+                                        "Stopping",
+                                        "Finishing",
+                                        "Stopped",
+                                        "Succeeded",
+                                        "Failed",
+                                        "Error"
+                                    ],
                                     "description": "The status of the run"
                                 },
                                 "commitId": {

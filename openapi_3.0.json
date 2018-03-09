@@ -431,6 +431,23 @@
                     },
                     "status": {
                       "description": "The status of the run",
+                      "enum": [
+                        "Queued",
+                        "Scheduled",
+                        "Preparing",
+                        "Building",
+                        "Pulling",
+                        "Running",
+                        "Serving",
+                        "StopRequested",
+                        "StopAndDiscardRequested",
+                        "Stopping",
+                        "Finishing",
+                        "Stopped",
+                        "Succeeded",
+                        "Failed",
+                        "Error"
+                      ],
                       "type": "string"
                     },
                     "title": {
