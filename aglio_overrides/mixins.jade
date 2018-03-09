@@ -127,6 +127,10 @@ mixin SchemaAsList(title, schema)
                 | &nbsp;
                 if properties.description
                     != self.markdown(properties.description)
+                if properties.enum
+                    if properties.enum.constructor == Array
+                        | Potential values include: 
+                        = properties.enum.join(", ")
 
 mixin RequestResponse(title, request, collapse, showSchema)
     .title

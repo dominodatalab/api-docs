@@ -1,7 +1,7 @@
 echo "Converting api_blueprint.apib =to=> index.html using aglio"
 NOCACHE=1 BENCHMARK=1 aglio \
 	--theme-variables aglio_overrides/aglio_styles.less \
-  --theme-template triple \
+	--theme-template aglio_overrides/triple.jade \
 	-i api_blueprint.apib \
 	-o index.html
 

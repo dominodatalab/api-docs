@@ -695,6 +695,7 @@
                 "properties": {
                   "parameters": {
                     "description": "An array of objects which directly map to the parameters of the function powering your API endpoint.\n\nFor example, if your API endpoint is powered by the following function:\n\n```python\n    def random_number(start = 10, stop = 100):\n      return random.uniform(start, stop)\n```\n\nYou would pass two number objects in to `parameters`, for example:\n\n```\n    {\"parameters\": [20, 200] }\n```",
+                    "items": {},
                     "type": "array"
                   }
                 },
