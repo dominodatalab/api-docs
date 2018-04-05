@@ -693,13 +693,13 @@
                 "summary": "Get models",
                 "description": "Get a list of models published by a project.",
                 "tags": [
-                    "Models"
+                    "Models - Domino 2.5+"
                 ],
                 "parameters": [
                     {
                         "name": "username",
                         "in": "path",
-                        "description": "The project owner's username.",
+                        "description": "",
                         "required": true,
                         "type": "string"
                     },
@@ -808,7 +808,7 @@
                 "summary": "Publish a model",
                 "description": "Publish a new model.",
                 "tags": [
-                    "Models"
+                    "Models - Domino 2.5+"
                 ],
                 "parameters": [
                     {
@@ -869,7 +869,7 @@
                 "summary": "Get model versions",
                 "description": "Get the latest versions of a model.",
                 "tags": [
-                    "Models"
+                    "Models - Domino 2.5+"
                 ],
                 "parameters": [
                     {
@@ -913,7 +913,7 @@
                 "summary": "Publish a model version",
                 "description": "Publish a new model version.",
                 "tags": [
-                    "Models"
+                    "Models - Domino 2.5+"
                 ],
                 "parameters": [
                     {

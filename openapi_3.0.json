@@ -148,7 +148,7 @@
           }
         },
         "tags": [
-          "Models"
+          "Models - Domino 2.5+"
         ],
         "description": "Publish a new model.",
         "requestBody": {
@@ -223,7 +223,7 @@
           }
         },
         "tags": [
-          "Models"
+          "Models - Domino 2.5+"
         ],
         "description": "Get the latest versions of a model.",
         "summary": "Get model versions"
@@ -272,7 +272,7 @@
           }
         },
         "tags": [
-          "Models"
+          "Models - Domino 2.5+"
         ],
         "description": "Publish a new model version.",
         "requestBody": {
@@ -388,7 +388,7 @@
       "get": {
         "parameters": [
           {
-            "description": "The project owner's username.",
+            "description": "",
             "in": "path",
             "name": "username",
             "required": true,
@@ -444,7 +444,7 @@
           }
         },
         "tags": [
-          "Models"
+          "Models - Domino 2.5+"
         ],
         "description": "Get a list of models published by a project.",
         "summary": "Get models"
