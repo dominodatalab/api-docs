@@ -394,6 +394,90 @@ Publish a new model version.
 
 + Response 200 (application/json)
 
+<<<<<<< HEAD
+=======
+## Group Models
+
+These APIs allow you to interact with your project's models.
+
+### Get models [GET /v1/projects/{username}/{project_name}/models]
+
+Get a list of models published by a project.
+
++ Parameters
+    + username: `nick` (string, required) - The project owner's username.
+    + project_name: `winequality` (string, required) - The project name.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+
+        + objectType: `list` (string) - The type of object the API returned.
+        + data (array) - Array of models.
+            - (Model Base)
+
+### Publish a model [POST /v1/models]
+
+Publish a new model.
+
++ Request
+
+    + Attributes (Model Create)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (Model Response)
+
+
+### Get model versions [GET /v1/models/{model_id}/versions]
+
+Get the latest versions of a model.
+
++ Parameters
+
+    + model_id: `5a73a6b86278f5c536008832` (string, required) - The unique id of the model to version.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+        + data (array) - Array of model versions.
+            - (Model Version List Item)
+
+### Publish a model version [POST /v1/models/{model_id}/versions]
+
+Publish a new model version.
+
++ Parameters
+
+    + model_id: `5a73a6b86278f5c536008832` (string, required) - The unique id of the model to version.
+
++ Request
+
+    + Attributes (Model Version Create)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+>>>>>>> d401c1410b063aa70c8ad65734ecb96b8c46940a
     + Attributes (Model Version Response)
 
 ## Group Environments
