@@ -150,7 +150,7 @@
         "tags": [
           "Models - Domino 2.5+"
         ],
-        "description": "Publish a new model.",
+        "description": "**This is a beta endpoint. This specification will not have long term support beyond Q3 2018.**<br><br>\nPublish a new model.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -225,7 +225,7 @@
         "tags": [
           "Models - Domino 2.5+"
         ],
-        "description": "Get the latest versions of a model.",
+        "description": "**This is a beta endpoint. This specification will not have long term support beyond Q3 2018.**<br><br>\nGet the latest versions of a model.",
         "summary": "Get model versions"
       },
       "post": {
@@ -274,7 +274,7 @@
         "tags": [
           "Models - Domino 2.5+"
         ],
-        "description": "Publish a new model version.",
+        "description": "**This is a beta endpoint. This specification will not have long term support beyond Q3 2018.**<br><br>\nPublish a new model version.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -446,7 +446,7 @@
         "tags": [
           "Models - Domino 2.5+"
         ],
-        "description": "Get a list of models published by a project.",
+        "description": "**This is a beta endpoint. This specification will not have long term support beyond Q3 2018.**<br><br>\nGet a list of models published by a project.",
         "summary": "Get models"
       }
     },
