@@ -483,7 +483,7 @@
                         {
                           "commitId": "1c6e8aa47951e39f9a905f0077af9355c35b712b",
                           "completed": 1473969762970,
-                          "diagnoisticStatistics": {
+                          "diagnosticStatistics": {
                             "data": [
                               {
                                 "key": "R^2",
@@ -680,7 +680,7 @@
                     "value": {
                       "commitId": "1c6e8aa47951e39f9a905f0077af9355c35b712b",
                       "completed": 1473969762970,
-                      "diagnoisticStatistics": {
+                      "diagnosticStatistics": {
                         "data": [
                           {
                             "key": "R^2",
@@ -716,7 +716,7 @@
                       "description": "Milliseconds epoch time the run completed running",
                       "type": "number"
                     },
-                    "diagnoisticStatistics": {
+                    "diagnosticStatistics": {
                       "description": "Object containing information about the run's [Diagnostic Statistics aka dominostats.json](http://support.dominodatalab.com/hc/en-us/articles/204348169-Run-Diagnostic-Statistics)",
                       "properties": {
                         "data": {
@@ -1043,6 +1043,7 @@
                 "properties": {
                   "parameters": {
                     "description": "An array of objects which directly map to the parameters of the function powering your API endpoint.\n\nFor example, if your API endpoint is powered by the following function:\n\n```python\n    def random_number(start = 10, stop = 100):\n      return random.uniform(start, stop)\n```\n\nYou would pass two number objects in to `parameters`, for example:\n\n```\n    {\"parameters\": [20, 200] }\n```",
+                    "items": {},
                     "type": "array"
                   }
                 },

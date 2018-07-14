@@ -141,7 +141,7 @@
                                         "title": "Run with great R^2 of 1!",
                                         "isArchived": false,
                                         "postProcessedTimestamp": 1473969767822,
-                                        "diagnoisticStatistics": {
+                                        "diagnosticStatistics": {
                                             "isError": false,
                                             "data": [
                                                 {
@@ -311,7 +311,7 @@
                                 "title": "Run with great R^2 of 1!",
                                 "isArchived": false,
                                 "postProcessedTimestamp": 1473969767822,
-                                "diagnoisticStatistics": {
+                                "diagnosticStatistics": {
                                     "isError": false,
                                     "data": [
                                         {
@@ -400,7 +400,7 @@
                                     "type": "number",
                                     "description": "Milliseconds epoch time the run finished processing (this happens after the run has completed and includes saving the results back to the main project repo)"
                                 },
-                                "diagnoisticStatistics": {
+                                "diagnosticStatistics": {
                                     "type": "object",
                                     "properties": {
                                         "isError": {
