@@ -1,0 +1,600 @@
+FORMAT: 1A
+HOST: https://api.dominodatalab.com
+
+# Domino Data Lab API
+
+Domino has two types of API:
+
+1. **Model API Endpoints** that serve your code as a low-latency web service. You don't need any API design experience
+   to turn your Python or R code into a Model API Endpoint.
+2. The **Domino API** that you can use to interact with your project's files and runs.
+
+
+For both types of API, the base URL will depend on your deployment of Domino. Replace `https://api.dominodatalab.com` in
+the examples below with the URL of your Domino deployment. This will be the same as the URL you visit in your browser
+when you use the Domino application.
+
+To authenticate your requests, include your API Key with the header `X-Domino-Api-Key`. You can find this key on your
+user account page in the Domino application.
+
+
+## Group Model API Endpoints
+
+[Model API Endpoints](https://support.dominodatalab.com/hc/en-us/articles/115001488023) allow you to deploy and
+operationalize your models as API endpoints automatically, without any web development knowledge.
+
+### Your model [POST /v1/{username}/{project_name}/endpoint]
+
+Your API Endpoint is a wrapper on top of a function in your Domino-hosted code. The arguments to the API are the
+arguments to your function; the response from the API includes the return value from your function in the `result`
+object.
+
+[Learn more about API Endpoint and Model Development](https://support.dominodatalab.com/hc/en-us/articles/115001488023)
+
++ Parameters
+
+    + username: `nick` (string, required) - The project owner's username.
+    + project_name: `winequality` (string, required) - The project name.
+
++ Request (application/json)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Attributes
+
+        + parameters: 20, 200 (array[string], required) - An array of objects which directly map to the parameters of the function powering your API endpoint.
+
+            For example, if your API endpoint is powered by the following function:
+
+            ```python
+                def random_number(start, stop):
+                  return random.uniform(start, stop)
+            ```
+
+            You would pass two number objects to `parameters`. For example:
+
+            ```
+                {"parameters": [20, 200] }
+            ```
+
+    + Body
+
+            {"parameters": [20, 200] }
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Domino-Deserialization-Time: 1
+            Domino-User-Code-Time: 10
+            Domino-Serialization-Time: 2
+
+    + Attributes
+
+        + release (object) - An object of key/value pairs describing the version of your API endpoint that responded to your request.
+            + commitId: `e1dfab96a6c6014767e9561059224a3153cb6de6` (string) - The commit your API endpoint is bound to.
+            + file: `predict.R` (string) - The file your API endpoint is bound to.
+            + function: `predictQuality` (string) - The function your API endpoint is bound to.
+            + version: `14` (number) - The version of your API that was used.
+        + requestId: `NMEOMGVJURWVPOQF` (string) - A unique request ID assigned to your API request.
+        + result (object) - The result of the function you bound to your API Endpoint. Will be either a JSON object/dictionary or array depending on what your function returns.
+            + a_random_number: `103` (number)
+
+
+## Group Project Runs and Files
+
+These endpoints allow you to interact with your project's files and runs
+
+
+### List of Runs [GET /v1/projects/{username}/{project_name}/runs]
+
+Get a list of runs.
+
++ Parameters
+
+    + username: `nick` (string, required) - The project owner's username
+    + project_name: `winequality` (string, required) - The project name
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+
+        + objectType: `list` (string) - The type of object the API returned.
+        + uri (string) - The URI that responded to your request.
+        + data (array) - Array of run statuses.
+            - (object) # TODO: DRY this up once Aglio supports MSON Data Structures
+                + id: `57dafe43317467e7b0ef5276` (string) - The unique ID for the run
+                + projectId: `54c17e92e4b0bc49e27d9398` (string) - The ID of the project
+                + number: `5` (number) - The auto-increment number associated with the run
+                + startingUserId: `57a28b28961401f240812caf` (string) - The ID of the user who started the run
+                + queued: `1473969731915`  (number) - Milliseconds epoch time the run was added to the queue
+                + started: `1473969754283` (number) - Milliseconds epoch time the run started executing
+                + completed: `1473969762970` (number) - Milliseconds epoch time the run completed running
+                + status: `Succeeded` (string) - The status of the run
+                + commitId: `1c6e8aa47951e39f9a905f0077af9355c35b712b` (string) - The commit hash of the project used to create the run
+                + executor: `us-west-2:i-007942020ce7baeb5` (string) - The unique ID of the executor (compute node) the run was executed on
+                + outputCommitId: `73fe9481fe635bada713246c3c739beefa424e8c` (string) - The commit hash of the project post-run (look at files with this hash for the results)
+                + title: `Run with great R^2 of 1!` (string) - Title of the run, if it was renamed
+                + isArchived: `false` (boolean) - Boolean denoting if the run was archived (hidden from the web interface)
+                + postProcessedTimestamp: `1473969767822` (number) -  Milliseconds epoch time the run finished processing (this happens after the run has completed and includes saving the results back to the main project repo)
+                + diagnosticStatistics (object) - Object containing information about the run's [Diagnostic Statistics aka dominostats.json](http://support.dominodatalab.com/hc/en-us/articles/204348169-Run-Diagnostic-Statistics)
+                    + isError: `false` (boolean)
+                    + data (array)
+                        - (object)
+                            + key: `R^2` (string):
+                            + value: `1.000`
+                + isCompleted: `true` (boolean) - A boolean to denote if the run has completed or is still run. See `status` for success/failure status.
+                + hardwareTierId: `gpu` (string) - The hardware tier the run exectued on (new in v1.42)
+
+
+### Start Run [POST /v1/projects/{username}/{project_name}/runs]
+
+Start a run of a given script or command.
+
++ Parameters
+
+    + username: `nick` (string, required) - The project owner's username
+    + project_name: `winequality` (string, required) - The project name
+
++ Request (application/json)
+
+    + Attributes
+
+        + command: `model.py`, `dataset`, `--sample`, `2000` (array, required) - Array of strings making up your command. For example:
+
+            ```python
+                    ["model.py", "dataset", "--sample", "2000"]
+            ```
+
+        + isDirect: `false` (boolean, required) - A direct command is interpretted as a shell command; Domino doesn't try to infer a program to match your file type.
+        + title: `This one should work!` (string) - An optional title for your run.
+        + tier: `gpu` (string) - Identifier of the hardware tier to use.
+        + commitId: `1c6e8aa47951e39f9a905f0077af9355c35b712b` (string) - Revision at which to start the run.
+        + publishApiEndpoint: `false` (boolean) - __This field will be deprecated in future versions.__ If true, the results of a successful run will be deployed to the project's active API Endpoint, if one exists.
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+        + runId: `553af271e4b0364c0f717b24` (string) - The unique ID for the run that was just started.
+        + message: `Run for project <username>/<project_name> started. You can view progress here: https://app.dominodatalab.com/<username>/<project_name/runs/553af271e4b0364c0f717b24` (string) - A human-readable message with a full link to view the status of your run.
+
+### Run Status [GET /v1/projects/{username}/{project_name}/runs/{run_id}]
+
+Get the status of a run.
+
++ Parameters
+
+    + username: `nick` (string, required) - The project owner's username.
+    + project_name: `winequality` (string, required) - The project name.
+    + run_id (string, required) - The unique ID for the run.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+
+        + id: `57dafe43317467e7b0ef5276` (string) - The unique ID for the run.
+        + projectId: `54c17e92e4b0bc49e27d9398` (string) - The ID of the project.
+        + number: `5` (number) - The auto-increment number associated with the run.
+        + startingUserId: `57a28b28961401f240812caf` (string) - The ID of the user who started the run.
+        + queued: `1473969731915`  (number) - Milliseconds epoch time the run was added to the queue.
+        + started: `1473969754283` (number) - Milliseconds epoch time the run started executing.
+        + completed: `1473969762970` (number) - Milliseconds epoch time the run completed running.
+        + status: `Succeeded` (enum[string]) - The status of the run.
+            + Members
+              + `Queued` - Waiting to be assigned to an executor. All runs start in this state.
+              + `Scheduled` - Executor assigned, about to begin startup process.
+              + `Preparing` - Getting the executor ready for environment build.
+              + `Building` - Building default environment.
+              + `Pulling` - Pulling the Docker image with project-specific environment.
+              + `Running` - Executing specified project code.
+              + `Serving` - Serving requests via a published port.
+              + `StopRequested` - Stop was requested by the user.
+              + `StopAndDiscardRequested` - User requested to stop and to discard changes
+              + `Stopping` - In the process of being stopped by user request.
+              + `Finishing` - Uploading results.
+              + `Stopped` - Run ended by user request.
+              + `Succeeded` - Run terminated on its own without error after executing requested operations.
+              + `Failed` - Run terminated due to error.
+              + `Error` - Run failed due to system error, not related to project code.
+        + commitId: `1c6e8aa47951e39f9a905f0077af9355c35b712b` (string) - The commit hash of the project used to create the run.
+        + executor: `us-west-2:i-007942020ce7baeb5` (string) - The unique ID of the executor (compute node) the run was executed on.
+        + outputCommitId: `73fe9481fe635bada713246c3c739beefa424e8c` (string) - The commit hash of the project post-run (look at files with this hash for the results).
+        + title: `Run with great R^2 of 1!` (string) - Title of the run, if it was renamed.
+        + isArchived: `false` (boolean) - Boolean denoting if the run was archived (hidden from the web interface).
+        + postProcessedTimestamp: `1473969767822` (number) -  Milliseconds epoch time the run finished processing (this happens after the run has completed and includes saving the results back to the main project repo).
+        + diagnosticStatistics (object) - Object containing information about the run's [Diagnostic Statistics aka dominostats.json](http://support.dominodatalab.com/hc/en-us/articles/204348169-Run-Diagnostic-Statistics).
+            + isError: `false` (boolean)
+            + data (array)
+                - (object)
+                    + key: `R^2` (string):
+                    + value: `1.000`
+        + isCompleted: `true` (boolean) - A boolean to denote if the run has completed or is still run. See `status` for success/failure status.
+        + hardwareTierId: `gpu` (string) - The hardware tier the run exectued on (new in v1.42).
+
+### List files [GET /v1/projects/{username}/{project_name}/files/{commit_id}/{path}]
+
+Get a list of files in a commit.
+
++ Parameters
+
+    + username: `nick` (string, required) - The project owner's username.
+    + project_name: `winequality` (string, required) - The project name.
+    + commit_id: `8f5622ad68829da47ab9be2660c962a56df6003e` (string, required) - The commit ID of the version of the project you want files for.
+    + path: `/` (string, required) - The path for which you want files for.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+### Get a file [GET /v1/projects/{username}/{project_name}/blobs/{blob_id}]
+
+Get the contents of a file from the project.
+
++ Parameters
+
+    + username: `nick` (string, required) - The project owner's username.
+    + project_name: `winequality` (string, required) - The project name.
+    + blob_id: `adfjlklasdfhjklah8323hfjkdf` (string, required) - The unique ID of the blob.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200
+
+### Upload a file [PUT /v1/projects/{username}/{project_name}/{path}]
+
+Upload a file to your project.
+
++ Parameters
+
+    + username: `nick` (string, required) - The project owner's username.
+    + project_name: `winequality` (string, required) - The project name.
+    + path: `data/randomNumbers.rdata` (string, required) - Where you want the file to be saved. (You can include forward slashes to upload files into folders that exist).
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Body
+
+            <CONTENTS_OF_YOUR_FILE>
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: https://app.dominodatalab.com/v1/projects/marks/quick-start/blobs/5c28ab880e29953e41b91e351f786a833fbf18a5
+            Transfer-Encoding: chunked
+
+    + Attributes
+        + path: `data/randomNumbers.rdata` (string, required) - Path within the project your file was saved to.
+        + lastModified: `1475878612000` (number, required) - Milliseconds epoch time the file was last modified.
+        + size: `32690` (number, required) - The size of the file you just uploaded, in bytes.
+        + key: `5c28ab880e29953e41b91e351f786a833fbf18a5` (string, required) - The blob ID for the file. Used by the 'Get a file' API.
+        + url: `https://app.dominodatalab.com/v1/projects/marks/quick-start/blobs/5c28ab880e29953e41b91e351f786a833fbf18a5` (string, required) - The full URL to the blob (this can be used to re-download the file).
+
+
+## Group Search
+
+These endpoints allow you to search for projects, runs, files, and comments.
+
+### Search [GET /v1/search{?query,area}]
+
+Execute a search.
+
++ Parameters
+    + query: `shiny` (string, required) - The phrase to search for.
+    + area: `project` (string, required) - The type of object to search. Valid values are `project`, `run`, `file`, and `comment`.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+
+## Group Environments
+
+These endpoints allow you to interact with your environments.
+
+### Get environments [GET /v1/environments]
+
+Get a list of all v2 environments.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+
+        + objectType: `list` (string) - The type of object the API returned.
+        + data (array) - Array of environments.
+            - (Environment List Item)
+
+
+## Group Models - Domino 2.5+
+
+**These are beta endpoints. They will not have long term support beyond Q3 2018.**<br><br>
+These endpoints are only available in Domino 2.5+. These endpoints allow you to interact with your project's models.
+
+### Get models [GET /v1/projects/{username}/{project_name}/models]
+
+**This is a beta endpoint. This specification will not have long term support beyond Q3 2018.**<br><br>
+Get a list of models published by a project.
+
++ Parameters
+    + username: `nick` (string, required) The project owner's username.
+    + project_name: `winequality` (string, required) - The project name.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+
+        + objectType: `list` (string) - The type of object the API returned.
+        + data (array) - Array of models.
+            - (Model Base)
+
+### Publish a model [POST /v1/models]
+
+**This is a beta endpoint. This specification will not have long term support beyond Q3 2018.**<br><br>
+Publish a new model.
+
++ Request
+
+    + Attributes (Model Create)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (Model Response)
+
+
+### Get model versions [GET /v1/models/{model_id}/versions]
+
+**This is a beta endpoint. This specification will not have long term support beyond Q3 2018.**<br><br>
+Get the latest versions of a model.
+
++ Parameters
+
+    + model_id: `5a73a6b86278f5c536008832` (string, required) - The unique id of the model to version.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+        + data (array) - Array of model versions.
+            - (Model Version List Item)
+
+### Publish a model version [POST /v1/models/{model_id}/versions]
+
+**This is a beta endpoint. This specification will not have long term support beyond Q3 2018.**<br><br>
+Publish a new model version.
+
++ Parameters
+
+    + model_id: `5a73a6b86278f5c536008832` (string, required) - The unique id of the model to version.
+
++ Request
+
+    + Attributes (Model Version Create)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (Model Version Response)
+
+
+
+
+
+
+
+
+
+
+# Group Users v4 - Domino 2.8+
+
+**These are beta endpoints. They may change in future versions of Domino.**<br><br>
+
+These endpoints are only available in Domino 2.8+. These endpoints provide information about the users in a Domino
+deployment.
+
+### Get users [GET /v4/users{?userId,username,query}]
+
+**This is a beta endpoint. It may change in future versions of Domino.**<br><br>
+Any user can use this endpoint to retrieve a list of users in their Domino organization. Admin users will see a list of
+all users in the deployment.<br><br>
+
+**The response will be an array of user objects.**
+
++ Parameters
+
+    + userId: `poweruser,anotheruser` (array, optional) - Optional, returns only the users who match the IDs in this array.
+    + username: `poweruser` (string, optional) - Optional, returns only the single user with the exact provided username.
+    + query: `p` (string, optional) - Optional, returns all usernames that start with this query string.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (array)
+
+        + (v4 user)
+        + (v4 user)
+          + firstName: Another
+          + lastName: User
+          + fullName: Another User
+          + email: another.user@dominodatalab.com
+
+
+### Get current user [GET /v4/users/self]
+
+**This is a beta endpoint. It may change in future versions of Domino.**<br><br>
+Retrieves the user object that corresponds to the provided API key.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (v4 user)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Data Structures
+
+## Model Base
++ _id: `5a73a6b86278f5c536008832` (string) - The unique ID for the model.
++ name: Wine Quality Model (string) - (required) The name of the model.
+
+## Create Base
++ projectId: `5a73a66cd4632584f7b0ed8d` (string) - (required) The unique id of the project the model will be bound to.
++ file: `predict.R` (string) - (required) Path to the file containing the model code. Defaults to the file used in the latest version of the model.
++ function: `predictQuality` (string) - (required) Defaults to the function used in the latest version of the model.
++ excludeFiles: `file1.data`, `file2.data`, `fileN.data` (array) - List of file names for the version to exclude. For example:
+
+    ```python
+            ["foo.py", "bar.py", "baz.py"]
+    ```
++ environmentId: `5a73a6906ece7a7aed984654` (string) - The unique id of the environment for the model to use. Defaults to the environment used in the latest version of the model, or the default project environment in the case of a new model.
+
+## Model Response (Model Base)
++ description: `A model of wine quality` (string) - Summary of the changes in the new version.
++ isArchived: `false` (boolean) - Status of model.
++ replicas: 2 (number) - The number of model instances to start for any model version.
++ metadata: (object) - Object containing **createdBy** user ID and **created** datetime properties.
+    + createdBy: `5a73a6b86278f5c536008832` (string) - The unique ID of the user who created the model.
+    + created: 78655832 (number) - The datetime when the model was created.
++ collaboratorSettings: (object) - Object containing **UserRef** and **EveryoneRef** properties.
+    + UserRef: `Owner` (string)
+    + EveryoneRef: `Hidden` (string)
++ accessConfiguration: (object) - Object containing **isPublic** visibility setting and **accessTokens**.
+    + isPublic: false (boolean)
+    + accessTokens: (array) - List of access tokens for the model.
+
+## Model Create (Create Base)
++ name: Wine Quality Model (string) - (required) The name of the new model.
++ description: `A model of wine quality` (string) - (required) Summary of the changes in the new version.
+
+## Model Version Create (Create Base)
++ commitId: `5a73a67e941923efd202c17d` (string) - The unique id of the project commit to use. Defaults to the latest commit of the project.
++ description: `A model of wine quality` (string) - Summary of the changes in the new version.
+
+## Model Version Response
++ id: `5a73a72189c5b2635de7ac5d` (string) - The unique ID for the model version.
++ number: `2` (number) - The new version number.
+
+## Model Version List Item
++ _id: `5a73a6b86278f5c536008832` (string) - The unique ID of the model version.
++ modelId: (object)
+    + value: `5a73a72189c5b2635de7ac5d` (string) - The unique id of the model.
++ projectId: `5a73a66cd4632584f7b0ed8d` (string) - The unique id of the project the model will be bound to.
++ commitId: `5a73a67e941923efd202c17d` (string) - The unique id of the project commit to use. Defaults to the latest commit of the project.
++ description: `A model of wine quality` (string) - Summary of the changes in the new version.
++ file: `predict.R` (string) - Path to the file containing the model code. Defaults to the file used in the latest version of the model.
++ function: `predictQuality` (string) - Defaults to the function used in the latest version of the model.
++ excludeFiles: (array) - List of file names for the version to exclude. For example:
+
+    ```python
+            ["foo.py", "bar.py", "baz.py"]
+    ```
++ metadata: (object)
+    + createdBy: `5a73a6b86278f5c536008832` (string) - The unique ID of the user who created the model.
+    + created: 3862360832 (number) - The datetime when the model was created.
+    + number: `2` (number) - The version number.
+    + builds: (array) - List of builds for the model version.
+
+## v4 user
++ firstName: `Power` (string) - User's first name.
++ lastName: `User` (string) - User's last name.
++ fullName: `Power User` (string) - User's full name.
++ userName: `poweruser` (string) - User's username.
++ email: `power.user@dominodatalab.com` (string) - User's email address.
++ avatarUrl: `URL` (string) - URL of the user's avatar.
++ id: `5ac42816e4b0e9a0a82bbe8f` (string) - User's unique ID.
++ companyName: `Domino Data Lab` (string) - User's company name.
++ phoneNumber: `555-123-4567` (string) - User's phone number.
+
+## Environment List Item
++ id: `5a73a6906ece7a7aed984654` (string) - The unique ID for the environment.
++ name: `Wine Quality Environment` (string) - The environment name.
++ visibility: `Global` (enum) - One of `Private`, `Organization`, or `Global`.
