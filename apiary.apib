@@ -5,7 +5,7 @@ HOST: https://api.dominodatalab.com
 
 Domino has two types of API:
 
-1. **Model API Endpoints** that serve your code as a low-latency web service. You don't need any API design experience
+1. The **Model API** serves your code as a low-latency web service. You don't need any API design experience
    to turn your Python or R code into a Model API Endpoint.
 2. The **Domino API** that you can use to interact with your project's files and runs.
 
@@ -18,18 +18,20 @@ To authenticate your requests, include your API Key with the header `X-Domino-Ap
 user account page in the Domino application.
 
 
-## Group Model API Endpoints
+# Group Model API
 
 [Model API Endpoints](https://support.dominodatalab.com/hc/en-us/articles/115001488023) allow you to deploy and
 operationalize your models as API endpoints automatically, without any web development knowledge.
 
-### Your model [POST /v1/{username}/{project_name}/endpoint]
+## Model endpoint [/v1/{username}/{project_name}/endpoint]
 
-Your API Endpoint is a wrapper on top of a function in your Domino-hosted code. The arguments to the API are the
+### Run your model [POST]
+
+Your model endpoint is a wrapper on top of a function in your Domino-hosted code. The arguments to the endpoint are the
 arguments to your function; the response from the API includes the return value from your function in the `result`
 object.
 
-[Learn more about API Endpoint and Model Development](https://support.dominodatalab.com/hc/en-us/articles/115001488023)
+[Learn more about model development and API endpoints.](https://support.dominodatalab.com/hc/en-us/articles/115001488023)
 
 + Parameters
 
@@ -44,24 +46,26 @@ object.
 
     + Attributes
 
-        + parameters: 20, 200 (array[string], required) - An array of objects which directly map to the parameters of the function powering your API endpoint.
-
-            For example, if your API endpoint is powered by the following function:
+        + parameters: 20, 200 (array[string], required) -
+        
+            An array of objects which directly map to the parameters of the function
+            powering your API endpoint. For example, if your endpoint is powered
+            by the following function:
 
             ```python
                 def random_number(start, stop):
                   return random.uniform(start, stop)
             ```
-
+            
             You would pass two number objects to `parameters`. For example:
 
             ```
-                {"parameters": [20, 200] }
+                {"parameters": [20, 200]}
             ```
 
     + Body
 
-            {"parameters": [20, 200] }
+            {"parameters": [20, 200]}
 
 + Response 200 (application/json)
 
@@ -73,24 +77,23 @@ object.
 
     + Attributes
 
-        + release (object) - An object of key/value pairs describing the version of your API endpoint that responded to your request.
+        + release (object) - An object describing the version of your API endpoint that responded to your request.
             + commitId: `e1dfab96a6c6014767e9561059224a3153cb6de6` (string) - The commit your API endpoint is bound to.
             + file: `predict.R` (string) - The file your API endpoint is bound to.
             + function: `predictQuality` (string) - The function your API endpoint is bound to.
             + version: `14` (number) - The version of your API that was used.
         + requestId: `NMEOMGVJURWVPOQF` (string) - A unique request ID assigned to your API request.
-        + result (object) - The result of the function you bound to your API Endpoint. Will be either a JSON object/dictionary or array depending on what your function returns.
+        + result (object) - The result of the function you bound to your API Endpoint. Will be either a JSON object/dictionary or an array depending on what your function returns.
             + a_random_number: `103` (number)
 
 
-## Group Project Runs and Files
+# Group Project runs and files
 
-These endpoints allow you to interact with your project's files and runs
+These endpoints allow you to interact with your project's runs and files.
 
+## Project runs [/v1/projects/{username}/{project_name}/runs]
 
-### List of Runs [GET /v1/projects/{username}/{project_name}/runs]
-
-Get a list of runs.
+### Get a list of runs [GET]
 
 + Parameters
 
@@ -109,35 +112,10 @@ Get a list of runs.
 
         + objectType: `list` (string) - The type of object the API returned.
         + uri (string) - The URI that responded to your request.
-        + data (array) - Array of run statuses.
-            - (object) # TODO: DRY this up once Aglio supports MSON Data Structures
-                + id: `57dafe43317467e7b0ef5276` (string) - The unique ID for the run
-                + projectId: `54c17e92e4b0bc49e27d9398` (string) - The ID of the project
-                + number: `5` (number) - The auto-increment number associated with the run
-                + startingUserId: `57a28b28961401f240812caf` (string) - The ID of the user who started the run
-                + queued: `1473969731915`  (number) - Milliseconds epoch time the run was added to the queue
-                + started: `1473969754283` (number) - Milliseconds epoch time the run started executing
-                + completed: `1473969762970` (number) - Milliseconds epoch time the run completed running
-                + status: `Succeeded` (string) - The status of the run
-                + commitId: `1c6e8aa47951e39f9a905f0077af9355c35b712b` (string) - The commit hash of the project used to create the run
-                + executor: `us-west-2:i-007942020ce7baeb5` (string) - The unique ID of the executor (compute node) the run was executed on
-                + outputCommitId: `73fe9481fe635bada713246c3c739beefa424e8c` (string) - The commit hash of the project post-run (look at files with this hash for the results)
-                + title: `Run with great R^2 of 1!` (string) - Title of the run, if it was renamed
-                + isArchived: `false` (boolean) - Boolean denoting if the run was archived (hidden from the web interface)
-                + postProcessedTimestamp: `1473969767822` (number) -  Milliseconds epoch time the run finished processing (this happens after the run has completed and includes saving the results back to the main project repo)
-                + diagnosticStatistics (object) - Object containing information about the run's [Diagnostic Statistics aka dominostats.json](http://support.dominodatalab.com/hc/en-us/articles/204348169-Run-Diagnostic-Statistics)
-                    + isError: `false` (boolean)
-                    + data (array)
-                        - (object)
-                            + key: `R^2` (string):
-                            + value: `1.000`
-                + isCompleted: `true` (boolean) - A boolean to denote if the run has completed or is still run. See `status` for success/failure status.
-                + hardwareTierId: `gpu` (string) - The hardware tier the run exectued on (new in v1.42)
+        + data (array[Run status]) - Array of run statuses.
 
 
-### Start Run [POST /v1/projects/{username}/{project_name}/runs]
-
-Start a run of a given script or command.
+### Start a run [POST]
 
 + Parameters
 
@@ -170,9 +148,9 @@ Start a run of a given script or command.
         + runId: `553af271e4b0364c0f717b24` (string) - The unique ID for the run that was just started.
         + message: `Run for project <username>/<project_name> started. You can view progress here: https://app.dominodatalab.com/<username>/<project_name/runs/553af271e4b0364c0f717b24` (string) - A human-readable message with a full link to view the status of your run.
 
-### Run Status [GET /v1/projects/{username}/{project_name}/runs/{run_id}]
+## Run status [/v1/projects/{username}/{project_name}/runs/{run_id}]
 
-Get the status of a run.
+### Get the status of a run [GET]
 
 + Parameters
 
@@ -188,57 +166,18 @@ Get the status of a run.
 
 + Response 200 (application/json)
 
-    + Attributes
+    + Attributes (Run status)
 
-        + id: `57dafe43317467e7b0ef5276` (string) - The unique ID for the run.
-        + projectId: `54c17e92e4b0bc49e27d9398` (string) - The ID of the project.
-        + number: `5` (number) - The auto-increment number associated with the run.
-        + startingUserId: `57a28b28961401f240812caf` (string) - The ID of the user who started the run.
-        + queued: `1473969731915`  (number) - Milliseconds epoch time the run was added to the queue.
-        + started: `1473969754283` (number) - Milliseconds epoch time the run started executing.
-        + completed: `1473969762970` (number) - Milliseconds epoch time the run completed running.
-        + status: `Succeeded` (enum[string]) - The status of the run.
-            + Members
-              + `Queued` - Waiting to be assigned to an executor. All runs start in this state.
-              + `Scheduled` - Executor assigned, about to begin startup process.
-              + `Preparing` - Getting the executor ready for environment build.
-              + `Building` - Building default environment.
-              + `Pulling` - Pulling the Docker image with project-specific environment.
-              + `Running` - Executing specified project code.
-              + `Serving` - Serving requests via a published port.
-              + `StopRequested` - Stop was requested by the user.
-              + `StopAndDiscardRequested` - User requested to stop and to discard changes
-              + `Stopping` - In the process of being stopped by user request.
-              + `Finishing` - Uploading results.
-              + `Stopped` - Run ended by user request.
-              + `Succeeded` - Run terminated on its own without error after executing requested operations.
-              + `Failed` - Run terminated due to error.
-              + `Error` - Run failed due to system error, not related to project code.
-        + commitId: `1c6e8aa47951e39f9a905f0077af9355c35b712b` (string) - The commit hash of the project used to create the run.
-        + executor: `us-west-2:i-007942020ce7baeb5` (string) - The unique ID of the executor (compute node) the run was executed on.
-        + outputCommitId: `73fe9481fe635bada713246c3c739beefa424e8c` (string) - The commit hash of the project post-run (look at files with this hash for the results).
-        + title: `Run with great R^2 of 1!` (string) - Title of the run, if it was renamed.
-        + isArchived: `false` (boolean) - Boolean denoting if the run was archived (hidden from the web interface).
-        + postProcessedTimestamp: `1473969767822` (number) -  Milliseconds epoch time the run finished processing (this happens after the run has completed and includes saving the results back to the main project repo).
-        + diagnosticStatistics (object) - Object containing information about the run's [Diagnostic Statistics aka dominostats.json](http://support.dominodatalab.com/hc/en-us/articles/204348169-Run-Diagnostic-Statistics).
-            + isError: `false` (boolean)
-            + data (array)
-                - (object)
-                    + key: `R^2` (string):
-                    + value: `1.000`
-        + isCompleted: `true` (boolean) - A boolean to denote if the run has completed or is still run. See `status` for success/failure status.
-        + hardwareTierId: `gpu` (string) - The hardware tier the run exectued on (new in v1.42).
+## Project files [/v1/projects/{username}/{project_name}/files/{commit_id}/{path}]
 
-### List files [GET /v1/projects/{username}/{project_name}/files/{commit_id}/{path}]
-
-Get a list of files in a commit.
+### Get a list of files in a commit [GET]
 
 + Parameters
 
     + username: `nick` (string, required) - The project owner's username.
     + project_name: `winequality` (string, required) - The project name.
-    + commit_id: `8f5622ad68829da47ab9be2660c962a56df6003e` (string, required) - The commit ID of the version of the project you want files for.
-    + path: `/` (string, required) - The path for which you want files for.
+    + commit_id: `8f5622ad68829da47ab9be2660c962a56df6003e` (string, required) - The commit ID of the revision of the project you want files for.
+    + path: `/` (string, required) - The path you want files for.
 
 + Request
 
@@ -248,9 +187,10 @@ Get a list of files in a commit.
 
 + Response 200 (application/json)
 
-### Get a file [GET /v1/projects/{username}/{project_name}/blobs/{blob_id}]
 
-Get the contents of a file from the project.
+## File contents [/v1/projects/{username}/{project_name}/blobs/{blob_id}]
+
+### Get the contents of a file [GET]
 
 + Parameters
 
@@ -266,15 +206,16 @@ Get the contents of a file from the project.
 
 + Response 200
 
-### Upload a file [PUT /v1/projects/{username}/{project_name}/{path}]
 
-Upload a file to your project.
+## File uploads [/v1/projects/{username}/{project_name}/{path}]
+
+### Upload a file to a project [PUT]
 
 + Parameters
 
     + username: `nick` (string, required) - The project owner's username.
     + project_name: `winequality` (string, required) - The project name.
-    + path: `data/randomNumbers.rdata` (string, required) - Where you want the file to be saved. (You can include forward slashes to upload files into folders that exist).
+    + path: `data/randomNumbers.rdata` (string, required) - Where you want the file to be saved. You can include `/` to upload files into directories that exist.
 
 + Request
 
@@ -294,20 +235,20 @@ Upload a file to your project.
             Transfer-Encoding: chunked
 
     + Attributes
-        + path: `data/randomNumbers.rdata` (string, required) - Path within the project your file was saved to.
+        + path: `data/randomNumbers.rdata` (string, required) - Path your file was saved to.
         + lastModified: `1475878612000` (number, required) - Milliseconds epoch time the file was last modified.
-        + size: `32690` (number, required) - The size of the file you just uploaded, in bytes.
-        + key: `5c28ab880e29953e41b91e351f786a833fbf18a5` (string, required) - The blob ID for the file. Used by the 'Get a file' API.
-        + url: `https://app.dominodatalab.com/v1/projects/marks/quick-start/blobs/5c28ab880e29953e41b91e351f786a833fbf18a5` (string, required) - The full URL to the blob (this can be used to re-download the file).
+        + size: `32690` (number, required) - The size of the file you uploaded, in bytes.
+        + key: `5c28ab880e29953e41b91e351f786a833fbf18a5` (string, required) - The blob ID for the file. Used by the `File contents` API.
+        + url: `https://app.dominodatalab.com/v1/projects/marks/quick-start/blobs/5c28ab880e29953e41b91e351f786a833fbf18a5` (string, required) - The full URL to the blob. This can be used to re-download the file.
 
 
-## Group Search
+# Group Search
 
 These endpoints allow you to search for projects, runs, files, and comments.
 
-### Search [GET /v1/search{?query,area}]
+## Domino object search [/v1/search{?query,area}]
 
-Execute a search.
+### Execute a search [GET]
 
 + Parameters
     + query: `shiny` (string, required) - The phrase to search for.
@@ -322,13 +263,13 @@ Execute a search.
 + Response 200 (application/json)
 
 
-## Group Environments
+# Group Environments
 
 These endpoints allow you to interact with your environments.
 
-### Get environments [GET /v1/environments]
+## Environments [/v1/environments]
 
-Get a list of all v2 environments.
+### Get a list of v2 environments [GET]
 
 + Request
 
@@ -341,19 +282,21 @@ Get a list of all v2 environments.
     + Attributes
 
         + objectType: `list` (string) - The type of object the API returned.
-        + data (array) - Array of environments.
-            - (Environment List Item)
+        + data (array[Environment list item]) - Array of environments.
 
 
-## Group Models - Domino 2.5+
+# Group Models
 
-**These are beta endpoints. They will not have long term support beyond Q3 2018.**<br><br>
-These endpoints are only available in Domino 2.5+. These endpoints allow you to interact with your project's models.
+**These are beta endpoints. They may change in future versions of Domino.**<br>
+**These endpoints are only available in Domino 2.5+.**<br><br>
+These endpoints allow you to interact with your project's models.
 
-### Get models [GET /v1/projects/{username}/{project_name}/models]
+## Project models [/v1/projects/{username}/{project_name}/models]
 
-**This is a beta endpoint. This specification will not have long term support beyond Q3 2018.**<br><br>
-Get a list of models published by a project.
+### Get a list of models published by a project [GET]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**
 
 + Parameters
     + username: `nick` (string, required) The project owner's username.
@@ -373,10 +316,12 @@ Get a list of models published by a project.
         + data (array) - Array of models.
             - (Model Base)
 
-### Publish a model [POST /v1/models]
+## Model publishing [/v1/models]
 
-**This is a beta endpoint. This specification will not have long term support beyond Q3 2018.**<br><br>
-Publish a new model.
+### Publish a new model [POST]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**
 
 + Request
 
@@ -391,10 +336,12 @@ Publish a new model.
     + Attributes (Model Response)
 
 
-### Get model versions [GET /v1/models/{model_id}/versions]
+## Model versions [/v1/models/{model_id}/versions]
 
-**This is a beta endpoint. This specification will not have long term support beyond Q3 2018.**<br><br>
-Get the latest versions of a model.
+### Get the latest versions of a model [GET]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**
 
 + Parameters
 
@@ -409,13 +356,12 @@ Get the latest versions of a model.
 + Response 200 (application/json)
 
     + Attributes
-        + data (array) - Array of model versions.
-            - (Model Version List Item)
+        + data (array[Model Version List Item])
 
-### Publish a model version [POST /v1/models/{model_id}/versions]
+### Publish a new model version [POST]
 
-**This is a beta endpoint. This specification will not have long term support beyond Q3 2018.**<br><br>
-Publish a new model version.
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**
 
 + Parameters
 
@@ -434,28 +380,18 @@ Publish a new model version.
     + Attributes (Model Version Response)
 
 
+# Group Users v4
 
+**These are beta endpoints. They may change in future versions of Domino.**<br>
+**These endpoints are only available in Domino 2.8+.**<br><br>
+These endpoints provide information about users in your deployment.
 
+## Query users [/v4/users{?userId,username,query}]
 
+### Get a list of users [GET]
 
-
-
-
-
-# Group Users v4 - Domino 2.8+
-
-**These are beta endpoints. They may change in future versions of Domino.**<br><br>
-
-These endpoints are only available in Domino 2.8+. These endpoints provide information about the users in a Domino
-deployment.
-
-### Get users [GET /v4/users{?userId,username,query}]
-
-**This is a beta endpoint. It may change in future versions of Domino.**<br><br>
-Any user can use this endpoint to retrieve a list of users in their Domino organization. Admin users will see a list of
-all users in the deployment.<br><br>
-
-**The response will be an array of user objects.**
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**
 
 + Parameters
 
@@ -471,20 +407,15 @@ all users in the deployment.<br><br>
 
 + Response 200 (application/json)
 
-    + Attributes (array)
-
-        + (v4 user)
-        + (v4 user)
-          + firstName: Another
-          + lastName: User
-          + fullName: Another User
-          + email: another.user@dominodatalab.com
+    + Attributes (array[v4 user])
 
 
-### Get current user [GET /v4/users/self]
+## Self [/v4/users/self]
 
-**This is a beta endpoint. It may change in future versions of Domino.**<br><br>
-Retrieves the user object that corresponds to the provided API key.
+### Get current user [GET]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**
 
 + Request
 
@@ -497,6 +428,144 @@ Retrieves the user object that corresponds to the provided API key.
     + Attributes (v4 user)
 
 
+# Group Organizations v4
+
+**These are beta endpoints. They may change in future versions of Domino.**<br>
+**These endpoints are only available in Domino 2.8+.**<br><br>
+These endpoints allow you interact with
+[organizations](https://support.dominodatalab.com/hc/en-us/articles/204857715) in
+your deployment.
+
+## All organizations [/v4/organizations{?name}]
+
+### Get a list of organizations [GET]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+**This endpoint requires admin permissions.**
+
++ Parameters
+
+    + name: `goodOrg` (optional) - Optional, returns only the organization with the specified name.
+   
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (array[Organization])
+
+
+## Create organization [/v4/organizations]
+
+### Create a new organization [POST]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**
+
++ Request
+
+    + Attributes
+    
+      + name: `newOrg` - Name of new organization.
+      + email: `domino@newOrg.suffix` - Email address for managing the organization in Domino.
+      + members (array[Organization member])
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Body
+    
+                {
+                  "name": "string",
+                  "email": "string",
+                  "members": [
+                    {
+                      "id": "string",
+                      "role": "Member"
+                    }
+                  ]
+                }
+
++ Response 200 (application/json)
+
+    + Attributes (Organization)
+    
+      + name: `newOrg` (string)
+
+
+## My organizations [/v4/organizations/self{?name}]
+
+### Get a list of my organizations [GET]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+
++ Parameters
+
+    + name: `goodOrg` (optional) - Optional, returns only the organization with the specified name.
+   
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (array[Organization])
+
+
+## Organizations by ID [/v4/organizations/{orgId}]
+
+### Get organization by ID [GET]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+
++ Parameters
+
+    + orgId: `5a73a6906ece7a7aed984654` (required) - Identifier of organization to get.
+   
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (Organization)
+
+
+## Organization members [/v4/organizations/{orgId}/members]
+
+### Add or remove members [PUT]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+
++ Parameters
+
+    + orgId: `5a73a6906ece7a7aed984654` (required) - Identifier of organization to modify members of.
+   
++ Request
+
+    + Attributes
+    
+      + members (array[Organization member]) - Array of objects representing members to add or remove.
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (Organization)
 
 
 
@@ -507,18 +576,470 @@ Retrieves the user object that corresponds to the provided API key.
 
 
 
+# Group Projects v4
+
+**These are beta endpoints. They may change in future versions of Domino.**<br>
+**These endpoints are only available in Domino 2.8+.**<br><br>
+These endpoints allow you interact with your
+[Domino projects](https://support.dominodatalab.com/hc/en-us/articles/360001055303).
+
+## Get projects [/v4/projects{?name,ownerId}]
+
+### Get a list of user's projects [GET]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+
++ Parameters
+
+    + name: `myProject` (optional) - Optional, returns only the project with the specified name.
+    + ownerId: `goodUser` (optional) - Optional, returns projects belonging to specified owner.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (array[v4 project])
 
 
+## Create project [/v4/projects]
+
+### Create a new project [POST]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**
+
++ Request
+
+    + Attributes (v4 new project)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+            
+    + Body
+    
+                {
+                  "name": "string",
+                  "description": "string",
+                  "visibility": "Public",
+                  "ownerId": "string",
+                  "collaborators": [
+                    {
+                      "collaboratorId": "string",
+                      "projectRole": "Contributor"
+                    }
+                  ]
+                }
+
++ Response 200 (application/json)
+
+    + Attributes (v4 new project)
 
 
+## Project fork [/v4/projects/{projectToForkId}/fork]
+
+### Fork a project [POST]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+
++ Parameters
+
+    + projectToForkId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fork.
+   
++ Request
+
+    + Attributes (v4 new project)
+    
+      + name: `forkedProject` - Name of destination project to fork into.
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Body
+    
+                {
+                  "name": "string",
+                  "description": "string",
+                  "visibility": "Public",
+                  "ownerId": "string",
+                  "collaborators": [
+                    {
+                      "collaboratorId": "string",
+                      "projectRole": "Contributor"
+                    }
+                  ]
+                }
+
++ Response 200 (application/json)
+
+    + Attributes (v4 new project)
+    
+      + name: `forkedProject` - Name of destination project to fork into.
 
 
+## Project copy [/v4/projects/{projectToCopyId}/copy]
+
+### Copy a project [POST]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+
++ Parameters
+
+    + projectToCopyId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to copy.
+   
++ Request
+
+    + Attributes (v4 new project)
+    
+      + name: `copiedProject` - Name of destination project to copy into.
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Body
+    
+                {
+                  "name": "string",
+                  "description": "string",
+                  "visibility": "Public",
+                  "ownerId": "string",
+                  "collaborators": [
+                    {
+                      "collaboratorId": "string",
+                      "projectRole": "Contributor"
+                    }
+                  ]
+                }
+
++ Response 200 (application/json)
+
+    + Attributes (v4 new project)
+    
+      + name: `copiedProject` - Name of destination project to copy into.
 
 
+## Project updates [/v4/projects/{projectId}]
+
+### Get project summary [GET]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch summary for.
+   
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (v4 project)
+
+### Update project description and visibility [PATCH]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to update description and visibility for.
+   
++ Request
+
+    + Attributes
+    
+      + description: `Doing new data science.` (string) - New description to apply to project.
+      + visibility: `Public` (enum[string]) - Project visibility setting.
+         + Members
+           + `Public`
+           + `Searchable`
+           + `Private`
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Body
+    
+                {
+                  "description": "string",
+                  "visibility": "Public"
+                }
+
++ Response 200 (application/json)
 
 
+## Project tags [/v4/projects/{projectId}/tags]
+
+### Add tags to project [POST]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to add tags to.
+   
++ Request
+
+    + Attributes
+    
+      + tagnames: `tag1`, `tag2` (array[string]) - Tag names to apply.
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+    
+    + Body
+    
+                {
+                      "tagNames": [
+                        "string"
+                      ]
+                }
+
++ Response 200 (application/json)
+
+    + Attributes
+    
+      + id: `5a73a6906ece7a7aed984654` (string) - ID of the tag.
+      + name: `tag1` (string) - Name of tag applied.
+
+    
+## Delete tags [/v4/projects/{projectId}/tags/{tagId}]
+
+### Remove a tag from a project [DELETE]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to remove a tag from.
+    + tagId: `6fn891abd7306ece7a7aed984654` (string, required) - ID of the tag to remove.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
 
 
+## Project settings [/v4/projects/{projectId}/settings]
+
+### Get settings for a project [GET]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch settings for.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+    
+      + defaultEnvironmentId: `n67shdg3ece7a7aed984654` (string) - ID of the project's default environment
+
+
+### Update project settings [PUT]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch settings for.
+
++ Request
+
+    + Attributes
+    
+      + defaultEnvironmentId: `n67shdg3ece7a7aed984654` (string) - ID of the environment to use as project default
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Body
+
+                {
+                  "defaultEnvironmentId": "string"
+                }
+
++ Response 200 (application/json)
+
+
+## Project activity [/v4/projects/{projectId}/activities{?afterMillis,beforeMillis,limit}]
+
+### Get activity records for a project [GET]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch activity for.
+    + afterMillis: `100000` (number, optional)
+    + beforeMillis: `100000` (number, optional)
+    + limit: `10` (number, optional)
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (array[v4 project activity record])
+
+
+## Project experiments [/v4/projects/{projectId}/experiments{?createdAfterExperiment,createdBeforeExperiment,limit}]
+
+### Get experiments for a project [GET]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch experiments for.
+    + createdAfterExperiment: `string` (string, optional)
+    + createdBeforeExperiment: `string` (string, optional)
+    + limit: `0` (number, optional)
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (array[v4 experiment])
+
+
+## Project hardware [/v4/projects/{projectId}/hardwareTiers]
+
+### Get hardware tiers for a project [GET]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch hardware tiers for.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (array[v4 hardware tier with capacity])
+
+
+## Project collaborators [/v4/projects/{projectId}/collaborators]
+
+### Add collaborator to project [POST]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to add a collaborator to.
+
++ Request
+
+    + Attributes
+    
+      + collaboratorId: `string` (string) - ID of the user to add as a collaborator.
+      + projectRole: `Contributor` (enum[string]) - Role permissions to grant the collaborator.
+          + Members
+              + `Contributor`
+              + `LauncherUser`
+              + `ResultsConsumer`
+              + `ProjectImporter`
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+    
+    + Body
+
+                {
+                  "collaboratorId": "string",
+                  "projectRole": "Contributor"
+                }
+
++ Response 200 (application/json)
+
+    + Attributes
+    
+      + collaboratorId: `string` (string) - ID of the user added.
+      + projectRole: `Contributor` (enum[string]) - Role permissions granted.
+          + Members
+              + `Contributor`
+              + `LauncherUser`
+              + `ResultsConsumer`
+              + `ProjectImporter`
+
+
+## Remove collaborators [/projects/{projectId}/collaborators/{collaboratorId}]
+
+### Remove collaborator from project [DELETE]
+
+**This is a beta endpoint.**<br>
+**Its specification may change in future versions of Domino.**<br><br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to remove a collaborator from.
+    + collaboratorId: `5a73a6906ece7a7aed984654` (string, required) - ID of the collaborator to remove.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+    
+      + collaboratorId: `string` (string) - ID of the user removed.
+      + projectRole: `Contributor` (enum[string]) - Role permissions removed from user.
+          + Members
+              + `Contributor`
+              + `LauncherUser`
+              + `ResultsConsumer`
+              + `ProjectImporter`
 
 # Data Structures
 
@@ -541,15 +1062,15 @@ Retrieves the user object that corresponds to the provided API key.
 + description: `A model of wine quality` (string) - Summary of the changes in the new version.
 + isArchived: `false` (boolean) - Status of model.
 + replicas: 2 (number) - The number of model instances to start for any model version.
-+ metadata: (object) - Object containing **createdBy** user ID and **created** datetime properties.
++ metadata (object) - Object containing **createdBy** user ID and **created** datetime properties.
     + createdBy: `5a73a6b86278f5c536008832` (string) - The unique ID of the user who created the model.
     + created: 78655832 (number) - The datetime when the model was created.
-+ collaboratorSettings: (object) - Object containing **UserRef** and **EveryoneRef** properties.
++ collaboratorSettings (object) - Object containing **UserRef** and **EveryoneRef** properties.
     + UserRef: `Owner` (string)
     + EveryoneRef: `Hidden` (string)
-+ accessConfiguration: (object) - Object containing **isPublic** visibility setting and **accessTokens**.
++ accessConfiguration (object) - Object containing **isPublic** visibility setting and **accessTokens**.
     + isPublic: false (boolean)
-    + accessTokens: (array) - List of access tokens for the model.
+    + accessTokens (array) - List of access tokens for the model.
 
 ## Model Create (Create Base)
 + name: Wine Quality Model (string) - (required) The name of the new model.
@@ -565,23 +1086,23 @@ Retrieves the user object that corresponds to the provided API key.
 
 ## Model Version List Item
 + _id: `5a73a6b86278f5c536008832` (string) - The unique ID of the model version.
-+ modelId: (object)
++ modelId (object)
     + value: `5a73a72189c5b2635de7ac5d` (string) - The unique id of the model.
 + projectId: `5a73a66cd4632584f7b0ed8d` (string) - The unique id of the project the model will be bound to.
 + commitId: `5a73a67e941923efd202c17d` (string) - The unique id of the project commit to use. Defaults to the latest commit of the project.
 + description: `A model of wine quality` (string) - Summary of the changes in the new version.
 + file: `predict.R` (string) - Path to the file containing the model code. Defaults to the file used in the latest version of the model.
 + function: `predictQuality` (string) - Defaults to the function used in the latest version of the model.
-+ excludeFiles: (array) - List of file names for the version to exclude. For example:
++ excludeFiles (array) - List of file names for the version to exclude. For example:
 
     ```python
             ["foo.py", "bar.py", "baz.py"]
     ```
-+ metadata: (object)
++ metadata (object)
     + createdBy: `5a73a6b86278f5c536008832` (string) - The unique ID of the user who created the model.
     + created: 3862360832 (number) - The datetime when the model was created.
     + number: `2` (number) - The version number.
-    + builds: (array) - List of builds for the model version.
+    + builds (array) - List of builds for the model version.
 
 ## v4 user
 + firstName: `Power` (string) - User's first name.
@@ -594,7 +1115,225 @@ Retrieves the user object that corresponds to the provided API key.
 + companyName: `Domino Data Lab` (string) - User's company name.
 + phoneNumber: `555-123-4567` (string) - User's phone number.
 
-## Environment List Item
+## Run status
++ id: `57dafe43317467e7b0ef5276` (string) - The unique ID for the run.
++ projectId: `54c17e92e4b0bc49e27d9398` (string) - The ID of the project.
++ number: `5` (number) - The auto-increment number associated with the run.
++ startingUserId: `57a28b28961401f240812caf` (string) - The ID of the user who started the run.
++ queued: `1473969731915`  (number) - Milliseconds epoch time the run was added to the queue.
++ started: `1473969754283` (number) - Milliseconds epoch time the run started executing.
++ completed: `1473969762970` (number) - Milliseconds epoch time the run completed running.
++ status: `Succeeded` (enum[string]) - The status of the run.
+    + Members
+        + `Queued` - Waiting to be assigned to an executor. All runs start in this state.
+        + `Scheduled` - Executor assigned, about to begin startup process.
+        + `Preparing` - Getting the executor ready for environment build.
+        + `Building` - Building default environment.
+        + `Pulling` - Pulling the Docker image with project-specific environment.
+        + `Running` - Executing specified project code.
+        + `Serving` - Serving requests via a published port.
+        + `StopRequested` - Stop was requested by the user.
+        + `StopAndDiscardRequested` - User requested to stop and to discard changes
+        + `Stopping` - In the process of being stopped by user request.
+        + `Finishing` - Uploading results.
+        + `Stopped` - Run ended by user request.
+        + `Succeeded` - Run terminated on its own without error after executing requested operations.
+        + `Failed` - Run terminated due to error.
+        + `Error` - Run failed due to system error, not related to project code.
++ commitId: `1c6e8aa47951e39f9a905f0077af9355c35b712b` (string) - The commit hash of the project used to create the run.
++ executor: `us-west-2:i-007942020ce7baeb5` (string) - The unique ID of the executor (compute node) the run was executed on.
++ outputCommitId: `73fe9481fe635bada713246c3c739beefa424e8c` (string) - The commit hash of the project post-run (look at files with this hash for the results).
++ title: `Run with great R^2 of 1!` (string) - Title of the run, if it was renamed.
++ isArchived: `false` (boolean) - Boolean denoting if the run was archived (hidden from the web interface).
++ postProcessedTimestamp: `1473969767822` (number) -  Milliseconds epoch time the run finished processing (this happens after the run has completed and includes saving the results back to the main project repo).
++ diagnosticStatistics (object) - Object containing information about the run's [diagnostic statistics from dominostats.json](http://support.dominodatalab.com/hc/en-us/articles/204348169-Run-Diagnostic-Statistics).
+    + isError: `false` (boolean)
+    + data (array)
+        - (object)
+            + key: `R^2` (string):
+            + value: `1.000`
++ isCompleted: `true` (boolean) - A boolean to denote if the run has completed or is still run. See `status` for success/failure status.
++ hardwareTierId: `gpu` (string) - The hardware tier the run exectued on
+
+## Environment list item
 + id: `5a73a6906ece7a7aed984654` (string) - The unique ID for the environment.
 + name: `Wine Quality Environment` (string) - The environment name.
 + visibility: `Global` (enum) - One of `Private`, `Organization`, or `Global`.
+
+## Organization
++ id: `5a73a6906ece7a7aed984654` (string) - Organization unique identifier.
++ name: `goodOrg` (string) - Organization name.
++ members (array[Organization member])
++ defaultEnvironment: `orgEnvironment 3` (string) - Default v2 environment for the organization.
++ legacyDefaultEnvironment: `orgEnvironment 1` (string) - Default legacy environment for the organization.
+
+## Organization member
++ id: `5ac42816e4b0e9a0a82bbe8f` (string) - User ID.
++ role: `Member` (enum[string])
+  + Members
+    + `Member` - Organization member.
+    + `Admin` - Organization admin.
+
+## v4 project
++ id: `5ac42816e4b0e9a0a82bbe8f` (string) - Project ID.
++ name: `goodProject` (string) - Project name.
++ description: `Doing data science.` (string) - Project description.
++ visibility: `Public` (enum[string]) - Project visibility setting.
+  + Members
+    + `Public`
+    + `Searchable`
+    + `Private`
++ ownerId: `5ac42816e4b0e9a0a82bbe8f` (string) - ID of project owner.
++ collaboratorIds (array[string]) - IDs of collaborators.
++ collaborators (array[v4 project collaborator]) - Objects representing collaborators.
++ tags (array[v4 project tag]) - Objects representing project tags.
+
+## v4 new project
++ name: `goodProject` (string, required) - Project name.
++ description: `Doing data science.` (string, required) - Project description.
++ visibility: `Public` (enum[string], required) - Project visibility setting.
+  + Members
+    + `Public`
+    + `Searchable`
+    + `Private`
++ ownerId: `5ac42816e4b0e9a0a82bbe8f` (string, required) - ID of project owner.
++ collaborators (array[v4 project collaborator], required) - Objects representing collaborators.
+
+## v4 project collaborator
++ collaboratorId: `5ac42816e4b0e9a0a82bbe8f` (string) - User ID of collaborator.
++ projectRole (enum[string]) - Role permissions assigned to collaborator.
+  + Members
+    + `Contributor`
+    + `LauncherUser`
+    + `ResultsConsumer`
+    + `ProjectImporter`
+
+## v4 project tag
++ id: `5ac42816e4b0e9a0a82bbe8f` (string) - Tag ID.
++ name: `descriptiveTag` (string) - Tag name.
+
+## v4 project activity record
++ person (object)
+  + firstName: `power` (string) - Person's first name.
+  + lastName: `user` (string) - Person's last name.
+  + fullName: `power user` (string) - Person's full name.
+  + userName: `powerUser` (string) - Person's username.
+  + email: `poweruser@dominodatalab.com` (string) - Email associated with person's Domino account.
+  + companyName: `Domino Data Lab` (string) - Person's company name.
+  + phoneNumber: `555-123-4567` (string) - Person's phone number.
+  + avatarUrl: `URL` (string) - URL of person's avatar.
+  + id: `5ac42816e4b0e9a0a82bbe8f` (string) - Person's Domino user ID.
++ timestamp: `0` (number) - Time activity occurred.
++ whatHappened: `FILES_CHANGED` (enum[string]) - What happened?
+  + Members
+    + `FILES_CHANGED`
+    + `EXPERIMENT_STARTED`
+    + `EXPERIMENT_SUCCEEDED`
+    + `EXPERIMENT_FAILED`
+    + `SESSION_STARTED`
+    + `SESSION_FINISHED`
+    + `SESSION_FAILED`
++ indicator: `SUCCESS` (enum[string]) - Record outcome category.
+  + Members
+    + `SUCCESS`
+    + `FAILURE`
+    + `INFO`
++ effects (array[v4 project activity effect])
++ context (array[v4 project activity context])
++ id: `5ac42816e4b0e9a0a82bbe8f` (string) - Activity record ID.
+
+## v4 project activity effect
++ effectType: `PROJECT` (enum[string]) - Type of effect.
+  + Members
+    + `PROJECT`
+    + `EXPERIMENT`
+    + `SESSION`
+    + `ADDED_OR_MODIFIED_FILE`
+    + `DELETED_FILE`
+    + `COMMIT`
++ name: `effectName` (string) - Name of effect.
++ identifiedBy: `identifier` (string) - Name of identifier.
+
+## v4 project activity context
++ contextType: `PROJECT` (string) - Type of context.
++ name: `contextName` (string) - Name of context.
++ identifiedBy: `identifier` (string) - Name of identifier.
+
+## v4 experiment
++ inputs (object)
+  + commandToRun (v4 experiment commands)
+  + title: `string` (string)
+  + projectId: `string` (string)
+  + initialization (v4 experiment initialization)
+  + experimentEnvironment (v4 experiment environment)
+  + hardwareTierId: `string` (string)
++ execution (object)
+  + executionId: `string` (string)
+  + experimentExecutionTechnology: `string` (string)
++ states (array[v4 experiment state])
++ outputs (object)
+  + results (v4 experiment output results)
+  + logs: `string` (string)
+  + dominoStats: `collection.immutable.map[string,string]` (string)
++ groups (array[v4 experiment group])
++ createdAt: `0` (number)
++ id: `string` (string)
+
+## v4 experiment initialization
++ commitId: `string` (string)
+
+## v4 experiment commands
++ args (array[string])
+
+## v4 experiment output results
++ commitMessage: `string` (string)
++ outputCommitId: `string` (string)
+
+## v4 experiment environment
++ environmentId: `string` (string)
++ environmentRevisionId: `string` (string)
+
+## v4 experiment state
++ status (enum[string])
+  + Members
+    + `IN_PROGRESS`
+    + `SUCCESSFUL`
+    + `FAILURE`
++ message: `string` (string)
++ recordedAt: `0` (number)
+
+## v4 experiment group
++ name: `string` (string)
++ projectId: `string` (string)
+
+## v4 hardware tier with capacity
++ hardwareTier (v4 hardware tier)
++ capacity (v4 hardware capacity)
+
+## v4 hardware tier
++ _id: `string` (string)
++ id: `string` (string)
++ name: `string` (string)
++ cores: `0` (number)
++ memory: `0` (number)
++ runMemoryLimit (v4 run memory limit)
++ isDefault: true (boolean)
++ isAllowedDuringTrial: true (boolean)
++ isVisible: true (boolean)
++ isGlobal: false (boolean)
++ centsPerMinute: `0` (number)
++ isFree: false (boolean)
+
+## v4 run memory limit
++ memoryLimitMegabytes: `0` (number)
++ memorySwapLimitMegabytes: `0` (number)
+
+## v4 hardware capacity
++ currentNumberOfExecutors: `0` (number)
++ maximumNumberOfExecutors: `0` (number)
++ numberOfCurrentlyExecutingRuns: `0` (number)
++ numberOfQueuedRuns: `0` (number)
++ maximumConcurrentRuns: `0` (number)
++ availableCapacityWithoutLaunching: `0` (number)
++ maximumAvailableCapacity: `0` (number)
++ capacityLevel (object)
