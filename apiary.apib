@@ -7,7 +7,7 @@ Domino has two types of API:
 
 1. The **Model API** serves your code as a low-latency web service. You don't need any API design experience
    to turn your Python or R code into a Model API Endpoint.
-2. The **Domino API** that you can use to interact with your project's files and runs.
+2. The **Domino API** that you can use to operate and administer Domino services.
 
 
 For both types of API, the base URL will depend on your deployment of Domino. Replace `https://api.dominodatalab.com` in
@@ -47,7 +47,7 @@ object.
     + Attributes
 
         + parameters: 20, 200 (array[string], required) -
-        
+
             An array of objects which directly map to the parameters of the function
             powering your API endpoint. For example, if your endpoint is powered
             by the following function:
@@ -56,7 +56,7 @@ object.
                 def random_number(start, stop):
                   return random.uniform(start, stop)
             ```
-            
+
             You would pass two number objects to `parameters`. For example:
 
             ```
@@ -447,7 +447,7 @@ your deployment.
 + Parameters
 
     + name: `goodOrg` (optional) - Optional, returns only the organization with the specified name.
-   
+
 + Request
 
     + Headers
@@ -469,7 +469,7 @@ your deployment.
 + Request
 
     + Attributes
-    
+
       + name: `newOrg` - Name of new organization.
       + email: `domino@newOrg.suffix` - Email address for managing the organization in Domino.
       + members (array[Organization member])
@@ -479,7 +479,7 @@ your deployment.
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
 
     + Body
-    
+
                 {
                   "name": "string",
                   "email": "string",
@@ -494,7 +494,7 @@ your deployment.
 + Response 200 (application/json)
 
     + Attributes (Organization)
-    
+
       + name: `newOrg` (string)
 
 
@@ -508,7 +508,7 @@ your deployment.
 + Parameters
 
     + name: `goodOrg` (optional) - Optional, returns only the organization with the specified name.
-   
+
 + Request
 
     + Headers
@@ -530,7 +530,7 @@ your deployment.
 + Parameters
 
     + orgId: `5a73a6906ece7a7aed984654` (required) - Identifier of organization to get.
-   
+
 + Request
 
     + Headers
@@ -552,11 +552,11 @@ your deployment.
 + Parameters
 
     + orgId: `5a73a6906ece7a7aed984654` (required) - Identifier of organization to modify members of.
-   
+
 + Request
 
     + Attributes
-    
+
       + members (array[Organization member]) - Array of objects representing members to add or remove.
 
     + Headers
@@ -620,9 +620,9 @@ These endpoints allow you interact with your
     + Headers
 
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
-            
+
     + Body
-    
+
                 {
                   "name": "string",
                   "description": "string",
@@ -651,11 +651,11 @@ These endpoints allow you interact with your
 + Parameters
 
     + projectToForkId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fork.
-   
+
 + Request
 
     + Attributes (v4 new project)
-    
+
       + name: `forkedProject` - Name of destination project to fork into.
 
     + Headers
@@ -663,7 +663,7 @@ These endpoints allow you interact with your
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
 
     + Body
-    
+
                 {
                   "name": "string",
                   "description": "string",
@@ -680,7 +680,7 @@ These endpoints allow you interact with your
 + Response 200 (application/json)
 
     + Attributes (v4 new project)
-    
+
       + name: `forkedProject` - Name of destination project to fork into.
 
 
@@ -694,11 +694,11 @@ These endpoints allow you interact with your
 + Parameters
 
     + projectToCopyId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to copy.
-   
+
 + Request
 
     + Attributes (v4 new project)
-    
+
       + name: `copiedProject` - Name of destination project to copy into.
 
     + Headers
@@ -706,7 +706,7 @@ These endpoints allow you interact with your
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
 
     + Body
-    
+
                 {
                   "name": "string",
                   "description": "string",
@@ -723,7 +723,7 @@ These endpoints allow you interact with your
 + Response 200 (application/json)
 
     + Attributes (v4 new project)
-    
+
       + name: `copiedProject` - Name of destination project to copy into.
 
 
@@ -737,7 +737,7 @@ These endpoints allow you interact with your
 + Parameters
 
     + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch summary for.
-   
+
 + Request
 
     + Headers
@@ -756,11 +756,11 @@ These endpoints allow you interact with your
 + Parameters
 
     + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to update description and visibility for.
-   
+
 + Request
 
     + Attributes
-    
+
       + description: `Doing new data science.` (string) - New description to apply to project.
       + visibility: `Public` (enum[string]) - Project visibility setting.
          + Members
@@ -773,7 +773,7 @@ These endpoints allow you interact with your
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
 
     + Body
-    
+
                 {
                   "description": "string",
                   "visibility": "Public"
@@ -792,19 +792,19 @@ These endpoints allow you interact with your
 + Parameters
 
     + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to add tags to.
-   
+
 + Request
 
     + Attributes
-    
+
       + tagnames: `tag1`, `tag2` (array[string]) - Tag names to apply.
 
     + Headers
 
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
-    
+
     + Body
-    
+
                 {
                       "tagNames": [
                         "string"
@@ -814,11 +814,11 @@ These endpoints allow you interact with your
 + Response 200 (application/json)
 
     + Attributes
-    
+
       + id: `5a73a6906ece7a7aed984654` (string) - ID of the tag.
       + name: `tag1` (string) - Name of tag applied.
 
-    
+
 ## Delete tags [/v4/projects/{projectId}/tags/{tagId}]
 
 ### Remove a tag from a project [DELETE]
@@ -860,7 +860,7 @@ These endpoints allow you interact with your
 + Response 200 (application/json)
 
     + Attributes
-    
+
       + defaultEnvironmentId: `n67shdg3ece7a7aed984654` (string) - ID of the project's default environment
 
 
@@ -876,7 +876,7 @@ These endpoints allow you interact with your
 + Request
 
     + Attributes
-    
+
       + defaultEnvironmentId: `n67shdg3ece7a7aed984654` (string) - ID of the environment to use as project default
 
     + Headers
@@ -978,7 +978,7 @@ These endpoints allow you interact with your
 + Request
 
     + Attributes
-    
+
       + collaboratorId: `string` (string) - ID of the user to add as a collaborator.
       + projectRole: `Contributor` (enum[string]) - Role permissions to grant the collaborator.
           + Members
@@ -990,7 +990,7 @@ These endpoints allow you interact with your
     + Headers
 
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
-    
+
     + Body
 
                 {
@@ -1001,7 +1001,7 @@ These endpoints allow you interact with your
 + Response 200 (application/json)
 
     + Attributes
-    
+
       + collaboratorId: `string` (string) - ID of the user added.
       + projectRole: `Contributor` (enum[string]) - Role permissions granted.
           + Members
@@ -1032,7 +1032,7 @@ These endpoints allow you interact with your
 + Response 200 (application/json)
 
     + Attributes
-    
+
       + collaboratorId: `string` (string) - ID of the user removed.
       + projectRole: `Contributor` (enum[string]) - Role permissions removed from user.
           + Members
