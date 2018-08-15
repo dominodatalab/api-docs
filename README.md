@@ -8,16 +8,3 @@ Need help? Email us at support@dominodatalab.com
 
 * [Python](https://github.com/dominodatalab/python-domino)
 * [R](https://github.com/dominodatalab/r-package)
-
-## Build Instructions
-
-### Input:
-* `api_blueprint.apib` is our API documented using the [API Blueprint](https://apiblueprint.org) standard
-
-### Output from running `convert.sh`:
-* `index.html` are our human-readable web documentation converted from the API Blueprint file using [aglio](https://github.com/danielgtaylor/aglio)
-* `swagger_2.0.json` is a Swagger 2.0 JSON version converted by [apib2swagger](https://github.com/kminami/apib2swagger)
-
-### Dependencies
-
-- `npm install -g apib2swagger aglio api-spec-converter`
