@@ -1,90 +1,20 @@
 FORMAT: 1A
 HOST: https://api.dominodatalab.com
 
-# Domino Data Lab API
+# Domino Data Lab APIs
 
-Domino has two types of API:
+Domino has two types of APIs:
 
-1. The **Model API** serves your code as a low-latency web service. You don't need any API design experience
-   to turn your Python or R code into a Model API Endpoint.
-2. The **Domino API** that you can use to operate and administer Domino services.
+1. **Domino APIs** that you can use to operate and administer Domino services. These APIs are documented on this page.
+2. **Model APIs** serves your code as a low-latency web service. You don't need any API design experience
+   to turn your Python or R code into a Model API Endpoint. [Learn more about Model APIs here.](https://support.dominodatalab.com/hc/en-us/articles/115001488023-Model-Manager-Overview-)
 
-
-For both types of API, the base URL will depend on your deployment of Domino. Replace `https://api.dominodatalab.com` in
+Please note: 
+* The base URL will depend on your deployment of Domino. Replace `https://api.dominodatalab.com` in
 the examples below with the URL of your Domino deployment. This will be the same as the URL you visit in your browser
 when you use the Domino application.
-
-To authenticate your requests, include your API Key with the header `X-Domino-Api-Key`. You can find this key on your
+* To authenticate your requests, include your API Key with the header `X-Domino-Api-Key`. You can find this key on your
 user account page in the Domino application.
-
-
-# Group Model API
-
-[Model API Endpoints](https://support.dominodatalab.com/hc/en-us/articles/115001488023) allow you to deploy and
-operationalize your models as API endpoints automatically, without any web development knowledge.
-
-## Model endpoint [/v1/{username}/{project_name}/endpoint]
-
-### Run your model [POST]
-
-Your model endpoint is a wrapper on top of a function in your Domino-hosted code. The arguments to the endpoint are the
-arguments to your function; the response from the API includes the return value from your function in the `result`
-object.
-
-[Learn more about model development and API endpoints.](https://support.dominodatalab.com/hc/en-us/articles/115001488023)
-
-+ Parameters
-
-    + username: `nick` (string, required) - The project owner's username.
-    + project_name: `winequality` (string, required) - The project name.
-
-+ Request (application/json)
-
-    + Headers
-
-            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
-
-    + Attributes
-
-        + parameters: 20, 200 (array[string], required) -
-
-            An array of objects which directly map to the parameters of the function
-            powering your API endpoint. For example, if your endpoint is powered
-            by the following function:
-
-            ```python
-                def random_number(start, stop):
-                  return random.uniform(start, stop)
-            ```
-
-            You would pass two number objects to `parameters`. For example:
-
-            ```
-                {"parameters": [20, 200]}
-            ```
-
-    + Body
-
-            {"parameters": [20, 200]}
-
-+ Response 200 (application/json)
-
-    + Headers
-
-            Domino-Deserialization-Time: 1
-            Domino-User-Code-Time: 10
-            Domino-Serialization-Time: 2
-
-    + Attributes
-
-        + release (object) - An object describing the version of your API endpoint that responded to your request.
-            + commitId: `e1dfab96a6c6014767e9561059224a3153cb6de6` (string) - The commit your API endpoint is bound to.
-            + file: `predict.R` (string) - The file your API endpoint is bound to.
-            + function: `predictQuality` (string) - The function your API endpoint is bound to.
-            + version: `14` (number) - The version of your API that was used.
-        + requestId: `NMEOMGVJURWVPOQF` (string) - A unique request ID assigned to your API request.
-        + result (object) - The result of the function you bound to your API Endpoint. Will be either a JSON object/dictionary or an array depending on what your function returns.
-            + a_random_number: `103` (number)
 
 
 # Group Project runs and files
