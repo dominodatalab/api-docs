@@ -98,6 +98,26 @@ These endpoints allow you to interact with your project's runs and files.
 
     + Attributes (Run status)
 
+## Run logs [/v1/projects/{username}/{project_name}/run/{run_id}/stdout?{previewNumberOfLines}]
+
+### Get run logs [GET]
+
++ Parameters
+    + username: `nick` (string, required) - The project owner's username
+    + project_name: `winequality` (string, required) - The project name
+    + run_id (string, required) - The unique ID for the run
+    + previewNumberOfLines (int, optional) - Take the last _N_ lines of the log output
+
++ Request
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+    + Attributes
+        + setup: `Downloading blobs\n0 of 1 transferred...\n`(string) - Logs output during the setup of the run
+        + stdout: `Hello, World!\n` (string) - Logs outputted from user code during the run.  Note that this field also include stderr logs as well.
+
 ## Project files [/v1/projects/{username}/{project_name}/files/{commit_id}/{path}]
 
 ### Get a list of files in a commit [GET]
