@@ -488,10 +488,12 @@ your deployment.
 
 ## Organization members [/v4/organizations/{orgId}/members]
 
-### Add or remove members [PUT]
+### Update organization members [PUT]
 
 **This is a beta endpoint available in Domino 2.8+**<br>
 **Its specification may change in future versions of Domino.**
+
+Note: the body of your PUT request should include an array of members you want to be part of the organization. In other words, include a full roster of users -- not the subset of users you want to add or remove specifically.
 
 + Parameters
 
@@ -501,7 +503,7 @@ your deployment.
 
     + Attributes
 
-      + members (array[Organization member]) - Array of objects representing members to add or remove.
+      + members (array[Organization member]) - Array of objects representing members
 
     + Headers
 
@@ -1096,11 +1098,11 @@ These endpoints allow you interact with your
 + visibility: `Global` (enum) - One of `Private`, `Organization`, or `Global`.
 
 ## Organization
-+ id: `5a73a6906ece7a7aed984654` (string) - Organization unique identifier.
++ organizationUserId: `5a73a6906ece7a7aed984654` (string) - Organization unique identifier.
 + name: `goodOrg` (string) - Organization name.
 + members (array[Organization member])
-+ defaultEnvironment: `orgEnvironment 3` (string) - Default v2 environment for the organization.
-+ legacyDefaultEnvironment: `orgEnvironment 1` (string) - Default legacy environment for the organization.
++ defaultEnvironment: `5a73a6906ece7a7aed984654` (string) - Default v2 environment for the organization.
++ legacyDefaultEnvironment: `5a73a6906ece7a7aed984653` (string) - Default legacy environment for the organization.
 
 ## Organization member
 + id: `5ac42816e4b0e9a0a82bbe8f` (string) - User ID.
