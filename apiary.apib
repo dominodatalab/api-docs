@@ -1082,7 +1082,7 @@ These endpoints allow you interact with your
 + isArchived: `false` (boolean) - Boolean denoting if the run was archived (hidden from the web interface).
 + postProcessedTimestamp: `1473969767822` (number) -  Milliseconds epoch time the run finished processing (this happens after the run has completed and includes saving the results back to the main project repo).
 + diagnosticStatistics (object) - Object containing information about the run's [diagnostic statistics from dominostats.json](http://support.dominodatalab.com/hc/en-us/articles/204348169-Run-Diagnostic-Statistics).
-    + isError: `false` (boolean)
+    + isError: `false` (boolean) - `true` if Domino had trouble parsing the dominostats.json file.
     + data (array)
         - (object)
             + key: `R^2` (string):
