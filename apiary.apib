@@ -975,6 +975,61 @@ These endpoints allow you interact with your
               + `LauncherUser`
               + `ResultsConsumer`
               + `ProjectImporter`
+              
+
+# Group Gateway
+
+## Gateway Runs GetByBatchId [/gateway/runs/getByBatchId{?batchId,limit}]
+
+### listToJson [GET]
+
+**Only available in Domino 3.0.1+**
+
+This endpoint can be used to batch extract Runs data for import into a 3rd party tool.
++ Parameters
+    + batchId (string, required)
+
+        Starting id of the batch query
+
+    + limit (number, optional)
+
+        The desired size of the batch to be returned
+
+
++ Response 200 (application/json)
+
+        success
+
+    + Attributes (domino.common.gateway.runs.RunsGatewaySequence)
+
+
++ Response 400 
+
+        The server could not understand the request due to malformed syntax
+
+
+
+
++ Response 401 
+
+        The current user cannot perform this operation because they are not logged in
+
+
+
+
++ Response 403 
+
+        The current user is not authorized to perform this operation
+
+
+
+
++ Response 500 
+
+        An internal error prevented the server from performing this action
+
+
+
 
 # Data Structures
 
@@ -1272,3 +1327,32 @@ These endpoints allow you interact with your
 + availableCapacityWithoutLaunching: `0` (number)
 + maximumAvailableCapacity: `0` (number)
 + capacityLevel (object)
+
+## domino.common.gateway.runs.RunsGatewaySummary (object)
+
+
+### Properties
++ `batchId` (string, required) 
++ `runId` (string, required) 
++ `title` (string, required) 
++ `command` (string, required) 
++ `status` (string, required) 
++ `runType` (string, required) 
++ `userName` (string, required) 
++ `userId` (string, required) 
++ `projectOwnerName` (string, required) 
++ `projectOwnerId` (string, required) 
++ `projectName` (string, required) 
++ `projectId` (string, required) 
++ `runDurationSec` (number, required) 
++ `hardwareTier` (string, required) 
++ `hardwareTierCostCurrency` (string, required) 
++ `hardwareTierCostAmount` (number, required) 
++ `queuedTime` (number, required) 
++ `startTime` (number, optional) 
++ `endTime` (number, optional) 
++ `totalCostCurrency` (string, required) 
++ `totalCostAmount` (number, required) 
+
+
+## domino.common.gateway.runs.RunsGatewaySequence (object)
