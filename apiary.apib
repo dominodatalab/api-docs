@@ -568,7 +568,12 @@ These endpoints allow you interact with your
                       "collaboratorId": "string",
                       "projectRole": "Contributor"
                     }
-                  ]
+                  ],
+                  "tags": {
+                    "tagNames": [
+                      "string"
+                    ]
+                  }
                 }
 
 + Response 200 (application/json)
@@ -1188,6 +1193,8 @@ This endpoint can be used to batch extract Runs data for import into a 3rd party
     + `Private`
 + ownerId: `5ac42816e4b0e9a0a82bbe8f` (string, required) - ID of project owner.
 + collaborators (array[v4 project collaborator], required) - Objects representing collaborators.
++ tags (object)
+  + tagnames (array[string], required) - String text of tags to apply to the project.
 
 ## v4 project collaborator
 + collaboratorId: `5ac42816e4b0e9a0a82bbe8f` (string) - User ID of collaborator.
