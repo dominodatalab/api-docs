@@ -982,6 +982,96 @@ These endpoints allow you interact with your
               + `ProjectImporter`
               
 
+## Connect Git repositories [/v4/projects/{projectId}/gitRepositories]
+
+### Get project's Git repositories [GET]
+
+**This endpoint is available in Domino 3.4+**<br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch Git repositories from.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (array[project Git repository])
+              
+
+### Add Git repository to project [POST]
+
+**This endpoint is available in Domino 3.4+**<br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch Git repositories from.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+    
+    + Attributes (project Git repository)
+
++ Response 200 (application/json)
+
+    + Attributes (project Git repository)
+
+
+## Manage Git repositories [/v4/projects/{projectId}/gitRepositories/{repositoryName}]
+
+### Update the reference of a Git repository [PATCH]
+
+**This endpoint is available in Domino 3.4+**<br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch Git repositories from.
+    + repositoryName: `repo1` (string, required) - Name of the repository the reference belongs to.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+    
+    + Attributes
+    
+      + type: `branches` (enum[string]) - Type of reference.
+          + Members
+              + `branches`
+              + `tags`
+              + `head`
+      + value: `master` (string) - Reference value.
+      
+
++ Response 200 (application/json)
+
+
+
+### Remove Git repository [DELETE]
+
+**This endpoint is available in Domino 3.4+**<br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch Git repositories from.
+    + repositoryName: `repo1` (string, required) - Name of the repository the reference belongs to.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
 # Group Gateway
 
 ## Gateway Runs GetByBatchId [/v4/gateway/runs/getByBatchId{?batchId,limit}]
@@ -1334,6 +1424,19 @@ This endpoint can be used to batch extract Runs data for import into a 3rd party
 + availableCapacityWithoutLaunching: `0` (number)
 + maximumAvailableCapacity: `0` (number)
 + capacityLevel (object)
+
+## Git ref
++ type (enum[string])
+  + Members
+    + `branches`
+    + `tags`
+    + `head`
++ value: `master` (string)
+
+## project Git repository
++ name: `repo1` (string)
++ uri: `git@github.com:user/repo1.git` (string)
++ ref (Git ref)
 
 ## domino.common.gateway.runs.RunsGatewaySummary (object)
 
