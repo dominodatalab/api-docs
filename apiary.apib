@@ -332,7 +332,7 @@ These endpoints allow you to interact with your project's models.
 
 These endpoints provide information about users in your deployment.
 
-## Query users [/v4/users{?userId,username,query}]
+## Query users [/v4/users{?userId,userName,query}]
 
 ### Get a list of users [GET]
 
@@ -342,7 +342,7 @@ These endpoints provide information about users in your deployment.
 + Parameters
 
     + userId: `poweruser,anotheruser` (array, optional) - Optional, returns only the users who match the IDs in this array.
-    + username: `poweruser` (string, optional) - Optional, returns only the single user with the exact provided username.
+    + userName: `poweruser` (string, optional) - Optional, returns only the single user with the exact provided username.
     + query: `p` (string, optional) - Optional, returns all usernames that start with this query string.
 
 + Request
