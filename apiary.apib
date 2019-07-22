@@ -1,4 +1,4 @@
-FORMAT: 1A
+`FORMAT: 1A
 HOST: https://api.dominodatalab.com
 
 # Domino Data Lab API
@@ -838,32 +838,7 @@ These endpoints allow you interact with your
                   "defaultEnvironmentId": "string"
                 }
 
-+ Response 200 (application/json)
-
-
-## Project activity [/v4/projects/{projectId}/activities{?afterMillis,beforeMillis,limit}]
-
-### Get activity records for a project [GET]
-
-**This is a beta endpoint available in Domino 2.8+**<br>
-**Its specification may change in future versions of Domino.**
-
-+ Parameters
-
-    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch activity for.
-    + afterMillis: `100000` (number, optional)
-    + beforeMillis: `100000` (number, optional)
-    + limit: `10` (number, optional)
-
-+ Request
-
-    + Headers
-
-            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
-
-+ Response 200 (application/json)
-
-    + Attributes (array[v4 project activity record])
++ Response 200 (application/json)emove
 
 
 ## Project experiments [/v4/projects/{projectId}/experiments{?createdAfterExperiment,createdBeforeExperiment,limit}]
@@ -1445,6 +1420,8 @@ This endpoint can be used to batch extract Runs data for import into a 3rd party
     + `commitId`
     + `ref`
 + value: `master` (string)
+
+
 
 ## project Git repository
 + name: `repo1` (string)
