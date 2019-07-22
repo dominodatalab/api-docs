@@ -511,8 +511,6 @@ your deployment.
 
     + Attributes (Organization)
 
-
-
 # Group Projects v4
 
 These endpoints allow you interact with your
@@ -1058,6 +1056,215 @@ These endpoints allow you interact with your
 
 + Response 200 (application/json)
 
+# Group Datasets
+
+These endpoints allow you interact with your
+[Domino Datasets](https://support.dominodatalab.com/hc/en-us/articles/360020125052).
+
+## Get or create Datasets [/v4/datasets{?projectId}]
+
+### Get a list of Datasets [GET]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + projectId: `507f191e810c19729de860ea` (optional) - Optional, returns only datasets from the specified project.
+    
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (array[dataset response])
+
+### Create a Dataset [POST]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Request (application/json)
+
+    + Attributes (create dataset request)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (dataset details response)
+    
+
+## Dataset operations [/v4/datasets/{datasetId}]
+
+### Get Dataset details [GET]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + datasetId: `507f191e810c19729de860ea` - ID of Dataset to fetch metadata for.
+    
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (dataset details response)
+
+### Update Dataset details [PATCH]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + datasetId: `507f191e810c19729de860ea` - ID of Dataset to update metadata for.
+
++ Request (application/json)
+
+    + Attributes (update dataset request)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (dataset details response)
+
+### Archive Dataset [DELETE]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + datasetId: `507f191e810c19729de860ea` - ID of Dataset to update metadata for.
+
++ Request (application/json)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200
+
+
+## Snapshot operations [/v4/datasets/snapshot/{snapshotId}]
+
+### Get Snapshot details [GET]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + snapshotId: `507f191e810c19729de860ea` - ID of snapshot to get.
+    
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (snapshot details response)
+
+### Update Snapshot details [PATCH]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + snapshotId: `507f191e810c19729de860ea` - ID of snapshot to get.
+    
++ Request
+
+    + Attributes (update snapshot request)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (snapshot details response)
+
+### Archive Snapshot [DELETE]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + snapshotId: `507f191e810c19729de860ea` - ID of snapshot to get.
+    
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+## Add tag to Snapshot [/v4/datasets/{datasetId}/tag]
+
+### Add tag [POST]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + datasetId: `507f191e810c19729de860ea` - ID of dataset containing the snapshot to tag.
+    
++ Request
+
+    + Attributes (add tag to dataset request)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (snapshot details response)
+
+## Remove tag from Snapshot [/v4/datasets/{datasetId}/tag/{tagName}]
+
+### Remove tag [DELETE]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + datasetId: `507f191e810c19729de860ea` - ID of dataset containing the snapshot with tag to be removed.
+    + tagName: `Production` - Name of tag to remove.
+    
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (snapshot details response)
+
+
 # Group Gateway
 
 ## Gateway Runs GetByBatchId [/v4/gateway/runs/getByBatchId{?batchId,limit}]
@@ -1427,6 +1634,51 @@ This endpoint can be used to batch extract Runs data for import into a 3rd party
 + name: `repo1` (string)
 + uri: `git@github.com:user/repo1.git` (string)
 + ref (Git ref)
+
+## create dataset request
++ datasetName: `myDataset` (string, required)
++ description: `A dataset for my useful data.` (string)
++ projectId: `5ac42816e4b0e9a0a82bbe8f` (string, required)
+
+## update dataset request
++ datasetName: `myDataset` (string)
++ description: `A dataset for my useful data.` (string)
+
+## add tag to dataset request
++ snapshotId: `5d35b6cfc9e77c000834d3d6` (string, required)
++ tag: `Production` (string, required)
+
+## update snapshot request
++ status: `Active` (string)
+
+## dataset response
++ datasetName: `myDataset` (string)
++ datasetId: `5d35b6dec9e77c000834d3da` (string)
++ projectId: `5ac42816e4b0e9a0a82bbe8f` (string)
+
+## dataset details response
++ datasetName: `myDataset` (string)
++ description: `A dataset for my useful data.` (string)
++ datasetId: `5d35b6dec9e77c000834d3da` (string)
++ projectId: `5ac42816e4b0e9a0a82bbe8f` (string)
++ created: `01012019` (string)
++ snapshots (array[string]) - Array of snapshot IDs
++ tags (array[string, string]) - Array of tag name / tag ID pairs
+
+## snapshot response
++ snapshotId: `5d35b6cfc9e77c000834d3d6` (string)
++ datasetId: `5d35b6dec9e77c000834d3da` (string)
+
+## snapshot details response
++ snapshotId: `5d35b6cfc9e77c000834d3d6` (string)
++ datasetId: `5d35b6dec9e77c000834d3da` (string)
++ creatorId: `5ac42816e4b0e9a0a82bbe8f` (string)
++ created: `01012019` (string)
++ status: `Active` (string)
++ lastMounted: `01012019` (string)
++ origin: `CLI Upload` (string)
+
+
 
 ## domino.common.gateway.runs.RunsGatewaySummary (object)
 
