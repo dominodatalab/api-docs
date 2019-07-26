@@ -488,7 +488,7 @@ your deployment.
 
 ## Organization members [/v4/organizations/{orgId}/members]
 
-### Add or remove members [PUT]
+### Change the list of members [PUT]
 
 **This is a beta endpoint available in Domino 2.8+**<br>
 **Its specification may change in future versions of Domino.**
@@ -501,8 +501,7 @@ your deployment.
 
     + Attributes
 
-      + members (array[Organization member]) - Array of objects representing members to add or remove.
-
+      + members (array[Organization member]) - Array of objects representing the desired list of members (Note: the list passed here will replace the existing member list. The current list can be retrieved by a call to the [organization-by-id](https://dominodatalab.github.io/api-docs/#/reference/organizations-v4/organizations-by-id/get-organization-by-id) API). 
     + Headers
 
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
