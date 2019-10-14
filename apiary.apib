@@ -1060,7 +1060,7 @@ These endpoints allow you interact with your
 These endpoints allow you interact with your
 [Domino Datasets](https://support.dominodatalab.com/hc/en-us/articles/360020125052).
 
-## Get or create Datasets [/v4/datasets{?projectId}]
+## Get or create Datasets [/v4/dataset{?projectId}]
 
 ### Get a list of Datasets [GET]
 
@@ -1099,7 +1099,7 @@ These endpoints allow you interact with your
     + Attributes (dataset details response)
     
 
-## Dataset operations [/v4/datasets/{datasetId}]
+## Dataset operations [/v4/dataset/{datasetId}]
 
 ### Get Dataset details [GET]
 
@@ -1159,7 +1159,7 @@ These endpoints allow you interact with your
 + Response 200
 
 
-## Snapshot operations [/v4/datasets/snapshot/{snapshotId}]
+## Snapshot operations [/v4/dataset/snapshot/{snapshotId}]
 
 ### Get Snapshot details [GET]
 
@@ -1218,7 +1218,7 @@ These endpoints allow you interact with your
 
 + Response 200 (application/json)
 
-## Add tag to Snapshot [/v4/datasets/{datasetId}/tag]
+## Add tag to Snapshot [/v4/dataset/{datasetId}/tag]
 
 ### Add tag [POST]
 
@@ -1241,7 +1241,7 @@ These endpoints allow you interact with your
 
     + Attributes (snapshot details response)
 
-## Remove tag from Snapshot [/v4/datasets/{datasetId}/tag/{tagName}]
+## Remove tag from Snapshot [/v4/dataset/{datasetId}/tag/{tagName}]
 
 ### Remove tag [DELETE]
 
