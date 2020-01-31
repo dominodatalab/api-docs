@@ -328,9 +328,9 @@ These endpoints allow you to interact with your project's models.
     + Attributes (Model Version Response)
     
 
-## Model image builds [/v4/models/buildModelImage]
+## Build Model Image [/v4/models/buildModelImage]
 
-### Build a Model Image [POST]
+### exportage [POST]
 
 + Request (application/json)
 
@@ -822,7 +822,7 @@ These endpoints allow you to interact with your project's models.
               "$schema": "http://json-schema.org/draft-04/schema#"
             }
 
-## Exported image status [/v4/models/{exportId}/getExportImageStatus]
+## Export Model Image Status [/v4/models/{exportId}/getExportImageStatus]
 
 ### Get model image export status [GET]
 
@@ -1014,7 +1014,7 @@ These endpoints allow you to interact with your project's models.
               "$schema": "http://json-schema.org/draft-04/schema#"
             }
 
-## Export logs [/v4/models/{exportId}/getExportLogs]
+## Export Model Image Logs [/v4/models/{exportId}/getExportLogs]
 
 ### Get model image export logs [GET]
 
@@ -1211,9 +1211,9 @@ These endpoints allow you to interact with your project's models.
               "$schema": "http://json-schema.org/draft-04/schema#"
             }
 
-## Export to registry [/v4/models/{modelId}/{modelVersionId}/exportImageToRegistry]
+## Export Model Image [/v4/models/{modelId}/{modelVersionId}/exportImageToRegistry]
 
-### Export a Model Image [POST]
+### Export model image to external registry [POST]
 
 + Parameters
 
@@ -1595,7 +1595,7 @@ These endpoints allow you to interact with your project's models.
               "$schema": "http://json-schema.org/draft-04/schema#"
             }
 
-## Model build logs [/v4/models/{modelId}/{modelVersionId}/getBuildLogs]
+## Build Model Image Logs [/v4/models/{modelId}/{modelVersionId}/getBuildLogs]
 
 ### Get model image build logs [GET]
 
@@ -1788,9 +1788,9 @@ These endpoints allow you to interact with your project's models.
               "$schema": "http://json-schema.org/draft-04/schema#"
             }
 
-## Model build status [/v4/models/{modelId}/{modelVersionId}/getBuildStatus]
+## Build Model Image Status [/v4/models/{modelId}/{modelVersionId}/getBuildStatus]
 
-### Get model build status [GET]
+### Get model image build status [GET]
 
 + Parameters
 
