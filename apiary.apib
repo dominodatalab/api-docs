@@ -326,6 +326,1655 @@ These endpoints allow you to interact with your project's models.
 + Response 200 (application/json)
 
     + Attributes (Model Version Response)
+    
+
+## Model image builds [/v4/models/buildModelImage]
+
+### Build a Model Image [POST]
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "modelName": "",
+              "projectId": "000000000000000000000000",
+              "inferenceFunctionToCall": "",
+              "inferenceFunctionFile": "",
+              "logHttpRequestResponse": false,
+              "description": "",
+              "environmentId": "000000000000000000000000",
+              "modelId": "000000000000000000000000"
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "environmentId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "inferenceFunctionFile": {
+                  "type": "string"
+                },
+                "inferenceFunctionToCall": {
+                  "type": "string"
+                },
+                "logHttpRequestResponse": {
+                  "type": "boolean"
+                },
+                "modelId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "modelName": {
+                  "type": "string"
+                },
+                "projectId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "modelName",
+                "projectId",
+                "inferenceFunctionToCall",
+                "inferenceFunctionFile",
+                "logHttpRequestResponse"
+              ]
+            }
+
++ Response 202 (application/json)
+
+    Request accepted, building of model image continues offline
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "name": "",
+                "environmentId": "000000000000000000000000",
+                "projectId": "000000000000000000000000",
+                "projectName": "",
+                "buildStatus": "",
+                "modelVersionId": "000000000000000000000000",
+                "modelVersionNumber": -100000000,
+                "description": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.BuildModelImageApiResponse"
+              },
+              "type": "array",
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.BuildModelImageApiResponse": {
+                  "properties": {
+                    "buildStatus": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "environmentId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionNumber": {
+                      "format": "int32",
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "projectId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "projectName": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "name",
+                    "environmentId",
+                    "projectId",
+                    "projectName",
+                    "buildStatus",
+                    "modelVersionId",
+                    "modelVersionNumber"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "modelName": "",
+              "projectId": "000000000000000000000000",
+              "inferenceFunctionToCall": "",
+              "inferenceFunctionFile": "",
+              "logHttpRequestResponse": false,
+              "description": "",
+              "environmentId": "000000000000000000000000",
+              "modelId": "000000000000000000000000"
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "environmentId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "inferenceFunctionFile": {
+                  "type": "string"
+                },
+                "inferenceFunctionToCall": {
+                  "type": "string"
+                },
+                "logHttpRequestResponse": {
+                  "type": "boolean"
+                },
+                "modelId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "modelName": {
+                  "type": "string"
+                },
+                "projectId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "modelName",
+                "projectId",
+                "inferenceFunctionToCall",
+                "inferenceFunctionFile",
+                "logHttpRequestResponse"
+              ]
+            }
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "modelName": "",
+              "projectId": "000000000000000000000000",
+              "inferenceFunctionToCall": "",
+              "inferenceFunctionFile": "",
+              "logHttpRequestResponse": false,
+              "description": "",
+              "environmentId": "000000000000000000000000",
+              "modelId": "000000000000000000000000"
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "environmentId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "inferenceFunctionFile": {
+                  "type": "string"
+                },
+                "inferenceFunctionToCall": {
+                  "type": "string"
+                },
+                "logHttpRequestResponse": {
+                  "type": "boolean"
+                },
+                "modelId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "modelName": {
+                  "type": "string"
+                },
+                "projectId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "modelName",
+                "projectId",
+                "inferenceFunctionToCall",
+                "inferenceFunctionFile",
+                "logHttpRequestResponse"
+              ]
+            }
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "modelName": "",
+              "projectId": "000000000000000000000000",
+              "inferenceFunctionToCall": "",
+              "inferenceFunctionFile": "",
+              "logHttpRequestResponse": false,
+              "description": "",
+              "environmentId": "000000000000000000000000",
+              "modelId": "000000000000000000000000"
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "environmentId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "inferenceFunctionFile": {
+                  "type": "string"
+                },
+                "inferenceFunctionToCall": {
+                  "type": "string"
+                },
+                "logHttpRequestResponse": {
+                  "type": "boolean"
+                },
+                "modelId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "modelName": {
+                  "type": "string"
+                },
+                "projectId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "modelName",
+                "projectId",
+                "inferenceFunctionToCall",
+                "inferenceFunctionFile",
+                "logHttpRequestResponse"
+              ]
+            }
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "modelName": "",
+              "projectId": "000000000000000000000000",
+              "inferenceFunctionToCall": "",
+              "inferenceFunctionFile": "",
+              "logHttpRequestResponse": false,
+              "description": "",
+              "environmentId": "000000000000000000000000",
+              "modelId": "000000000000000000000000"
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "environmentId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "inferenceFunctionFile": {
+                  "type": "string"
+                },
+                "inferenceFunctionToCall": {
+                  "type": "string"
+                },
+                "logHttpRequestResponse": {
+                  "type": "boolean"
+                },
+                "modelId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "modelName": {
+                  "type": "string"
+                },
+                "projectId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "modelName",
+                "projectId",
+                "inferenceFunctionToCall",
+                "inferenceFunctionFile",
+                "logHttpRequestResponse"
+              ]
+            }
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+## Exported image status [/v4/models/{exportId}/getExportImageStatus]
+
+### Get model image export status [GET]
+
++ Parameters
+
+    + exportId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    success
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "modelVersionId": "000000000000000000000000",
+                "exportId": "000000000000000000000000",
+                "status": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.ModelExportStatusApiResponse"
+              },
+              "type": "array",
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.ModelExportStatusApiResponse": {
+                  "properties": {
+                    "exportId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "modelVersionId",
+                    "exportId",
+                    "status"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+## Export logs [/v4/models/{exportId}/getExportLogs]
+
+### Get model image export logs [GET]
+
++ Parameters
+
+    + exportId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    success
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "modelVersionId": "000000000000000000000000",
+                "exportId": "000000000000000000000000",
+                "status": "",
+                "logs": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.ModelExportLogsApiResponse"
+              },
+              "type": "array",
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.ModelExportLogsApiResponse": {
+                  "properties": {
+                    "exportId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "logs": {
+                      "type": "string"
+                    },
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "modelVersionId",
+                    "exportId",
+                    "status",
+                    "logs"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+## Export to registry [/v4/models/{modelId}/{modelVersionId}/exportImageToRegistry]
+
+### Export a Model Image [POST]
+
++ Parameters
+
+    + modelId (required)
+    
+    + modelVersionId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "password": "",
+              "tag": "",
+              "username": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "password": {
+                  "type": "string"
+                },
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "registryUrl",
+                "repository"
+              ]
+            }
+
++ Response 202 (application/json)
+
+    Request accepted, exporting of model image continues offline
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "modelVersionId": "000000000000000000000000",
+                "exportId": "000000000000000000000000",
+                "status": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.ModelExportStatusApiResponse"
+              },
+              "type": "array",
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.ModelExportStatusApiResponse": {
+                  "properties": {
+                    "exportId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "modelVersionId",
+                    "exportId",
+                    "status"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "password": "",
+              "tag": "",
+              "username": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "password": {
+                  "type": "string"
+                },
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "registryUrl",
+                "repository"
+              ]
+            }
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "password": "",
+              "tag": "",
+              "username": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "password": {
+                  "type": "string"
+                },
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "registryUrl",
+                "repository"
+              ]
+            }
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "password": "",
+              "tag": "",
+              "username": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "password": {
+                  "type": "string"
+                },
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "registryUrl",
+                "repository"
+              ]
+            }
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "password": "",
+              "tag": "",
+              "username": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "password": {
+                  "type": "string"
+                },
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "registryUrl",
+                "repository"
+              ]
+            }
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+## Model build logs [/v4/models/{modelId}/{modelVersionId}/getBuildLogs]
+
+### Get model image build logs [GET]
+
++ Parameters
+
+    + modelId (required)
+    
+    + modelVersionId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    success
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "modelVersionId": "000000000000000000000000",
+                "status": "",
+                "logs": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.ModelBuildLogsApiResponse"
+              },
+              "type": "array",
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.ModelBuildLogsApiResponse": {
+                  "properties": {
+                    "logs": {
+                      "type": "string"
+                    },
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "modelVersionId",
+                    "status",
+                    "logs"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+## Model build status [/v4/models/{modelId}/{modelVersionId}/getBuildStatus]
+
+### Get model build status [GET]
+
++ Parameters
+
+    + modelId (required)
+    
+    + modelVersionId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    success
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "modelVersionId": "000000000000000000000000",
+                "status": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.ModelBuildStatusApiResponse"
+              },
+              "type": "array",
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.ModelBuildStatusApiResponse": {
+                  "properties": {
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "modelVersionId",
+                    "status"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
 
 
 # Group Users v4
@@ -1707,3 +3356,66 @@ This endpoint can be used to batch extract Runs data for import into a 3rd party
 
 
 ## domino.common.gateway.runs.RunsGatewaySequence (object)
+
+## definitions/domino.api.ErrorResponse
+
++ message (optional)
+
+## definitions/domino.modelmanager.web.BuildModelImageApiRequest
+
++ description (optional)
++ environmentId (optional)
++ inferenceFunctionFile (required)
++ inferenceFunctionToCall (required)
++ logHttpRequestResponse (boolean, required)
++ modelId (optional)
++ modelName (required)
++ projectId (required)
+
+## definitions/domino.modelmanager.web.BuildModelImageApiResponse
+
++ buildStatus (required)
++ description (optional)
++ environmentId (required)
++ modelId (required)
++ modelVersionId (required)
++ modelVersionNumber (number, required)
++ name (required)
++ projectId (required)
++ projectName (required)
+
+## definitions/domino.modelmanager.web.ExportModelImageApiRequest
+
++ password (optional)
++ registryUrl (required)
++ repository (required)
++ tag (optional)
++ username (optional)
+
+## definitions/domino.modelmanager.web.ModelBuildLogsApiResponse
+
++ logs (required)
++ modelId (required)
++ modelVersionId (required)
++ status (required)
+
+## definitions/domino.modelmanager.web.ModelBuildStatusApiResponse
+
++ modelId (required)
++ modelVersionId (required)
++ status (required)
+
+## definitions/domino.modelmanager.web.ModelExportLogsApiResponse
+
++ exportId (required)
++ logs (required)
++ modelId (required)
++ modelVersionId (required)
++ status (required)
+
+## definitions/domino.modelmanager.web.ModelExportStatusApiResponse
+
++ exportId (required)
++ modelId (required)
++ modelVersionId (required)
++ status (required)
