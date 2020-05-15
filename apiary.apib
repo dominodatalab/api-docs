@@ -1596,6 +1596,368 @@ These endpoints allow you to interact with your project's models.
               "$schema": "http://json-schema.org/draft-04/schema#"
             }
 
+## Build Model Image for Sagemaker [/v4/models/{modelId}/{modelVersionId}/exportImageForSagemaker]
+
+### Export a Sagemaker compatible model image to any external container registry [POST]
+
++ Parameters
+
+    + modelId (required)
+
+    + modelVersionId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "tag": "",
+              "username": "",
+              "password": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+              "required":[
+                "inferenceFunctionToCall",
+                "inferenceFunctionFile",
+                "registryUrl",
+                "repository"
+              ]
+            }
+
+
+
++ Response 200 (application/json)
+
+    success
+
+    + Attributes
+
+    + Body
+
+            {
+              "modelId": "000000000000000000000000",
+              "modelVersionId": "000000000000000000000000",
+              "exportId": "000000000000000000000000",
+              "status": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "modelId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "modelVersionId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "exportId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "modelId",
+                "modelVersionId",
+                "exportId",
+                "status"
+              ]
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "tag": "",
+              "username": "",
+              "password": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "tag": "",
+              "username": "",
+              "password": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "tag": "",
+              "username": "",
+              "password": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "tag": "",
+              "username": "",
+              "password": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+
 ## Build Model Image Logs [/v4/models/{modelId}/{modelVersionId}/getBuildLogs]
 
 ### Get model image build logs [GET]
@@ -2174,7 +2536,7 @@ These endpoints allow you interact with your
 
 + Parameters
 
-    + projectName: `myProject` (optional) - Optional, returns the project information for the specified project belonging to the user.
+    + name: `myProject` (optional) - Optional, returns the project information for the specified project belonging to the user.
     + ownerId: `507f191e810c19729de860ea` (optional) - Optional, returns projects belonging to owner, specified by owner's 24-character hexidecimal identifier.
 
 + Request
@@ -3420,3 +3782,11 @@ This endpoint can be used to batch extract Runs data for import into a 3rd party
 + modelId (required)
 + modelVersionId (required)
 + status (required)
+
+## definitions/domino.modelmanager.web.ExportImageForSagemakerApiRequest
+
++ registryUrl (optional)
++ repository (optional)
++ tag (optional)
++ username (optional)
++ password (optional)
