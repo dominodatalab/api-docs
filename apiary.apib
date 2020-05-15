@@ -1596,7 +1596,7 @@ These endpoints allow you to interact with your project's models.
               "$schema": "http://json-schema.org/draft-04/schema#"
             }
 
-## Build Model Image for Sagemaker [/v4/models/{modelId}/{modelVersionId}/exportImageForSagemaker]
+## Export a Sagemaker compatible model image [/v4/models/{modelId}/{modelVersionId}/exportImageForSagemaker]
 
 ### Export a Sagemaker compatible model image to any external container registry [POST]
 
@@ -2339,6 +2339,569 @@ These endpoints allow you to interact with your project's models.
               "$schema": "http://json-schema.org/draft-04/schema#"
             }
 
+## Stop running Model API [/v4/models/{modelId}/{modelVersionId}/stopModelDeployment]
+
+### Stop a Model API that is currently running on Domino [POST]
+
++ Parameters
+
+    + modelId (required)
+    
+    + modelVersionId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    success
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "modelVersionId": "000000000000000000000000",
+                "status": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.ModelDeploymentStatusApiResponse"
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.ModelDeploymentStatusApiResponse": {
+                  "properties": {
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "modelVersionId",
+                    "status"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+## Start Model API [/v4/models/{modelId}/{modelVersionId}/startModelDeployment]
+
+### Start or deploy a Model API that is currently not running [POST]
+
++ Parameters
+
+    + modelId (required)
+    
+    + modelVersionId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    success
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "modelVersionId": "000000000000000000000000",
+                "status": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.ModelDeploymentStatusApiResponse"
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.ModelDeploymentStatusApiResponse": {
+                  "properties": {
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "modelVersionId",
+                    "status"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+### /v4/models/{modelId}/{modelVersionId}/modelDeploymentStatus
+
+#### Get deployment status for a Model API [GET]
+
++ Parameters
+
+    + modelId (required)
+    
+    + modelVersionId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    success
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "modelVersionId": "000000000000000000000000",
+                "status": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.ModelDeploymentStatusApiResponse"
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.ModelDeploymentStatusApiResponse": {
+                  "properties": {
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "modelVersionId",
+                    "status"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
 
 # Group Users v4
 
