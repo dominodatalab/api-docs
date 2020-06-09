@@ -3839,30 +3839,26 @@ These endpoints allow you interact with your
     + Attributes (snapshot details response)
 
 
-# Group Gateway
+# Group Usage Data
 
-## Gateway Runs GetByBatchId [/v4/gateway/runs/getByBatchId{?batchId,limit}]
+## Get User Activity Report [/admin/generateUserActivityReport]
 
-### listToJson [GET]
+### User Activity json [POST]
 
-**Only available in Domino 3.0.1+**
+**Only available in Domino 4+**
 
-This endpoint can be used to batch extract Runs data for import into a 3rd party tool.
-+ Parameters
-    + batchId (string, required)
+Returns a json of usage statistics per user in Domino. Requires admin acccess. 
 
-        Starting id of the batch query
++ Request (application/json)
 
-    + limit (number, optional)
+    + Attributes (Usage Data)
 
-        The desired size of the batch to be returned
+    + Headers
 
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
 
 + Response 200 (application/json)
-
-        success
-
-    + Attributes (domino.common.gateway.runs.RunsGatewaySequence)
+    + Attributes (Usage Data Response)
 
 
 + Response 400 
@@ -3893,7 +3889,123 @@ This endpoint can be used to batch extract Runs data for import into a 3rd party
 
 
 
+## Get Runs Usage Data [/v4/gateway/runs/getByBatchId{?batchId,limit}]
+
+### Runs data to json [GET]
+
+**Only available in Domino 3.0.1+**
+
+This endpoint can be used to batch extract Runs level data to be used in analizing usage statistics of Domino. Requires admin acccess. 
+
++ Request (application/json)
+
+    + Attributes (Runs Data)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+        success
+
+    + Attributes (Runs Data Response)
+
+
++ Response 400 
+
+        The server could not understand the request due to malformed syntax
+
+
+
+
++ Response 401 
+
+        The current user cannot perform this operation because they are not logged in
+
+
+
+
++ Response 403 
+
+        The current user is not authorized to perform this operation
+
+
+
+
++ Response 500 
+
+        An internal error prevented the server from performing this action
+
 # Data Structures
+
+## Runs Data Response
++ batchId: 1565722907558 (number) - (required) Id for the API batch response
++ runId: '5d5308d32314a50006a49d2c' (string) - (required) Run Id
++ title: '[Rerun] main.py' (string) - (required) Run title
++ command: 'main.py' (string) - (required) Run command
++ status: 'Succeeded' (string) - Run current status
++ runType: 'Batch' (string) - Run type
++ userName: 'john-doe' (string) - Username of user who started the run 
++ userId: '5d523fade09324f0f8235215' (string) - User Id of user who started the run 
++ projectOwnerName: 'john-doe' (string) - Username of owner of the project where the run was started
++ projectOwnerId: '5d523fade09324f0f8235215' (string) - User Id of owner of the project where the run was started
++ projectName: 'quick-start' (string) - Project name where the run was started
++ projectId: '5d523fad8a344900069eeeb3' (string) - Project Id
++ runDurationSec: 5.432 (number) - Duration of the run in seconds
++ hardwareTier: 'Large' (string) - Name of the hardware tier the run used
++ hardwareTierCostCurrency: 'USD' (string) - Currency units for run cost
++ hardwareTierCostAmount: '.0011' (string) - Dollars per minute per Run for this hardware tier. 
++ queuedTime: '2019-08-13T19:00:35.323Z' (string) - Time that the run was initialed requested
++ startTime: '2019-08-13T19:01:35.323Z' (string) - Run start time
++ endTime: '2019-08-13T19:02:35.323Z' (string) - Run end time 
++ totalCostCurrency: 'USD" (string) - Currency units
++ totalCostAmount: '.11' (string) - Total cost of the run
++ nextBatchId: 1566051748337 (number) - BatchId for the first run of the next batch of API response
+
+
+
+
+## Usage Data Response
++ user_id: 'de7c4c496c55e773d961cb74a3756ff2f92c99366eabfcbbeba51c866cd3d3b5' (string) - User Id number
++ username: 'vdhawan' (string) - Username
++ email: 'jane.doe@example.com' (string) - User's Email Address
++ signup_date: '2018-10-05T14:23:57.435Z' (string) '- Data user first signed up for Domino
++ active_user: 'yes' (string) - Whether the user's account is active or deactivated
++ deployment_id: 'domino-trial' (string) - Stage name for the Domino Deployment
++ deployment_url: 'domino.example.com'(string) - Host url for the Domino Deployment
++ organization: 'marketing' (array) - List of organizations the user belongs to
++ license_type: 'Practitioner" (string) - Imputed license type
++ projects: 10 (number) - Number of projects excluding Quick-start
++ most_recent_activity: '2019-10-05T14:23:57.435Z' (string) - Date time of most recent Domino activity (e.g. start run, publish app)
++ practitioner_workloads_total: 10 (number) - Number of practioner activies in the time window
++ practitioner_workloads_recent: 8 (number) - Number of practioner activies in the time lookback window
++ batch_runs_total: 11 (number) - Number of batch jobs started in the time window
++ batch_runs_recent: 10 (number) - Number of batch jobs started in the look back window
++ scheduled_runs_total: 3 (number) - Number of scheduled runs in the time window
++ scheduled_runs_recent: 2 (number) - Number of scheduled runs in the look back window
++ workspace_runs_total: 13 (number) - Number of worksapces started in the time window
++ workspace_runs_recent: 11 (number) - Number of worksapces started in the look back window
++ launchers_total: 4 (number) - Number of launchers in the time window
++ launchers_recent: 3 (number) - Number of launchers in the look back window
++ app_publish_total: 5 (number) - Number of apps published in the time window
++ app_publish_recent: 6 (number) - Number of apps published in the look back window
++ model_publish_total: 34 (number) - Number of models published in the time window
++ model_publish_recent: 25 (number) - Number of models published in the look back window
++ report_date: '2020-06-08T17:24:11.377Z' (string) - Date the report was generated
++ recent_start: '2020-03-09T00:00:00.000Z' (string) - Start date of the look back window
++ recent_end: '2020-04-07T23:59:59.000Z' (string) - End date of the look back window
+
+## Runs Data
++ batchId: 1566051748337 (number) - (optional) Starting id of the batch query
++ limit: 100 (number) -  (optional) The desired size of the batch to be returned
+
+## Usage Data
++ `start-date': 03/08/2020 (string) - (required) Starting date for your usage data
++ `end-date`: 04/08/2020 (string) - (required) Ending date for your usage data
++ `lookback-days`: 30 (number) - (optional) Number of days in arrears for computing "_recent" column values
++ orgId: '5c48afdac9e77c00077234e9' (string) - (optional) ID of the user Organzation that you'd like to filter on
+
 
 ## Model Base
 + _id: `5a73a6b86278f5c536008832` (string) - The unique ID for the model.
