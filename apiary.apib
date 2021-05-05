@@ -56,10 +56,10 @@ These endpoints allow you to interact with your project's runs and files.
 
     + Attributes
 
-        + command: `model.py`, `dataset`, `--sample`, `2000` (array, required) - Array of strings making up your command. For example:
+        + command: `model.py`, `random-argument`, `--sample`, `2000` (array, required) - Array of strings making up your command. For example:
 
             ```python
-                    ["model.py", "dataset", "--sample", "2000"]
+                    ["model.py", "random-argument", "--sample", "2000"]
             ```
 
         + isDirect: `false` (boolean, required) - A direct command is interpretted as a shell command; Domino doesn't try to infer a program to match your file type.
@@ -67,7 +67,7 @@ These endpoints allow you to interact with your project's runs and files.
         + tier: `gpu` (string) - Identifier of the hardware tier to use. This should be the human-readable name of the hardware tier, such as "Free", "Small", "Medium" etc. 
         + commitId: `1c6e8aa47951e39f9a905f0077af9355c35b712b` (string) - Revision at which to start the run.
         + publishApiEndpoint: `false` (boolean) - __This field will be deprecated in future versions.__ If true, the results of a successful run will be deployed to the project's active API Endpoint, if one exists.
-        + datasetConfig: '' (string) - Name of Dataset configuration from domino.yaml file; used to start a run with a specific dataset configuration mounted.
+        + datasetConfig: '' (string) - The optional name of a Dataset configuration from a domino.yaml file; used to start a run with a specific dataset configuration mounted.
 
     + Headers
 
