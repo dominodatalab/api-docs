@@ -3716,9 +3716,10 @@ These endpoints allow you interact with your
 
     + Attributes (dataset details response)
 
-### Archive Dataset [DELETE]
+### Delete Dataset [DELETE]
 
-**This is a beta endpoint available in Domino 3.6+**<br>
+**Note: Archive Dataset has been changed to admin only operation Delete Dataset starting Domino 4.5.0**<br>
+**This is a beta endpoint available in Domino 4.5+**<br>
 **Its specification may change in future versions of Domino.**
 
 + Parameters
@@ -3814,6 +3815,10 @@ These endpoints allow you interact with your
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
 
 + Response 200 (application/json)
+
++ Response 403
+
+        The current user is not authorized to perform this operation
 
 ## Create Dataset from Snapshot [/dataset/{snapshotId}/create{?name,description}]
 
