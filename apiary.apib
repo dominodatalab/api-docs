@@ -3734,9 +3734,10 @@ These endpoints allow you interact with your
 
     + Attributes (dataset details response)
 
-### Archive Dataset [DELETE]
+### Delete Dataset [DELETE]
 
-**This is a beta endpoint available in Domino 3.6+**<br>
+**Note: Archive Dataset has been changed to admin only operation Delete Dataset starting Domino 4.5**<br>
+**This is a beta endpoint available in Domino 4.5+**<br>
 **Its specification may change in future versions of Domino.**
 
 + Parameters
@@ -3751,8 +3752,30 @@ These endpoints allow you interact with your
 
 + Response 200
 
++ Response 403
+
+        The current user is not authorized to perform this operation
+
 
 ## Snapshot operations [/dataset/snapshot/{snapshotId}]
+
+### Create Snapshot [POST]
+
+**This is a beta endpoint available in Domino 4.5+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Attributes (create snapshot request)
+
+
++ Response 200 (application/json)        
+
+    + Attributes (rw snapshot response)
 
 ### Get Snapshot details [GET]
 
@@ -3810,6 +3833,33 @@ These endpoints allow you interact with your
             X-Domino-Api-Key: YOUR_DOMINO_API_KEY
 
 + Response 200 (application/json)
+
++ Response 403
+
+        The current user is not authorized to perform this operation
+
+## Create Dataset from Snapshot [/dataset/{snapshotId}/create{?name,description}]
+
+### Create Dataset [POST]
+
+**This is a beta endpoint available in Domino 4.5+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + snapshotId: `60b005d22121b85022adb126` (required) - ID of snapshot used to create the dataset.
+    + name: `Dataset` (required) - Name of the new dataset created from snapshot.
+    + description: `My Dataset from Snapshot` (optional) - Description of the dataset created from snapshot.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (rw dataset view response)
 
 ## Add tag to Snapshot [/dataset/{datasetId}/tag]
 
@@ -4355,6 +4405,10 @@ This endpoint can be used to batch extract Runs level data to be used in analizi
 ## update snapshot request
 + status: `Active` (string)
 
+## create snapshot request
++ relativeFilePaths: array(string) - Array of filepaths relative to the dataset directory
++ datasetId: `5d35b6cfc9e77c000834d3d6` (string)
+
 ## dataset response
 + datasetName: `myDataset` (string)
 + datasetId: `5d35b6dec9e77c000834d3da` (string)
@@ -4381,6 +4435,34 @@ This endpoint can be used to batch extract Runs level data to be used in analizi
 + status: `Active` (string)
 + lastMounted: `01012019` (string)
 + origin: `CLI Upload` (string)
+
+## rw snapshot response
++ id: `5d35b6cfc9e77c000834d3d6` (string),
++ resourceId: `5d35b6cfc9e75c050834dbe6` (string),
++ datasetId: `5d35b6dec9e77c000834d3da` (string),
++ author: `5d531bdee09329f0f83932a6` (string, optional),
++ version: `1` (number),
++ description: `my first snapshot` (string),
++ creationTime: `1622148562901` (number),
++ lifecycleStatus: `Active` (string),
++ statusLastUpdatedBy: `000000000000000000000000` (string),
++ statusLastUpdatedTime: `1622148567541` (number),
++ storageSize: `52908706` (number),
++ isPartialSize: false (boolean),
++ lastUsedTime: `0` (number, optional),
++ isReadWrite: false (boolean)
+
+## rw dataset view response
++ id: `5d35b6dec9e77c000834d3da` (string),
++ name: `dataset name` (string),
++ description: `dataset description` (string, optional),
++ snapshotIds (array[string]),
++ tags (array[string, string]),
++ createdTime (number),
++ projectId (string, optional),
++ projectOwner (string),
++ projectName (string)
+
 
 
 
