@@ -3759,24 +3759,6 @@ These endpoints allow you interact with your
 
 ## Snapshot operations [/dataset/snapshot/{snapshotId}]
 
-### Create Snapshot [POST]
-
-**This is a beta endpoint available in Domino 4.5+**<br>
-**Its specification may change in future versions of Domino.**
-
-+ Request
-
-    + Headers
-
-            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
-
-    + Attributes (create snapshot request)
-
-
-+ Response 200 (application/json)        
-
-    + Attributes (rw snapshot response)
-
 ### Get Snapshot details [GET]
 
 **This is a beta endpoint available in Domino 3.6+**<br>
@@ -3838,7 +3820,27 @@ These endpoints allow you interact with your
 
         The current user is not authorized to perform this operation
 
-## Create Dataset from Snapshot [/dataset/{snapshotId}/create{?name,description}]
+## Create Snapshot [/v4/datasetrw/snapshot]
+
+### Create Snapshot [POST]
+
+**This is a beta endpoint available in Domino 4.5+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Attributes (create snapshot request)
+
+
++ Response 200 (application/json)
+
+    + Attributes (rw snapshot response)
+
+## Create Dataset from Snapshot [/v4/datasetrw/dataset/{snapshotId}/create{?name,description}]
 
 ### Create Dataset [POST]
 
