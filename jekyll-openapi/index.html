@@ -122,7 +122,7 @@
 
             {%- if request_body -%}
               <h3 class="h6">Request Body</h3>
-              {%- include request_body.html request_body=request_body -%}
+              {%- include _includes/request_body.html request_body=request_body -%}
             {%- endif -%}
 
           </div>
@@ -131,7 +131,7 @@
             {%- if responses -%}
               <h2 class="h5 font-weight-normal mb-3 px-4 pt-4 text-white-50">Responses</h2>
               {%- for response in responses -%}
-                {%- include response.html response=response -%}
+                {%- include _includes/response.html response=response -%}
               {%- endfor -%}
             {%- endif -%}
           </div>
