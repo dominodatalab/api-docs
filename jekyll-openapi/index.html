@@ -114,10 +114,10 @@
             <pre class="p-2 border rounded bg-light">{{- server -}}{{- path[0] -}}{% include _includes/utilsquery_string.html parameters=parameters %}</pre>
 
             {%- if parameters -%}
-              {%- include parameters.html parameters=parameters in='header' -%}
-              {%- include parameters.html parameters=parameters in='path' -%}
-              {%- include parameters.html parameters=parameters in='query' -%}
-              {%- include parameters.html parameters=parameters in='cookie' -%}
+              {%- include _includes/parameters.html parameters=parameters in='header' -%}
+              {%- include _includes/parameters.html parameters=parameters in='path' -%}
+              {%- include _includes/parameters.html parameters=parameters in='query' -%}
+              {%- include _includes/parameters.html parameters=parameters in='cookie' -%}
             {%- endif -%}
 
             {%- if request_body -%}
