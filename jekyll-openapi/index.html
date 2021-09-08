@@ -1,7 +1,7 @@
 ---
 ---
 
-{%- include utils/variables.html -%}
+{%- include _includes/utilsvariables.html -%}
 
 <div class="row no-gutters">
   <div class="col-12 col-lg-7 bg-white border-bottom p-4">
@@ -86,7 +86,7 @@
 
   <div class="row no-gutters">
     <div class="col-12 col-lg-7 bg-white border-bottom p-4">
-      <h1 class="h4 offset-top">{%- include utils/titleize.html word=collection -%}</h1>
+      <h1 class="h4 offset-top">{%- include _includes/utilstitleize.html word=collection -%}</h1>
     </div>
     <div class="d-none d-lg-block col-lg-5 bg-dark border-bottom-dark">&nbsp;</div>
   </div>
@@ -105,13 +105,13 @@
 
         <div class="row no-gutters">
           <div class="col-12 col-lg-7 bg-white border-bottom p-4">
-            <h2 class="h5 mb-3 offset-top" id="{%- include utils/idify.html text=id -%}">{% include utils/request_method.html request_method=request_method %} {{ path[0] }}</h2>
+            <h2 class="h5 mb-3 offset-top" id="{%- include _includes/utilsidify.html text=id -%}">{% include _includes/utilsrequest_method.html request_method=request_method %} {{ path[0] }}</h2>
 
             {%- if description -%}
               <div>{{- description | markdownify -}}</div>
             {%- endif -%}
 
-            <pre class="p-2 border rounded bg-light">{{- server -}}{{- path[0] -}}{% include utils/query_string.html parameters=parameters %}</pre>
+            <pre class="p-2 border rounded bg-light">{{- server -}}{{- path[0] -}}{% include _includes/utilsquery_string.html parameters=parameters %}</pre>
 
             {%- if parameters -%}
               {%- include parameters.html parameters=parameters in='header' -%}
