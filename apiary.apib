@@ -4008,6 +4008,306 @@ This endpoint can be used to batch extract Runs level data to be used in analizi
 + Response 500 
 
         An internal error prevented the server from performing this action
+        
+# Group Notifications
+
+## Users Notifications Alert [/users/notifications/alert]
+
+### hasUserNotifications [GET]
+Checks whether the current user has unread notifications.
+
++ Response 401 (application/json)
+
+        The current user cannot perform this operation because they are not logged in
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 500 (application/json)
+
+        An internal error prevented the server from performing this action
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 200 (application/json)
+
+        success
+
+    + Attributes (domino.notifications.HasNotifications)
+
+
+
+
+## Users Notifications Display [/users/notifications/display{?label,offset,limit}]
+
+### displayUserNotifications [GET]
+Display all notifications for the current user.
++ Parameters
+    + label (string, optional)
+
+        Filter by Label (optional)
+
+    + offset (number, optional)
+
+        Offset in Data (optional)
+
+    + limit (number, optional)
+
+        Maximum number of records to display (optional)
+
+
++ Response 400 (application/json)
+
+        The server could not understand the request due to malformed syntax
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 401 (application/json)
+
+        The current user cannot perform this operation because they are not logged in
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 500 (application/json)
+
+        An internal error prevented the server from performing this action
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 200 (application/json)
+
+        success
+
+    + Attributes (domino.notifications.ListNotificationsResult)
+
+
+
+
+## Users Notifications Markread [/users/notifications/markread]
+
+### markUserNotificationsRead [POST]
+Mark one ore more notifications as read.
+
++ Request (<<Add Header Value>>)
+
+    + Attributes (domino.notifications.MarkReadRequest)
+
+
+
++ Response 401 (application/json)
+
+        The current user cannot perform this operation because they are not logged in
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 500 (application/json)
+
+        An internal error prevented the server from performing this action
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 200 
+
+        success
+
+
+
+
+
+## Admin Notifications Display [/admin/notifications/display{?label,expired,sort,dir,offset,limit}]
+
+### displayAdminNotifications [GET]
+Lists all current notificatons with paging.
++ Parameters
+    + label (string, optional)
+
+        Filter by Label (optional)
+
+    + expired (boolean, optional)
+
+        Filter by expired status (optional)
+
+    + sort (enum[string], optional)
+
+        Specify sort criteria (optional)
+
+        + Members
+            + `title` 
+            + `message` 
+            + `priority` 
+            + `created` 
+            + `start` 
+            + `end` 
+
+    + dir (enum[string], optional)
+
+        Specify sort direction (optional)
+
+        + Members
+            + `asc` 
+            + `desc` 
+
+    + offset (number, optional)
+
+        Offset in Data (optional)
+
+    + limit (number, optional)
+
+        Maximum number of records to display (optional)
+
+
++ Response 400 (application/json)
+
+        The server could not understand the request due to malformed syntax
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 401 (application/json)
+
+        The current user cannot perform this operation because they are not logged in
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 500 (application/json)
+
+        An internal error prevented the server from performing this action
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 200 (application/json)
+
+        success
+
+    + Attributes (domino.notifications.ListAdminNotificationsResult)
+
+
+
+
+## Admin Notifications Create [/admin/notifications/create]
+
+### createAdminNotification [POST]
+Creates a new Notification.
+
++ Request (<<Add Header Value>>)
+
+    + Attributes (domino.notifications.CreateNotificationRequest)
+
+
+
++ Response 401 (application/json)
+
+        The current user cannot perform this operation because they are not logged in
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 500 (application/json)
+
+        An internal error prevented the server from performing this action
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 200 
+
+        success
+
+
+
+
+
+## Admin Notifications Update By Id [/admin/notifications/update/{id}]
+
++ Parameters
+    + id (string, required)
+
+        Notification ID
+
+
+### updateAdminNotifications [PUT]
+Updates an existing Notification.
+
++ Request (<<Add Header Value>>)
+
+    + Attributes (domino.notifications.UpdateNotificationRequest)
+
+
+
++ Response 401 (application/json)
+
+        The current user cannot perform this operation because they are not logged in
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 500 (application/json)
+
+        An internal error prevented the server from performing this action
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 200 
+
+        success
+
+
+
+
+
+## Admin Notifications Delete By Id [/admin/notifications/delete/{id}]
+
++ Parameters
+    + id (string, required)
+
+        Notification ID
+
+
+### deleteAdminNotification [DELETE]
+Deletes an existing Notification.
+
++ Response 401 (application/json)
+
+        The current user cannot perform this operation because they are not logged in
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 500 (application/json)
+
+        An internal error prevented the server from performing this action
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 200 
+
+        success
 
 # Data Structures
 
@@ -4319,6 +4619,383 @@ This endpoint can be used to batch extract Runs level data to be used in analizi
 
 ## v4 experiment initialization
 + commitId: `string` (string)
+
+## v4 experiment commands
++ args (array[string])
+
+## v4 experiment output results
++ commitMessage: `string` (string)
++ outputCommitId: `string` (string)
+
+## v4 experiment environment
++ environmentId: `string` (string)
++ environmentRevisionId: `string` (string)
+
+## v4 experiment state
++ status (enum[string])
+  + Members
+    + `IN_PROGRESS`
+    + `SUCCESSFUL`
+    + `FAILURE`
++ message: `string` (string)
++ recordedAt: `0` (number)
+
+## v4 experiment group
++ name: `string` (string)
++ projectId: `string` (string)
+
+## v4 hardware tier with capacity
++ hardwareTier (v4 hardware tier)
++ capacity (v4 hardware capacity)
+
+## v4 hardware tier
++ _id: `string` (string)
++ id: `string` (string)
++ name: `string` (string)
++ cores: `0` (number)
++ memory: `0` (number)
++ runMemoryLimit (v4 run memory limit)
++ isDefault: true (boolean)
++ isAllowedDuringTrial: true (boolean)
++ isVisible: true (boolean)
++ isGlobal: false (boolean)
++ centsPerMinute: `0` (number)
++ isFree: false (boolean)
+
+## v4 run memory limit
++ memoryLimitMegabytes: `0` (number)
++ memorySwapLimitMegabytes: `0` (number)
+
+## v4 hardware capacity
++ currentNumberOfExecutors: `0` (number)
++ maximumNumberOfExecutors: `0` (number)
++ numberOfCurrentlyExecutingRuns: `0` (number)
++ numberOfQueuedRuns: `0` (number)
++ maximumConcurrentRuns: `0` (number)
++ availableCapacityWithoutLaunching: `0` (number)
++ maximumAvailableCapacity: `0` (number)
++ capacityLevel (object)
+
+## Git ref
++ type (enum[string])
+  + Members
+    + `branches`
+    + `tags`
+    + `head`
+    + `commitId`
+    + `ref`
++ value: `master` (string)
+
+
+
+## project Git repository
++ name: `repo1` (string)
++ uri: `git@github.com:user/repo1.git` (string)
++ ref (Git ref)
+
+## create dataset request
++ datasetName: `myDataset` (string, required)
++ description: `A dataset for my useful data.` (string)
++ projectId: `5ac42816e4b0e9a0a82bbe8f` (string, required)
+
+## update dataset request
++ datasetName: `myDataset` (string)
++ description: `A dataset for my useful data.` (string)
+
+## add tag to dataset request
++ snapshotId: `5d35b6cfc9e77c000834d3d6` (string, required)
++ tag: `Production` (string, required)
+
+## update snapshot request
++ status: `Active` (string)
+
+## create snapshot request
++ relativeFilePaths: array(string) - Array of filepaths relative to the dataset directory
++ datasetId: `5d35b6cfc9e77c000834d3d6` (string)
+
+## dataset response
++ datasetName: `myDataset` (string)
++ datasetId: `5d35b6dec9e77c000834d3da` (string)
++ projectId: `5ac42816e4b0e9a0a82bbe8f` (string)
+
+## dataset details response
++ datasetName: `myDataset` (string)
++ description: `A dataset for my useful data.` (string)
++ datasetId: `5d35b6dec9e77c000834d3da` (string)
++ projectId: `5ac42816e4b0e9a0a82bbe8f` (string)
++ created: `01012019` (string)
++ snapshots (array[string]) - Array of snapshot IDs
++ tags (array[string, string]) - Array of tag name / tag ID pairs
+
+## snapshot response
++ snapshotId: `5d35b6cfc9e77c000834d3d6` (string)
++ datasetId: `5d35b6dec9e77c000834d3da` (string)
+
+## snapshot details response
++ snapshotId: `5d35b6cfc9e77c000834d3d6` (string)
++ datasetId: `5d35b6dec9e77c000834d3da` (string)
++ creatorId: `5ac42816e4b0e9a0a82bbe8f` (string)
++ created: `01012019` (string)
++ status: `Active` (string)
++ lastMounted: `01012019` (string)
++ origin: `CLI Upload` (string)
+
+## rw snapshot response
++ id: `5d35b6cfc9e77c000834d3d6` (string),
++ resourceId: `5d35b6cfc9e75c050834dbe6` (string),
++ datasetId: `5d35b6dec9e77c000834d3da` (string),
++ author: `5d531bdee09329f0f83932a6` (string, optional),
++ version: `1` (number),
++ description: `my first snapshot` (string),
++ creationTime: `1622148562901` (number),
++ lifecycleStatus: `Active` (string),
++ statusLastUpdatedBy: `000000000000000000000000` (string),
++ statusLastUpdatedTime: `1622148567541` (number),
++ storageSize: `52908706` (number),
++ isPartialSize: false (boolean),
++ lastUsedTime: `0` (number, optional),
++ isReadWrite: false (boolean)
+
+## rw dataset view response
++ id: `5d35b6dec9e77c000834d3da` (string),
++ name: `dataset name` (string),
++ description: `dataset description` (string, optional),
++ snapshotIds (array[string]),
++ tags (array[string, string]),
++ createdTime (number),
++ projectId (string, optional),
++ projectOwner (string),
++ projectName (string)
+
+
+
+
+## domino.common.gateway.runs.RunsGatewaySummary (object)
+
+
+### Properties
++ `batchId` (string, required) 
++ `runId` (string, required) 
++ `title` (string, required) 
++ `command` (string, required) 
++ `status` (string, required) 
++ `runType` (string, required) 
++ `userName` (string, required) 
++ `userId` (string, required) 
++ `projectOwnerName` (string, required) 
++ `projectOwnerId` (string, required) 
++ `projectName` (string, required) 
++ `projectId` (string, required) 
++ `runDurationSec` (number, required) 
++ `hardwareTier` (string, required) 
++ `hardwareTierCostCurrency` (string, required) 
++ `hardwareTierCostAmount` (number, required) 
++ `queuedTime` (number, required) 
++ `startTime` (number, optional) 
++ `endTime` (number, optional) 
++ `totalCostCurrency` (string, required) 
++ `totalCostAmount` (number, required) 
+
+
+## domino.common.gateway.runs.RunsGatewaySequence (object)
+
+## definitions/domino.api.ErrorResponse
+
++ message (optional)
+
+## definitions/domino.modelmanager.web.BuildModelImageApiRequest
+
++ description (optional)
++ environmentId (optional)
++ inferenceFunctionFile (required)
++ inferenceFunctionToCall (required)
++ logHttpRequestResponse (boolean, required)
++ modelId (optional)
++ modelName (required)
++ projectId (required)
+
+## definitions/domino.modelmanager.web.BuildModelImageApiResponse
+
++ buildStatus (required)
++ description (optional)
++ environmentId (required)
++ modelId (required)
++ modelVersionId (required)
++ modelVersionNumber (number, required)
++ name (required)
++ projectId (required)
++ projectName (required)
+
+## definitions/domino.modelmanager.web.ExportModelImageApiRequest
+
++ password (optional)
++ registryUrl (required)
++ repository (required)
++ tag (optional)
++ username (optional)
+
+## definitions/domino.modelmanager.web.ModelBuildLogsApiResponse
+
++ logs (required)
++ modelId (required)
++ modelVersionId (required)
++ status (required)
+
+## definitions/domino.modelmanager.web.ModelBuildStatusApiResponse
+
++ modelId (required)
++ modelVersionId (required)
++ status (required)
+
+## definitions/domino.modelmanager.web.ModelExportLogsApiResponse
+
++ exportId (required)
++ logs (required)
++ modelId (required)
++ modelVersionId (required)
++ status (required)
+
+## definitions/domino.modelmanager.web.ModelExportStatusApiResponse
+
++ exportId (required)
++ modelId (required)
++ modelVersionId (required)
++ status (required)
+
+## definitions/domino.modelmanager.web.ExportImageForSagemakerApiRequest
+
++ registryUrl (optional)
++ repository (optional)
++ tag (optional)
++ username (optional)
++ password (optional)
+
+## domino.api.ErrorResponse (object)
+
+## domino.notifications.MarkReadRequest (object)
+### Properties
++ `ids` (array[string], required) - IDs of notifications to be marked as read
+
+## domino.notifications.ListNotificationsResult (object)
+
+### Properties
++ `pagination` (domino.notifications.Pagination, optional) 
++ `notifications` (array[domino.notifications.UserNotification], optional) 
+
+## domino.notifications.NameAndDescription (object)
+
+### Properties
++ `name`: `abc123` (string, optional) - object ID
++ `description` (string, optional) - Descriptive name for presentation
+
+## domino.notifications.Pagination (object)
+### Properties
++ `offset` (number, optional) - offset in the underlying data
++ `count` (number, optional) - total number of matching records
+
+## domino.notifications.Label (object)
+A label, with attached priority
+
+### Properties
++ `priority` (number, required) - numeric priority, low is more critical
++ `name`: `Critical` (string, required) - label to display
+
+## domino.notifications.UserNotification (object)
+
+### Properties
++ `notification` (domino.notifications.Notification, optional) 
++ `read` (boolean, optional) - has this notification been read by the current user?
++ `expired` (boolean, optional) - has this notification expired?
+
+## domino.notifications.HasNotifications (object)
+### Properties
++ `unread` (boolean, optional) 
+
+## domino.notifications.Notification (object)
+
+### Properties
++ `id`: `abc123` (string, optional) - Message ID, not displayed anywhere
++ `title`: `Important notification` (string, optional) 
++ `message`: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.` (string, optional) 
++ `created` (string, optional) 
++ `origin` (domino.notifications.Origin, optional) - Message source or author. Modeled as object for future extensibility
++ `labels` (array[domino.notifications.Label], optional) 
+
+## domino.notifications.ListAdminNotificationsResult (object)
+
+### Properties
++ `pagination` (domino.notifications.Pagination, optional) 
++ `notifications` (array[domino.notifications.AdminNotification], optional) 
+
+## domino.notifications.Metadata (object)
+
+### Properties
++ `read` (boolean, optional) - Has the message already been read by this user? Only set in user-specific contexts.
++ `expired` (boolean, required) - Has the message been marked as expired by the admin?
+
+## domino.notifications.Origin (object)
+Message source or author. Modeled as object for future extensibility
+
+### Properties
++ `name`: `Admin` (string, required) - author or origin name
++ `initials`: `SF` (string, optional) - 2 letter initials to display in a bubble
+
+## domino.notifications.NameAndId (object)
+
+### Properties
++ `id`: `abc123` (string, optional) - object ID
++ `name` (string, optional) - Descriptive name for presentation
+
+## domino.notifications.LimitedAudience (object)
+Definition of a limited audience for a notification. If present, a notification will be shown to users who are mentioned directly, or part of a mentioned org, or have one of the mentioned roles (at least one of these criteria must apply).
+
+### Properties
++ `users` (array[string], optional) - DominoIds of users who will receive this notification
++ `orgs` (array[string], optional) - DominoIds of orgs whose users will receive this notification
++ `roles` (array[string], optional) - Users that have any of these Roles will receive this notification
+
+## domino.notifications.Timeframe (object)
+
+### Properties
++ `from`: `2021-12-12T09:12:33.001Z` (string, optional) - Start time from which to display the notification, optional
++ `to`: `2021-12-16T09:12:33.001Z` (string, optional) - End time at which the notification expires, optional
+
+## domino.notifications.LimitedAudienceWithNames (object)
+Definition of a limited audience for a notification. If present, a notification will be shown to users who are mentioned directly, or part of a mentioned org, or have one of the mentioned roles (at least one of these criteria must apply).
+
+### Properties
++ `users` (array[domino.notifications.NameAndId], optional) - DominoIds of users who will receive this notification
++ `orgs` (array[domino.notifications.NameAndId], optional) - DominoIds of orgs whose users will receive this notification
++ `roles` (array[domino.notifications.NameAndDescription], optional) - Users that have any of these Roles will receive this notification
+
+## domino.notifications.CreateNotificationRequest (object)
+
+
+### Properties
++ `title` (string, required) - the notification title
++ `message` (string, required) - the notification body
++ `priority` (enum[string], required) - Priority, internally mapped to labels
+    + `Critical`
+    + `Default`
++ `start`: `2022-12-03T10:15:30+01:00` (string, optional) - optional start date/time in ISO-8601 offset format
++ `end`: `2022-12-03T10:15:30+01:00` (string, optional) - optional end date/time in ISO-8601 offset format
++ `limitedAudience` (domino.notifications.LimitedAudience, optional) - Definition of a limited audience for a notification. If present, a notification will be shown to users who are mentioned directly, or part of a mentioned org, or have one of the mentioned roles (at least one of these criteria must apply).
+
+## domino.notifications.UpdateNotificationRequest (object)
+
+
+### Properties
++ `expired` (boolean, optional) - mark the notification as expired (only true is supported)
+
+## domino.notifications.AdminNotification (object)
+
+
+### Properties
++ `notification` (domino.notifications.Notification, optional) 
++ `timeframe` (domino.notifications.Timeframe, optional) 
++ `expired` (boolean, optional) - has this notification expired?
++ `limitedAudience` (domino.notifications.LimitedAudienceWithNames, optional) - Definition of a limited audience for a notification. If present, a notification will be shown to users who are mentioned directly, or part of a mentioned org, or have one of the mentioned roles (at least one of these criteria must apply).
+
 
 ## v4 experiment commands
 + args (array[string])
