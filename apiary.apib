@@ -4319,6 +4319,5004 @@ This endpoint can be used to batch extract Runs level data to be used in analizi
 
 ## v4 experiment initialization
 + commitId: `string` (string)
+FORMAT: 1A
+HOST: https://api.dominodatalab.com
+
+# Domino Data Lab API
+
+**NOTE:** These APIs are not officially supported and are subject to change in future releases.
+
+Domino has two types of APIs:
+
+1. The **Domino API** that you can use to operate and administer Domino services. These APIs are documented on this page.
+2. The **Model API** serves your code as a low-latency web service. You don't need any API design experience
+   to turn your Python or R code into a Model API Endpoint. [Learn more about Model APIs here.](https://support.dominodatalab.com/hc/en-us/articles/115001488023-Model-Manager-Overview-)
+
+**Note:** 
+* The base URL will depend on your deployment of Domino. Replace `https://api.dominodatalab.com` in
+the examples below with the URL of your Domino deployment. This will be the same as the URL you visit in your browser
+when you use the Domino application.
+* To authenticate your requests, include your API Key with the header `X-Domino-Api-Key`. You can find this key on your
+user account page in the Domino application.
+
+
+# Group Project runs and files
+
+These endpoints allow you to interact with your project's runs and files.
+
+## Project runs [/v1/projects/{username}/{project_name}/runs]
+
+### Get a list of runs [GET]
+
++ Parameters
+
+    + username: `nick` (string, required) - The project owner's username
+    + project_name: `winequality` (string, required) - The project name
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+
+        + objectType: `list` (string) - The type of object the API returned.
+        + uri (string) - The URI that responded to your request.
+        + data (array[Run status]) - Array of run statuses.
+
+
+### Start a run [POST]
+
++ Parameters
+
+    + username: `nick` (string, required) - The project owner's username
+    + project_name: `winequality` (string, required) - The project name
+
++ Request (application/json)
+
+    + Attributes
+
+        + command: `model.py`, `random-argument`, `--sample`, `2000` (array, required) - Array of strings making up your command. For example:
+
+            ```python
+                    ["model.py", "random-argument", "--sample", "2000"]
+            ```
+
+        + isDirect: `false` (boolean, required) - A direct command is interpretted as a shell command; Domino doesn't try to infer a program to match your file type.
+        + title: `This one should work!` (string) - An optional title for your run.
+        + tier: `gpu` (string) - Identifier of the hardware tier to use. This should be the human-readable name of the hardware tier, such as "Free", "Small", "Medium" etc. 
+        + commitId: `1c6e8aa47951e39f9a905f0077af9355c35b712b` (string) - Revision at which to start the run.
+        + publishApiEndpoint: `false` (boolean) - __This field will be deprecated in future versions.__ If true, the results of a successful run will be deployed to the project's active API Endpoint, if one exists.
+        + datasetConfig: '' (string) - Deprecated in 4.5. The optional name of a Dataset configuration from a domino.yaml file; used to start a run with a specific dataset configuration mounted.
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+        + runId: `553af271e4b0364c0f717b24` (string) - The unique ID for the run that was just started.
+        + message: `Run for project <username>/<project_name> started. You can view progress here: https://app.dominodatalab.com/<username>/<project_name/runs/553af271e4b0364c0f717b24` (string) - A human-readable message with a full link to view the status of your run.
+
+## Run status [/v1/projects/{username}/{project_name}/runs/{run_id}]
+
+### Get the status of a run [GET]
+
++ Parameters
+
+    + username: `nick` (string, required) - The project owner's username.
+    + project_name: `winequality` (string, required) - The project name.
+    + run_id (string, required) - The unique ID for the run.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (Run status)
+
+## Run logs [/v1/projects/{username}/{project_name}/run/{run_id}/stdout?{previewNumberOfLines}]
+
+### Get run logs [GET]
+
++ Parameters
+    + username: `nick` (string, required) - The project owner's username
+    + project_name: `winequality` (string, required) - The project name
+    + run_id (string, required) - The unique ID for the run
+    + previewNumberOfLines (int, optional) - Take the last _N_ lines of the log output
+
++ Request
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+    + Attributes
+        + setup: `Downloading blobs\n0 of 1 transferred...\n`(string) - Logs output during the setup of the run
+        + stdout: `Hello, World!\n` (string) - Logs outputted from user code during the run.  Note that this field also include stderr logs as well.
+
+## Project files [/v1/projects/{username}/{project_name}/files/{commit_id}/{path}]
+
+### Get a list of files in a commit [GET]
+
++ Parameters
+
+    + username: `nick` (string, required) - The project owner's username.
+    + project_name: `winequality` (string, required) - The project name.
+    + commit_id: `8f5622ad68829da47ab9be2660c962a56df6003e` (string, required) - The commit ID of the revision of the project you want files for.
+    + path: `/` (string, required) - The path you want files for.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+
+## File contents [/v1/projects/{username}/{project_name}/blobs/{blob_id}]
+
+### Get the contents of a file [GET]
+
++ Parameters
+
+    + username: `nick` (string, required) - The project owner's username.
+    + project_name: `winequality` (string, required) - The project name.
+    + blob_id: `adfjlklasdfhjklah8323hfjkdf` (string, required) - The unique ID of the blob.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200
+
+
+## File uploads [/v1/projects/{username}/{project_name}/{path}]
+
+### Upload a file to a project [PUT]
+
++ Parameters
+
+    + username: `nick` (string, required) - The project owner's username.
+    + project_name: `winequality` (string, required) - The project name.
+    + path: `data/randomNumbers.rdata` (string, required) - Where you want the file to be saved. You can include `/` to upload files into directories that exist.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Body
+
+            <CONTENTS_OF_YOUR_FILE>
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: https://app.dominodatalab.com/v1/projects/marks/quick-start/blobs/5c28ab880e29953e41b91e351f786a833fbf18a5
+            Transfer-Encoding: chunked
+
+    + Attributes
+        + path: `data/randomNumbers.rdata` (string, required) - Path your file was saved to.
+        + lastModified: `1475878612000` (number, required) - Milliseconds epoch time the file was last modified.
+        + size: `32690` (number, required) - The size of the file you uploaded, in bytes.
+        + key: `5c28ab880e29953e41b91e351f786a833fbf18a5` (string, required) - The blob ID for the file. Used by the `File contents` API.
+        + url: `https://app.dominodatalab.com/v1/projects/marks/quick-start/blobs/5c28ab880e29953e41b91e351f786a833fbf18a5` (string, required) - The full URL to the blob. This can be used to re-download the file.
+
+
+# Group Search
+
+These endpoints allow you to search for projects, runs, files, and comments.
+
+## Domino object search [/v1/search{?query,area}]
+
+### Execute a search [GET]
+
++ Parameters
+    + query: `shiny` (string, required) - The phrase to search for.
+    + area: `project` (string, required) - The type of object to search. Valid values are `project`, `run`, `file`, and `comment`.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+
+# Group Environments
+
+These endpoints allow you to interact with your environments.
+
+## Environments [/v1/environments]
+
+### Get a list of v2 environments [GET]
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+
+        + objectType: `list` (string) - The type of object the API returned.
+        + data (array[Environment list item]) - Array of environments.
+
+
+# Group Models
+
+These endpoints allow you to interact with your project's models.
+
+## Project models [/v1/projects/{username}/{project_name}/models]
+
+### Get a list of models published by a project [GET]
+
+**This is a beta endpoint available in Domino 2.5+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+    + username: `nick` (string, required) The project owner's username.
+    + project_name: `winequality` (string, required) - The project name.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+
+        + objectType: `list` (string) - The type of object the API returned.
+        + data (array) - Array of models.
+            - (Model Base)
+
+## Model publishing [/v1/models]
+
+### Publish a new model [POST]
+
+**This is a beta endpoint available in Domino 2.5+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Request (application/json)
+
+    + Attributes (Model Create)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (Model Response)
+
+
+## Model versions [/v1/models/{model_id}/versions]
+
+### Get the latest versions of a model [GET]
+
+**This is a beta endpoint available in Domino 2.5+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + model_id: `5a73a6b86278f5c536008832` (string, required) - The unique id of the model to version.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+        + data (array[Model Version List Item])
+
+### Publish a new model version [POST]
+
+**This is a beta endpoint available in Domino 2.5+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + model_id: `5a73a6b86278f5c536008832` (string, required) - The unique id of the model to version.
+
++ Request (application/json)
+
+    + Attributes (Model Version Create)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (Model Version Response)
+    
+
+## Build Model Image [/v4/models/buildModelImage]
+
+### Build a model image  [POST]
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "modelName": "",
+              "projectId": "000000000000000000000000",
+              "inferenceFunctionToCall": "",
+              "inferenceFunctionFile": "",
+              "logHttpRequestResponse": false,
+              "description": "",
+              "environmentId": "000000000000000000000000",
+              "modelId": "000000000000000000000000"
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "environmentId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "inferenceFunctionFile": {
+                  "type": "string"
+                },
+                "inferenceFunctionToCall": {
+                  "type": "string"
+                },
+                "logHttpRequestResponse": {
+                  "type": "boolean"
+                },
+                "modelId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "modelName": {
+                  "type": "string"
+                },
+                "projectId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "modelName",
+                "projectId",
+                "inferenceFunctionToCall",
+                "inferenceFunctionFile",
+                "logHttpRequestResponse"
+              ]
+            }
+
++ Response 202 (application/json)
+
+    Request accepted, building of model image continues offline
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "name": "",
+                "environmentId": "000000000000000000000000",
+                "projectId": "000000000000000000000000",
+                "projectName": "",
+                "buildStatus": "",
+                "modelVersionId": "000000000000000000000000",
+                "modelVersionNumber": -100000000,
+                "description": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.BuildModelImageApiResponse"
+              },
+              "type": "array",
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.BuildModelImageApiResponse": {
+                  "properties": {
+                    "buildStatus": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "environmentId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionNumber": {
+                      "format": "int32",
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "projectId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "projectName": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "name",
+                    "environmentId",
+                    "projectId",
+                    "projectName",
+                    "buildStatus",
+                    "modelVersionId",
+                    "modelVersionNumber"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "modelName": "",
+              "projectId": "000000000000000000000000",
+              "inferenceFunctionToCall": "",
+              "inferenceFunctionFile": "",
+              "logHttpRequestResponse": false,
+              "description": "",
+              "environmentId": "000000000000000000000000",
+              "modelId": "000000000000000000000000"
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "environmentId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "inferenceFunctionFile": {
+                  "type": "string"
+                },
+                "inferenceFunctionToCall": {
+                  "type": "string"
+                },
+                "logHttpRequestResponse": {
+                  "type": "boolean"
+                },
+                "modelId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "modelName": {
+                  "type": "string"
+                },
+                "projectId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "modelName",
+                "projectId",
+                "inferenceFunctionToCall",
+                "inferenceFunctionFile",
+                "logHttpRequestResponse"
+              ]
+            }
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "modelName": "",
+              "projectId": "000000000000000000000000",
+              "inferenceFunctionToCall": "",
+              "inferenceFunctionFile": "",
+              "logHttpRequestResponse": false,
+              "description": "",
+              "environmentId": "000000000000000000000000",
+              "modelId": "000000000000000000000000"
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "environmentId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "inferenceFunctionFile": {
+                  "type": "string"
+                },
+                "inferenceFunctionToCall": {
+                  "type": "string"
+                },
+                "logHttpRequestResponse": {
+                  "type": "boolean"
+                },
+                "modelId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "modelName": {
+                  "type": "string"
+                },
+                "projectId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "modelName",
+                "projectId",
+                "inferenceFunctionToCall",
+                "inferenceFunctionFile",
+                "logHttpRequestResponse"
+              ]
+            }
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "modelName": "",
+              "projectId": "000000000000000000000000",
+              "inferenceFunctionToCall": "",
+              "inferenceFunctionFile": "",
+              "logHttpRequestResponse": false,
+              "description": "",
+              "environmentId": "000000000000000000000000",
+              "modelId": "000000000000000000000000"
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "environmentId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "inferenceFunctionFile": {
+                  "type": "string"
+                },
+                "inferenceFunctionToCall": {
+                  "type": "string"
+                },
+                "logHttpRequestResponse": {
+                  "type": "boolean"
+                },
+                "modelId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "modelName": {
+                  "type": "string"
+                },
+                "projectId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "modelName",
+                "projectId",
+                "inferenceFunctionToCall",
+                "inferenceFunctionFile",
+                "logHttpRequestResponse"
+              ]
+            }
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "modelName": "",
+              "projectId": "000000000000000000000000",
+              "inferenceFunctionToCall": "",
+              "inferenceFunctionFile": "",
+              "logHttpRequestResponse": false,
+              "description": "",
+              "environmentId": "000000000000000000000000",
+              "modelId": "000000000000000000000000"
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "environmentId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "inferenceFunctionFile": {
+                  "type": "string"
+                },
+                "inferenceFunctionToCall": {
+                  "type": "string"
+                },
+                "logHttpRequestResponse": {
+                  "type": "boolean"
+                },
+                "modelId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "modelName": {
+                  "type": "string"
+                },
+                "projectId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "modelName",
+                "projectId",
+                "inferenceFunctionToCall",
+                "inferenceFunctionFile",
+                "logHttpRequestResponse"
+              ]
+            }
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+## Export Model Image Status [/v4/models/{exportId}/getExportImageStatus]
+
+### Get model image export status [GET]
+
++ Parameters
+
+    + exportId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    success
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "modelVersionId": "000000000000000000000000",
+                "exportId": "000000000000000000000000",
+                "status": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.ModelExportStatusApiResponse"
+              },
+              "type": "array",
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.ModelExportStatusApiResponse": {
+                  "properties": {
+                    "exportId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "modelVersionId",
+                    "exportId",
+                    "status"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+## Export Model Image Logs [/v4/models/{exportId}/getExportLogs]
+
+### Get model image export logs [GET]
+
++ Parameters
+
+    + exportId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    success
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "modelVersionId": "000000000000000000000000",
+                "exportId": "000000000000000000000000",
+                "status": "",
+                "logs": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.ModelExportLogsApiResponse"
+              },
+              "type": "array",
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.ModelExportLogsApiResponse": {
+                  "properties": {
+                    "exportId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "logs": {
+                      "type": "string"
+                    },
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "modelVersionId",
+                    "exportId",
+                    "status",
+                    "logs"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+## Export Model Image [/v4/models/{modelId}/{modelVersionId}/exportImageToRegistry]
+
+### Export model image to external registry [POST]
+
++ Parameters
+
+    + modelId (required)
+    
+    + modelVersionId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "password": "",
+              "tag": "",
+              "username": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "password": {
+                  "type": "string"
+                },
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "registryUrl",
+                "repository"
+              ]
+            }
+
++ Response 202 (application/json)
+
+    Request accepted, exporting of model image continues offline
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "modelVersionId": "000000000000000000000000",
+                "exportId": "000000000000000000000000",
+                "status": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.ModelExportStatusApiResponse"
+              },
+              "type": "array",
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.ModelExportStatusApiResponse": {
+                  "properties": {
+                    "exportId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "modelVersionId",
+                    "exportId",
+                    "status"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "password": "",
+              "tag": "",
+              "username": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "password": {
+                  "type": "string"
+                },
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "registryUrl",
+                "repository"
+              ]
+            }
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "password": "",
+              "tag": "",
+              "username": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "password": {
+                  "type": "string"
+                },
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "registryUrl",
+                "repository"
+              ]
+            }
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "password": "",
+              "tag": "",
+              "username": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "password": {
+                  "type": "string"
+                },
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "registryUrl",
+                "repository"
+              ]
+            }
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "password": "",
+              "tag": "",
+              "username": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "password": {
+                  "type": "string"
+                },
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "registryUrl",
+                "repository"
+              ]
+            }
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+## Export a Sagemaker compatible model image [/v4/models/{modelId}/{modelVersionId}/exportImageForSagemaker]
+
+### Export a Sagemaker compatible model image to any external container registry [POST]
+
++ Parameters
+
+    + modelId (required)
+
+    + modelVersionId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "tag": "",
+              "username": "",
+              "password": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+              "required":[
+                "inferenceFunctionToCall",
+                "inferenceFunctionFile",
+                "registryUrl",
+                "repository"
+              ]
+            }
+
+
+
++ Response 200 (application/json)
+
+    success
+
+    + Attributes
+
+    + Body
+
+            {
+              "modelId": "000000000000000000000000",
+              "modelVersionId": "000000000000000000000000",
+              "exportId": "000000000000000000000000",
+              "status": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "modelId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "modelVersionId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "exportId": {
+                  "pattern": "^[0-9a-f]{24}$",
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "modelId",
+                "modelVersionId",
+                "exportId",
+                "status"
+              ]
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "tag": "",
+              "username": "",
+              "password": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "tag": "",
+              "username": "",
+              "password": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "tag": "",
+              "username": "",
+              "password": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
+    + Attributes
+
+    + Body
+
+            {
+              "registryUrl": "",
+              "repository": "",
+              "tag": "",
+              "username": "",
+              "password": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "registryUrl": {
+                  "type": "string"
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+
+## Build Model Image Logs [/v4/models/{modelId}/{modelVersionId}/getBuildLogs]
+
+### Get model image build logs [GET]
+
++ Parameters
+
+    + modelId (required)
+    
+    + modelVersionId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    success
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "modelVersionId": "000000000000000000000000",
+                "status": "",
+                "logs": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.ModelBuildLogsApiResponse"
+              },
+              "type": "array",
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.ModelBuildLogsApiResponse": {
+                  "properties": {
+                    "logs": {
+                      "type": "string"
+                    },
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "modelVersionId",
+                    "status",
+                    "logs"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+## Build Model Image Status [/v4/models/{modelId}/{modelVersionId}/getBuildStatus]
+
+### Get model image build status [GET]
+
++ Parameters
+
+    + modelId (required)
+    
+    + modelVersionId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    success
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "modelVersionId": "000000000000000000000000",
+                "status": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.ModelBuildStatusApiResponse"
+              },
+              "type": "array",
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.ModelBuildStatusApiResponse": {
+                  "properties": {
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "modelVersionId",
+                    "status"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "properties": {
+                "message": {
+                  "description": "Error message",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+## Stop running Model API [/v4/models/{modelId}/{modelVersionId}/stopModelDeployment]
+
+### Stop a Model API that is currently running on Domino [POST]
+
++ Parameters
+
+    + modelId (required)
+    
+    + modelVersionId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    success
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "modelVersionId": "000000000000000000000000",
+                "status": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.ModelDeploymentStatusApiResponse"
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.ModelDeploymentStatusApiResponse": {
+                  "properties": {
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "modelVersionId",
+                    "status"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+## Start Model API [/v4/models/{modelId}/{modelVersionId}/startModelDeployment]
+
+### Start or deploy a Model API that is currently not running [POST]
+
++ Parameters
+
+    + modelId (required)
+    
+    + modelVersionId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    success
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "modelVersionId": "000000000000000000000000",
+                "status": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.ModelDeploymentStatusApiResponse"
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.ModelDeploymentStatusApiResponse": {
+                  "properties": {
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "modelVersionId",
+                    "status"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+### /v4/models/{modelId}/{modelVersionId}/modelDeploymentStatus
+
+#### Get deployment status for a Model API [GET]
+
++ Parameters
+
+    + modelId (required)
+    
+    + modelVersionId (required)
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    success
+
+    + Attributes
+
+    + Body
+
+            [
+              {
+                "modelId": "000000000000000000000000",
+                "modelVersionId": "000000000000000000000000",
+                "status": ""
+              }
+            ]
+
+    + Schema
+
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/domino.modelmanager.web.ModelDeploymentStatusApiResponse"
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "definitions": {
+                "domino.modelmanager.web.ModelDeploymentStatusApiResponse": {
+                  "properties": {
+                    "modelId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "modelVersionId": {
+                      "pattern": "^[0-9a-f]{24}$",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "modelVersionId",
+                    "status"
+                  ]
+                }
+              }
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 400 (application/json)
+
+    The server could not understand the request due to malformed syntax
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 401 (application/json)
+
+    The current user cannot perform this operation because they are not logged in
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 403 (application/json)
+
+    The current user is not authorized to perform this operation
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+
++ Response 500 (application/json)
+
+    An internal error prevented the server from performing this action
+
+    + Attributes (optional)
+
+    + Body
+
+            {
+              "message": ""
+            }
+
+    + Schema
+
+            {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              },
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
+
+# Group Users v4
+
+These endpoints provide information about users in your deployment.
+
+## Query users [/v4/users{?userId,userName,query}]
+
+### Get a list of users [GET]
+
+**This is a beta endpoint available in Domino 2.8+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + userId: `poweruser,anotheruser` (array, optional) - Optional, returns only the users who match the IDs in this array.
+    + userName: `poweruser` (string, optional) - Optional, returns only the single user with the exact provided username.
+    + query: `p` (string, optional) - Optional, returns all usernames that start with this query string.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (array[v4 user])
+
+
+## Self [/v4/users/self]
+
+### Get current user [GET]
+
+**This is a beta endpoint available in Domino 2.8+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (v4 user)
+
+
+# Group Organizations v4
+
+These endpoints allow you interact with
+[organizations](https://support.dominodatalab.com/hc/en-us/articles/204857715) in
+your deployment.
+
+## All organizations [/v4/organizations{?name}]
+
+### Get a list of organizations [GET]
+
+**This endpoint requires admin permissions.**<br>
+**This is a beta endpoint available in Domino 2.8+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + name: `goodOrg` (optional) - Optional, returns only the organization with the specified name.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (array[Organization])
+
+
+## Create organization [/v4/organizations]
+
+### Create a new organization [POST]
+
+**This is a beta endpoint available in Domino 2.8+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Request (application/json)
+
+    + Attributes
+
+      + name: `newOrg` - Name of new organization.
+      + email: `domino@newOrg.suffix` - Email address for managing the organization in Domino.
+      + members (array[Organization member])
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Body
+
+                {
+                  "name": "string",
+                  "email": "string",
+                  "members": [
+                    {
+                      "id": "string",
+                      "role": "Member"
+                    }
+                  ]
+                }
+
++ Response 200 (application/json)
+
+    + Attributes (Organization)
+
+      + name: `newOrg` (string)
+
+
+## My organizations [/v4/organizations/self{?name}]
+
+### Get a list of my organizations [GET]
+
+**This is a beta endpoint available in Domino 2.8+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + name: `goodOrg` (optional) - Optional, returns only the organization with the specified name.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (array[Organization])
+
+
+## Organizations by ID [/v4/organizations/{orgId}]
+
+### Get organization by ID [GET]
+
+**This is a beta endpoint available in Domino 2.8+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + orgId: `5a73a6906ece7a7aed984654` (required) - Identifier of organization to get.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (Organization)
+
+
+## Organization members [/v4/organizations/{orgId}/members]
+
+### Change the list of members [PUT]
+
+**This is a beta endpoint available in Domino 2.8+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + orgId: `5a73a6906ece7a7aed984654` (required) - Identifier of organization to modify members of.
+
++ Request (application/json)
+
+    + Attributes
+
+      + members (array[Organization member]) - Array of objects representing the desired list of members (Note: the list passed here will replace the existing member list. The current list can be retrieved by a call to the [organization-by-id](https://dominodatalab.github.io/api-docs/#/reference/organizations-v4/organizations-by-id/get-organization-by-id) API). 
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (Organization)
+
+# Group Projects v4
+
+These endpoints allow you interact with your
+[Domino projects](https://support.dominodatalab.com/hc/en-us/articles/360001055303).
+
+## Get projects [/v4/projects{?name,ownerId}]
+
+### Get a list of user's projects [GET]
+
+**This is a beta endpoint available in Domino 2.9+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + name: `myProject` (optional) - Optional, returns the project information for the specified project belonging to the user.
+    + ownerId: `507f191e810c19729de860ea` (optional) - Optional, returns projects belonging to owner, specified by owner's 24-character hexidecimal identifier.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (array[v4 project])
+
+
+## Create project [/v4/projects]
+
+### Create a new project [POST]
+
+**This is a beta endpoint available in Domino 2.9+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Request (application/json)
+
+    + Attributes (v4 new project)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Body
+
+                {
+                  "name": "string",
+                  "description": "string",
+                  "visibility": "Public",
+                  "ownerId": "string",
+                  "repoToCreate": {
+                    "serviceProvider": "string",
+                    "credentialId": "string",
+                    "repositoryName": "string",
+                    "owner": "string",
+                    "isPrivate": "boolean"
+                  },
+                  "mainRepository": {
+                    "id": "string",
+                    "uri": "string",
+                    "defaultRef": {
+                      "type": "string",
+                      "value": "string"
+                    },
+                    "name": "string",
+                    "serviceProvider": "string",
+                    "credentialId": "string"
+                  },                  
+                  "collaborators": [
+                    {
+                      "collaboratorId": "string",
+                      "projectRole": "Contributor"
+                    }
+                  ],
+                  "tags": {
+                    "tagNames": [
+                      "string"
+                    ]
+                  }
+                }
+
++ Response 200 (application/json)
+
+    + Attributes (v4 new project)
+
+
+## Project fork [/v4/projects/{projectToForkId}/fork]
+
+### Fork a project [POST]
+
+**This is a beta endpoint available in Domino 2.9+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + projectToForkId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fork.
+
++ Request (application/json)
+
+    + Attributes (v4 new project)
+
+      + name: `forkedProject` - Name of destination project to fork into.
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Body
+
+                {
+                  "name": "string",
+                  "description": "string",
+                  "visibility": "Public",
+                  "ownerId": "string",
+                  "collaborators": [
+                    {
+                      "collaboratorId": "string",
+                      "projectRole": "Contributor"
+                    }
+                  ]
+                }
+
++ Response 200 (application/json)
+
+    + Attributes (v4 new project)
+
+      + name: `forkedProject` - Name of destination project to fork into.
+
+
+## Project copy [/v4/projects/{projectToCopyId}/copy]
+
+### Copy a project [POST]
+
+**This is a beta endpoint available in Domino 2.9+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + projectToCopyId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to copy.
+
++ Request (application/json)
+
+    + Attributes
+      + name: `copiedProject` (string, required) - Project name.
+      + description: `Doing data science.` (string) - Project description.
+      + visibility: `Public` (enum[string]) - Project visibility setting.
+         + Members
+           + `Public`
+           + `Searchable`
+           + `Private`
+      + ownerId: `5ac42816e4b0e9a0a82bbe8f` (string) - ID of project owner.
+      + collaborators (array[v4 project collaborator]) - Objects representing collaborators.
+      + tags (object)
+         + tagNames (array[string]) - String text of tags to apply to the project.
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Body
+
+                {
+                  "name": "string",
+                  "description": "string",
+                  "visibility": "Public",
+                  "ownerId": "string",
+                  "collaborators": [
+                    {
+                      "collaboratorId": "string",
+                      "projectRole": "Contributor"
+                    }
+                  ]
+                }
+
++ Response 200 (application/json)
+
+    + Attributes (v4 new project)
+
+      + name: `copiedProject` - Name of destination project to copy into.
+
+
+## Project updates [/v4/projects/{projectId}]
+
+### Get project summary [GET]
+
+**This is a beta endpoint available in Domino 2.9+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch summary for.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (v4 project)
+
+### Update project description and visibility [PATCH]
+
+**This is a beta endpoint available in Domino 2.9+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to update description and visibility for.
+
++ Request (application/json)
+
+    + Attributes
+
+      + description: `Doing new data science.` (string) - New description to apply to project.
+      + visibility: `Public` (enum[string]) - Project visibility setting.
+         + Members
+           + `Public`
+           + `Searchable`
+           + `Private`
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Body
+
+                {
+                  "description": "string",
+                  "visibility": "Public"
+                }
+
++ Response 200 (application/json)
+
+
+## Project tags [/v4/projects/{projectId}/tags]
+
+### Add tags to project [POST]
+
+**This is a beta endpoint available in Domino 2.9+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to add tags to.
+
++ Request (application/json)
+
+    + Attributes
+
+      + tagnames: `tag1`, `tag2` (array[string]) - Tag names to apply.
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Body
+
+                {
+                      "tagNames": [
+                        "string"
+                      ]
+                }
+
++ Response 200 (application/json)
+
+    + Attributes
+
+      + id: `5a73a6906ece7a7aed984654` (string) - ID of the tag.
+      + name: `tag1` (string) - Name of tag applied.
+
+
+## Delete tags [/v4/projects/{projectId}/tags/{tagId}]
+
+### Remove a tag from a project [DELETE]
+
+**This is a beta endpoint available in Domino 2.9+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to remove a tag from.
+    + tagId: `6fn891abd7306ece7a7aed984654` (string, required) - ID of the tag to remove.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+
+## Project settings [/v4/projects/{projectId}/settings]
+
+### Get settings for a project [GET]
+
+**This is a beta endpoint available in Domino 2.8+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch settings for.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+
+      + defaultEnvironmentId: `n67shdg3ece7a7aed984654` (string) - ID of the project's default environment
+
+
+### Update project settings [PUT]
+
+**This is a beta endpoint available in Domino 2.8+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch settings for.
+
++ Request (application/json)
+
+    + Attributes
+
+      + defaultEnvironmentId: `n67shdg3ece7a7aed984654` (string) - ID of the environment to use as project default
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Body
+
+                {
+                  "defaultEnvironmentId": "string"
+                }
+
++ Response 200 (application/json)
+
+
+## Project experiments [/v4/projects/{projectId}/experiments{?createdAfterExperiment,createdBeforeExperiment,limit}]
+
+### Get experiments for a project [GET]
+
+**This is a beta endpoint available in Domino 2.8+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch experiments for.
+    + createdAfterExperiment: `string` (string, optional)
+    + createdBeforeExperiment: `string` (string, optional)
+    + limit: `0` (number, optional)
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (array[v4 experiment])
+
+
+## Project hardware [/v4/projects/{projectId}/hardwareTiers]
+
+### Get hardware tiers for a project [GET]
+
+**This is a beta endpoint available in Domino 2.8+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch hardware tiers for.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (array[v4 hardware tier with capacity])
+
+
+## Project collaborators [/v4/projects/{projectId}/collaborators]
+
+### Add collaborator to project [POST]
+
+**This is a beta endpoint available in Domino 2.8+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to add a collaborator to.
+
++ Request (application/json)
+
+    + Attributes
+
+      + collaboratorId: `string` (string) - ID of the user to add as a collaborator.
+      + projectRole: `Contributor` (enum[string]) - Role permissions to grant the collaborator.
+          + Members
+              + `Contributor`
+              + `LauncherUser`
+              + `ResultsConsumer`
+              + `ProjectImporter`
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Body
+
+                {
+                  "collaboratorId": "string",
+                  "projectRole": "Contributor"
+                }
+
++ Response 200 (application/json)
+
+    + Attributes
+
+      + collaboratorId: `string` (string) - ID of the user added.
+      + projectRole: `Contributor` (enum[string]) - Role permissions granted.
+          + Members
+              + `Contributor`
+              + `LauncherUser`
+              + `ResultsConsumer`
+              + `ProjectImporter`
+
+
+## Remove collaborators [/v4/projects/{projectId}/collaborators/{collaboratorId}]
+
+### Remove collaborator from project [DELETE]
+
+**This is a beta endpoint available in Domino 2.8+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to remove a collaborator from.
+    + collaboratorId: `5a73a6906ece7a7aed984654` (string, required) - ID of the collaborator to remove.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes
+
+      + collaboratorId: `string` (string) - ID of the user removed.
+      + projectRole: `Contributor` (enum[string]) - Role permissions removed from user.
+          + Members
+              + `Contributor`
+              + `LauncherUser`
+              + `ResultsConsumer`
+              + `ProjectImporter`
+              
+
+## Connect Git repositories [/v4/projects/{projectId}/gitRepositories]
+
+### Get project's Git repositories [GET]
+
+**This endpoint is available in Domino 3.4+**<br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch Git repositories from.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (array[project Git repository])
+              
+
+### Add Git repository to project [POST]
+
+**This endpoint is available in Domino 3.4+**<br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch Git repositories from.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+    
+    + Attributes (project Git repository)
+
++ Response 200 (application/json)
+
+    + Attributes (project Git repository)
+
+
+## Manage Git repositories [/v4/projects/{projectId}/gitRepositories/{repositoryName}]
+
+### Update the reference of a Git repository [PATCH]
+
+**This endpoint is available in Domino 3.4+**<br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch Git repositories from.
+    + repositoryName: `repo1` (string, required) - Name of the repository the reference belongs to.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+    
+    + Attributes
+    
+      + type: `branches` (enum[string]) - Type of reference.
+          + Members
+              + `branches`
+              + `tags`
+              + `head`
+              + `commitId`
+              + `ref`
+      + value: `master` (string) - Reference value.
+      
+
++ Response 200 (application/json)
+
+
+
+### Remove Git repository [DELETE]
+
+**This endpoint is available in Domino 3.4+**<br>
+
++ Parameters
+
+    + projectId: `5a73a6906ece7a7aed984654` (string, required) - ID of the project to fetch Git repositories from.
+    + repositoryName: `repo1` (string, required) - Name of the repository the reference belongs to.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+# Group Datasets
+
+These endpoints allow you interact with your
+[Domino Datasets](https://support.dominodatalab.com/hc/en-us/articles/360020125052).
+
+## Get or create Datasets [/dataset{?projectId}]
+
+### Get a list of Datasets [GET]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + projectId: `507f191e810c19729de860ea` (optional) - Optional, returns only datasets from the specified project.
+    
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (array[dataset response])
+
+### Create a Dataset [POST]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Request (application/json)
+
+    + Attributes (create dataset request)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (dataset details response)
+    
+
+## Dataset operations [/dataset/{datasetId}]
+
+### Get Dataset details [GET]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + datasetId: `507f191e810c19729de860ea` - ID of Dataset to fetch metadata for.
+    
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (dataset details response)
+
+### Update Dataset details [PATCH]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + datasetId: `507f191e810c19729de860ea` - ID of Dataset to update metadata for.
+
++ Request (application/json)
+
+    + Attributes (update dataset request)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (dataset details response)
+
+### Delete Dataset [DELETE]
+
+**Note: Archive Dataset has been changed to admin only operation Delete Dataset starting Domino 4.5**<br>
+**This is a beta endpoint available in Domino 4.5+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + datasetId: `507f191e810c19729de860ea` - ID of Dataset to update metadata for.
+
++ Request (application/json)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200
+
++ Response 403
+
+        The current user is not authorized to perform this operation
+
+
+## Snapshot operations [/dataset/snapshot/{snapshotId}]
+
+### Get Snapshot details [GET]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + snapshotId: `507f191e810c19729de860ea` - ID of snapshot to get.
+    
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (snapshot details response)
+
+### Update Snapshot details [PATCH]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + snapshotId: `507f191e810c19729de860ea` - ID of snapshot to get.
+    
++ Request
+
+    + Attributes (update snapshot request)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (snapshot details response)
+
+### Archive Snapshot [DELETE]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + snapshotId: `507f191e810c19729de860ea` - ID of snapshot to get.
+    
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
++ Response 403
+
+        The current user is not authorized to perform this operation
+
+## Create Snapshot [/v4/datasetrw/snapshot]
+
+### Create Snapshot [POST]
+
+**This is a beta endpoint available in Domino 4.5+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
+    + Attributes (create snapshot request)
+
+
++ Response 200 (application/json)
+
+    + Attributes (rw snapshot response)
+
+## Create Dataset from Snapshot [/v4/datasetrw/dataset/{snapshotId}/create{?name,description}]
+
+### Create Dataset [POST]
+
+**This is a beta endpoint available in Domino 4.5+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + snapshotId: `60b005d22121b85022adb126` (required) - ID of snapshot used to create the dataset.
+    + name: `Dataset` (required) - Name of the new dataset created from snapshot.
+    + description: `My Dataset from Snapshot` (optional) - Description of the dataset created from snapshot.
+
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (rw dataset view response)
+
+## Add tag to Snapshot [/dataset/{datasetId}/tag]
+
+### Add tag [POST]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + datasetId: `507f191e810c19729de860ea` - ID of dataset containing the snapshot to tag.
+    
++ Request
+
+    + Attributes (add tag to dataset request)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (snapshot details response)
+
+## Remove tag from Snapshot [/dataset/{datasetId}/tag/{tagName}]
+
+### Remove tag [DELETE]
+
+**This is a beta endpoint available in Domino 3.6+**<br>
+**Its specification may change in future versions of Domino.**
+
++ Parameters
+
+    + datasetId: `507f191e810c19729de860ea` - ID of dataset containing the snapshot with tag to be removed.
+    + tagName: `Production` - Name of tag to remove.
+    
++ Request
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+    + Attributes (snapshot details response)
+
+
+# Group Usage Data
+
+## Get User Activity Report [/admin/generateUserActivityReport]
+
+### User Activity json [POST]
+
+**Only available in Domino 4+**
+
+Returns a json of usage statistics per user in Domino. Requires admin acccess. 
+
++ Request (application/json)
+
+    + Attributes (Usage Data)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+    + Attributes (Usage Data Response)
+
+
++ Response 400 
+
+        The server could not understand the request due to malformed syntax
+
+
+
+
++ Response 401 
+
+        The current user cannot perform this operation because they are not logged in
+
+
+
+
++ Response 403 
+
+        The current user is not authorized to perform this operation
+
+
+
+
++ Response 500 
+
+        An internal error prevented the server from performing this action
+
+
+
+
+## Get Runs Usage Data [/v4/gateway/runs/getByBatchId{?batchId,limit}]
+
+### Runs data to json [GET]
+
+**Only available in Domino 3.0.1+**
+
+This endpoint can be used to batch extract Runs level data to be used in analizing usage statistics of Domino. Requires admin acccess. 
+
++ Request (application/json)
+
+    + Attributes (Runs Data)
+
+    + Headers
+
+            X-Domino-Api-Key: YOUR_DOMINO_API_KEY
+
++ Response 200 (application/json)
+
+        success
+
+    + Attributes (Runs Data Response)
+
+
++ Response 400 
+
+        The server could not understand the request due to malformed syntax
+
+
+
+
++ Response 401 
+
+        The current user cannot perform this operation because they are not logged in
+
+
+
+
++ Response 403 
+
+        The current user is not authorized to perform this operation
+
+
+
+
++ Response 500 
+
+        An internal error prevented the server from performing this action
+        
+# Group Notifications
+
+## Users Notifications Alert [/users/notifications/alert]
+
+### hasUserNotifications [GET]
+Checks whether the current user has unread notifications.
+
++ Response 401 (application/json)
+
+        The current user cannot perform this operation because they are not logged in
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 500 (application/json)
+
+        An internal error prevented the server from performing this action
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 200 (application/json)
+
+        success
+
+    + Attributes (domino.notifications.HasNotifications)
+
+
+
+
+## Users Notifications Display [/users/notifications/display{?label,offset,limit}]
+
+### displayUserNotifications [GET]
+Display all notifications for the current user.
++ Parameters
+    + label (string, optional)
+
+        Filter by Label (optional)
+
+    + offset (number, optional)
+
+        Offset in Data (optional)
+
+    + limit (number, optional)
+
+        Maximum number of records to display (optional)
+
+
++ Response 400 (application/json)
+
+        The server could not understand the request due to malformed syntax
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 401 (application/json)
+
+        The current user cannot perform this operation because they are not logged in
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 500 (application/json)
+
+        An internal error prevented the server from performing this action
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 200 (application/json)
+
+        success
+
+    + Attributes (domino.notifications.ListNotificationsResult)
+
+
+
+
+## Users Notifications Markread [/users/notifications/markread]
+
+### markUserNotificationsRead [POST]
+Mark one ore more notifications as read.
+
++ Request (<<Add Header Value>>)
+
+    + Attributes (domino.notifications.MarkReadRequest)
+
+
+
++ Response 401 (application/json)
+
+        The current user cannot perform this operation because they are not logged in
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 500 (application/json)
+
+        An internal error prevented the server from performing this action
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 200 
+
+        success
+
+
+
+
+
+## Admin Notifications Display [/admin/notifications/display{?label,expired,sort,dir,offset,limit}]
+
+### displayAdminNotifications [GET]
+Lists all current notificatons with paging.
++ Parameters
+    + label (string, optional)
+
+        Filter by Label (optional)
+
+    + expired (boolean, optional)
+
+        Filter by expired status (optional)
+
+    + sort (enum[string], optional)
+
+        Specify sort criteria (optional)
+
+        + Members
+            + `title` 
+            + `message` 
+            + `priority` 
+            + `created` 
+            + `start` 
+            + `end` 
+
+    + dir (enum[string], optional)
+
+        Specify sort direction (optional)
+
+        + Members
+            + `asc` 
+            + `desc` 
+
+    + offset (number, optional)
+
+        Offset in Data (optional)
+
+    + limit (number, optional)
+
+        Maximum number of records to display (optional)
+
+
++ Response 400 (application/json)
+
+        The server could not understand the request due to malformed syntax
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 401 (application/json)
+
+        The current user cannot perform this operation because they are not logged in
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 500 (application/json)
+
+        An internal error prevented the server from performing this action
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 200 (application/json)
+
+        success
+
+    + Attributes (domino.notifications.ListAdminNotificationsResult)
+
+
+
+
+## Admin Notifications Create [/admin/notifications/create]
+
+### createAdminNotification [POST]
+Creates a new Notification.
+
++ Request (<<Add Header Value>>)
+
+    + Attributes (domino.notifications.CreateNotificationRequest)
+
+
+
++ Response 401 (application/json)
+
+        The current user cannot perform this operation because they are not logged in
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 500 (application/json)
+
+        An internal error prevented the server from performing this action
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 200 
+
+        success
+
+
+
+
+
+## Admin Notifications Update By Id [/admin/notifications/update/{id}]
+
++ Parameters
+    + id (string, required)
+
+        Notification ID
+
+
+### updateAdminNotifications [PUT]
+Updates an existing Notification.
+
++ Request (<<Add Header Value>>)
+
+    + Attributes (domino.notifications.UpdateNotificationRequest)
+
+
+
++ Response 401 (application/json)
+
+        The current user cannot perform this operation because they are not logged in
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 500 (application/json)
+
+        An internal error prevented the server from performing this action
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 200 
+
+        success
+
+
+
+
+
+## Admin Notifications Delete By Id [/admin/notifications/delete/{id}]
+
++ Parameters
+    + id (string, required)
+
+        Notification ID
+
+
+### deleteAdminNotification [DELETE]
+Deletes an existing Notification.
+
++ Response 401 (application/json)
+
+        The current user cannot perform this operation because they are not logged in
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 500 (application/json)
+
+        An internal error prevented the server from performing this action
+
+    + Attributes (domino.api.ErrorResponse)
+
+
+
++ Response 200 
+
+        success
+
+# Data Structures
+
+## Runs Data Response
++ batchId: 1565722907558 (number) - (required) Id for the API batch response
++ runId: '5d5308d32314a50006a49d2c' (string) - (required) Run Id
++ title: '[Rerun] main.py' (string) - (required) Run title
++ command: 'main.py' (string) - (required) Run command
++ status: 'Succeeded' (string) - Run current status
++ runType: 'Batch' (string) - Run type
++ userName: 'john-doe' (string) - Username of user who started the run 
++ userId: '5d523fade09324f0f8235215' (string) - User Id of user who started the run 
++ projectOwnerName: 'john-doe' (string) - Username of owner of the project where the run was started
++ projectOwnerId: '5d523fade09324f0f8235215' (string) - User Id of owner of the project where the run was started
++ projectName: 'quick-start' (string) - Project name where the run was started
++ projectId: '5d523fad8a344900069eeeb3' (string) - Project Id
++ runDurationSec: 5.432 (number) - Duration of the run in seconds
++ hardwareTier: 'Large' (string) - Name of the hardware tier the run used
++ hardwareTierCostCurrency: 'USD' (string) - Currency units for run cost
++ hardwareTierCostAmount: '.0011' (string) - Dollars per minute per Run for this hardware tier. 
++ queuedTime: '2019-08-13T19:00:35.323Z' (string) - Time that the run was initialed requested
++ startTime: '2019-08-13T19:01:35.323Z' (string) - Run start time
++ endTime: '2019-08-13T19:02:35.323Z' (string) - Run end time 
++ totalCostCurrency: 'USD" (string) - Currency units
++ totalCostAmount: '.11' (string) - Total cost of the run
++ nextBatchId: 1566051748337 (number) - BatchId for the first run of the next batch of API response
+
+
+
+
+## Usage Data Response
++ user_id: 'de7c4c496c55e773d961cb74a3756ff2f92c99366eabfcbbeba51c866cd3d3b5' (string) - User Id number
++ username: 'vdhawan' (string) - Username
++ email: 'jane.doe@example.com' (string) - User's Email Address
++ signup_date: '2018-10-05T14:23:57.435Z' (string) '- Data user first signed up for Domino
++ active_user: 'yes' (string) - Whether the user's account is active or deactivated
++ deployment_id: 'domino-trial' (string) - Stage name for the Domino Deployment
++ deployment_url: 'domino.example.com'(string) - Host url for the Domino Deployment
++ organization: 'marketing' (array) - List of organizations the user belongs to
++ license_type: 'Practitioner" (string) - Imputed license type
++ projects: 10 (number) - Number of projects excluding Quick-start
++ most_recent_activity: '2019-10-05T14:23:57.435Z' (string) - Date time of most recent Domino activity (e.g. start run, publish app)
++ practitioner_workloads_total: 10 (number) - Number of practioner activies in the time window
++ practitioner_workloads_recent: 8 (number) - Number of practioner activies in the time lookback window
++ batch_runs_total: 11 (number) - Number of batch jobs started in the time window
++ batch_runs_recent: 10 (number) - Number of batch jobs started in the look back window
++ scheduled_runs_total: 3 (number) - Number of scheduled runs in the time window
++ scheduled_runs_recent: 2 (number) - Number of scheduled runs in the look back window
++ workspace_runs_total: 13 (number) - Number of worksapces started in the time window
++ workspace_runs_recent: 11 (number) - Number of worksapces started in the look back window
++ launchers_total: 4 (number) - Number of launchers in the time window
++ launchers_recent: 3 (number) - Number of launchers in the look back window
++ app_publish_total: 5 (number) - Number of apps published in the time window
++ app_publish_recent: 6 (number) - Number of apps published in the look back window
++ model_publish_total: 34 (number) - Number of models published in the time window
++ model_publish_recent: 25 (number) - Number of models published in the look back window
++ report_date: '2020-06-08T17:24:11.377Z' (string) - Date the report was generated
++ recent_start: '2020-03-09T00:00:00.000Z' (string) - Start date of the look back window
++ recent_end: '2020-04-07T23:59:59.000Z' (string) - End date of the look back window
+
+## Runs Data
++ batchId: 1566051748337 (number) - (optional) Starting id of the batch query
++ limit: 100 (number) -  (optional) The desired size of the batch to be returned
+
+## Usage Data
++ `start-date': 03/08/2020 (string) - (required) Starting date for your usage data
++ `end-date`: 04/08/2020 (string) - (required) Ending date for your usage data
++ `lookback-days`: 30 (number) - (optional) Number of days in arrears for computing "_recent" column values
++ orgId: '5c48afdac9e77c00077234e9' (string) - (optional) ID of the user Organzation that you'd like to filter on
+
+
+## Model Base
++ _id: `5a73a6b86278f5c536008832` (string) - The unique ID for the model.
++ name: Wine Quality Model (string) - (required) The name of the model.
+
+## Create Base
++ projectId: `5a73a66cd4632584f7b0ed8d` (string) - (required) The unique id of the project the model will be bound to.
++ file: `predict.R` (string) - (required) Path to the file containing the model code. Defaults to the file used in the latest version of the model.
++ function: `predictQuality` (string) - (required) Defaults to the function used in the latest version of the model.
++ excludeFiles: `file1.data`, `file2.data`, `fileN.data` (array) - List of file names for the version to exclude. For example:
+
+    ```python
+            ["foo.py", "bar.py", "baz.py"]
+    ```
++ environmentId: `5a73a6906ece7a7aed984654` (string) - The unique id of the environment for the model to use. Defaults to the environment used in the latest version of the model, or the default project environment in the case of a new model.
+
+## Model Response (Model Base)
++ description: `A model of wine quality` (string) - Summary of the changes in the new version.
++ isArchived: `false` (boolean) - Status of model.
++ replicas: 2 (number) - The number of model instances to start for any model version.
++ metadata (object) - Object containing **createdBy** user ID and **created** datetime properties.
+    + createdBy: `5a73a6b86278f5c536008832` (string) - The unique ID of the user who created the model.
+    + created: 78655832 (number) - The datetime when the model was created.
++ collaboratorSettings (object) - Object containing **UserRef** and **EveryoneRef** properties.
+    + UserRef: `Owner` (string)
+    + EveryoneRef: `Hidden` (string)
++ accessConfiguration (object) - Object containing **isPublic** visibility setting and **accessTokens**.
+    + isPublic: false (boolean)
+    + accessTokens (array) - List of access tokens for the model.
+
+## Model Create (Create Base)
++ name: Wine Quality Model (string) - (required) The name of the new model.
++ description: `A model of wine quality` (string) - (required) Summary of the changes in the new version.
+
+## Model Version Create (Create Base)
++ commitId: `5a73a67e941923efd202c17d` (string) - The unique id of the project commit to use. Defaults to the latest commit of the project.
++ description: `A model of wine quality` (string) - Summary of the changes in the new version.
+
+## Model Version Response
++ id: `5a73a72189c5b2635de7ac5d` (string) - The unique ID for the model version.
++ number: `2` (number) - The new version number.
+
+## Model Version List Item
++ _id: `5a73a6b86278f5c536008832` (string) - The unique ID of the model version.
++ modelId (object)
+    + value: `5a73a72189c5b2635de7ac5d` (string) - The unique id of the model.
++ projectId: `5a73a66cd4632584f7b0ed8d` (string) - The unique id of the project the model will be bound to.
++ commitId: `5a73a67e941923efd202c17d` (string) - The unique id of the project commit to use. Defaults to the latest commit of the project.
++ description: `A model of wine quality` (string) - Summary of the changes in the new version.
++ file: `predict.R` (string) - Path to the file containing the model code. Defaults to the file used in the latest version of the model.
++ function: `predictQuality` (string) - Defaults to the function used in the latest version of the model.
++ excludeFiles (array) - List of file names for the version to exclude. For example:
+
+    ```python
+            ["foo.py", "bar.py", "baz.py"]
+    ```
++ metadata (object)
+    + createdBy: `5a73a6b86278f5c536008832` (string) - The unique ID of the user who created the model.
+    + created: 3862360832 (number) - The datetime when the model was created.
+    + number: `2` (number) - The version number.
+    + builds (array) - List of builds for the model version.
+
+## v4 user
++ firstName: `Power` (string) - User's first name.
++ lastName: `User` (string) - User's last name.
++ fullName: `Power User` (string) - User's full name.
++ userName: `poweruser` (string) - User's username.
++ email: `power.user@dominodatalab.com` (string) - User's email address.
++ avatarUrl: `URL` (string) - URL of the user's avatar.
++ id: `5ac42816e4b0e9a0a82bbe8f` (string) - User's unique ID.
++ companyName: `Domino Data Lab` (string) - User's company name.
++ phoneNumber: `555-123-4567` (string) - User's phone number.
+
+## Run status
++ id: `57dafe43317467e7b0ef5276` (string) - The unique ID for the run.
++ projectId: `54c17e92e4b0bc49e27d9398` (string) - The ID of the project.
++ number: `5` (number) - The auto-increment number associated with the run.
++ startingUserId: `57a28b28961401f240812caf` (string) - The ID of the user who started the run.
++ queued: `1473969731915`  (number) - Milliseconds epoch time the run was added to the queue.
++ started: `1473969754283` (number) - Milliseconds epoch time the run started executing.
++ completed: `1473969762970` (number) - Milliseconds epoch time the run completed running.
++ status: `Succeeded` (enum[string]) - The status of the run.
+    + Members
+        + `Queued` - Waiting to be assigned to an executor. All runs start in this state.
+        + `Scheduled` - Executor assigned, about to begin startup process.
+        + `Preparing` - Getting the executor ready for environment build.
+        + `Building` - Building default environment.
+        + `Pulling` - Pulling the Docker image with project-specific environment.
+        + `Running` - Executing specified project code.
+        + `Serving` - Serving requests via a published port.
+        + `StopRequested` - Stop was requested by the user.
+        + `StopAndDiscardRequested` - User requested to stop and to discard changes
+        + `Stopping` - In the process of being stopped by user request.
+        + `Finishing` - Uploading results.
+        + `Stopped` - Run ended by user request.
+        + `Succeeded` - Run terminated on its own without error after executing requested operations.
+        + `Failed` - Run terminated due to error.
+        + `Error` - Run failed due to system error, not related to project code.
++ commitId: `1c6e8aa47951e39f9a905f0077af9355c35b712b` (string) - The commit hash of the project used to create the run.
++ executor: `us-west-2:i-007942020ce7baeb5` (string) - The unique ID of the executor (compute node) the run was executed on.
++ outputCommitId: `73fe9481fe635bada713246c3c739beefa424e8c` (string) - The commit hash of the project post-run (look at files with this hash for the results).
++ title: `Run with great R^2 of 1!` (string) - Title of the run, if it was renamed.
++ isArchived: `false` (boolean) - Boolean denoting if the run was archived (hidden from the web interface).
++ postProcessedTimestamp: `1473969767822` (number) -  Milliseconds epoch time the run finished processing (this happens after the run has completed and includes saving the results back to the main project repo).
++ diagnosticStatistics (object) - Object containing information about the run's [diagnostic statistics from dominostats.json](http://support.dominodatalab.com/hc/en-us/articles/204348169-Run-Diagnostic-Statistics).
+    + isError: `false` (boolean) - `true` if Domino had trouble parsing the dominostats.json file.
+    + data (array)
+        - (object)
+            + key: `R^2` (string):
+            + value: `1.000`
++ isCompleted: `true` (boolean) - A boolean to denote if the run has completed or is still run. See `status` for success/failure status.
++ hardwareTierId: `gpu` (string) - The hardware tier the run exectued on
+
+## Environment list item
++ id: `5a73a6906ece7a7aed984654` (string) - The unique ID for the environment.
++ name: `Wine Quality Environment` (string) - The environment name.
++ visibility: `Global` (enum) - One of `Private`, `Organization`, or `Global`.
+
+## Organization
++ id: `5a73a6906ece7a7aed984654` (string) - Organization unique identifier.
++ name: `goodOrg` (string) - Organization name.
++ members (array[Organization member])
++ defaultEnvironment: `orgEnvironment 3` (string) - Default v2 environment for the organization.
++ legacyDefaultEnvironment: `orgEnvironment 1` (string) - Default legacy environment for the organization.
+
+## Organization member
++ id: `5ac42816e4b0e9a0a82bbe8f` (string) - User ID.
++ role: `Member` (enum[string])
+  + Members
+    + `Member` - Organization member.
+    + `Admin` - Organization admin.
+
+## v4 project
++ id: `5ac42816e4b0e9a0a82bbe8f` (string) - Project ID.
++ name: `goodProject` (string) - Project name.
++ description: `Doing data science.` (string) - Project description.
++ visibility: `Public` (enum[string]) - Project visibility setting.
+  + Members
+    + `Public`
+    + `Searchable`
+    + `Private`
++ ownerId: `5ac42816e4b0e9a0a82bbe8f` (string) - ID of project owner.
++ collaboratorIds (array[string]) - IDs of collaborators.
++ collaborators (array[v4 project collaborator]) - Objects representing collaborators.
++ tags (array[v4 project tag]) - Objects representing project tags.
+
+## v4 new project
++ name: `goodProject` (string, required) - Project name.
++ description: `Doing data science.` (string, required) - Project description.
++ visibility: `Public` (enum[string], required) - Project visibility setting.
+  + Members
+    + `Public`
+    + `Searchable`
+    + `Private`
++ ownerId: `5ac42816e4b0e9a0a82bbe8f` (string, required) - ID of project owner.
++ collaborators (array[v4 project collaborator], required) - Objects representing collaborators.
++ tags (object)
+  + tagNames (array[string], required) - String text of tags to apply to the project.
+
+## v4 project collaborator
++ collaboratorId: `5ac42816e4b0e9a0a82bbe8f` (string) - User ID of collaborator.
++ projectRole (enum[string]) - Role permissions assigned to collaborator.
+  + Members
+    + `Contributor`
+    + `LauncherUser`
+    + `ResultsConsumer`
+    + `ProjectImporter`
+
+## v4 project tag
++ id: `5ac42816e4b0e9a0a82bbe8f` (string) - Tag ID.
++ name: `descriptiveTag` (string) - Tag name.
+
+## v4 project activity record
++ person (object)
+  + firstName: `power` (string) - Person's first name.
+  + lastName: `user` (string) - Person's last name.
+  + fullName: `power user` (string) - Person's full name.
+  + userName: `powerUser` (string) - Person's username.
+  + email: `poweruser@dominodatalab.com` (string) - Email associated with person's Domino account.
+  + companyName: `Domino Data Lab` (string) - Person's company name.
+  + phoneNumber: `555-123-4567` (string) - Person's phone number.
+  + avatarUrl: `URL` (string) - URL of person's avatar.
+  + id: `5ac42816e4b0e9a0a82bbe8f` (string) - Person's Domino user ID.
++ timestamp: `0` (number) - Time activity occurred.
++ whatHappened: `FILES_CHANGED` (enum[string]) - What happened?
+  + Members
+    + `FILES_CHANGED`
+    + `EXPERIMENT_STARTED`
+    + `EXPERIMENT_SUCCEEDED`
+    + `EXPERIMENT_FAILED`
+    + `SESSION_STARTED`
+    + `SESSION_FINISHED`
+    + `SESSION_FAILED`
++ indicator: `SUCCESS` (enum[string]) - Record outcome category.
+  + Members
+    + `SUCCESS`
+    + `FAILURE`
+    + `INFO`
++ effects (array[v4 project activity effect])
++ context (array[v4 project activity context])
++ id: `5ac42816e4b0e9a0a82bbe8f` (string) - Activity record ID.
+
+## v4 project activity effect
++ effectType: `PROJECT` (enum[string]) - Type of effect.
+  + Members
+    + `PROJECT`
+    + `EXPERIMENT`
+    + `SESSION`
+    + `ADDED_OR_MODIFIED_FILE`
+    + `DELETED_FILE`
+    + `COMMIT`
++ name: `effectName` (string) - Name of effect.
++ identifiedBy: `identifier` (string) - Name of identifier.
+
+## v4 project activity context
++ contextType: `PROJECT` (string) - Type of context.
++ name: `contextName` (string) - Name of context.
++ identifiedBy: `identifier` (string) - Name of identifier.
+
+## v4 experiment
++ inputs (object)
+  + commandToRun (v4 experiment commands)
+  + title: `string` (string)
+  + projectId: `string` (string)
+  + initialization (v4 experiment initialization)
+  + experimentEnvironment (v4 experiment environment)
+  + hardwareTierId: `string` (string)
++ execution (object)
+  + executionId: `string` (string)
+  + experimentExecutionTechnology: `string` (string)
++ states (array[v4 experiment state])
++ outputs (object)
+  + results (v4 experiment output results)
+  + logs: `string` (string)
+  + dominoStats: `collection.immutable.map[string,string]` (string)
++ groups (array[v4 experiment group])
++ createdAt: `0` (number)
++ id: `string` (string)
+
+## v4 experiment initialization
++ commitId: `string` (string)
+
+## v4 experiment commands
++ args (array[string])
+
+## v4 experiment output results
++ commitMessage: `string` (string)
++ outputCommitId: `string` (string)
+
+## v4 experiment environment
++ environmentId: `string` (string)
++ environmentRevisionId: `string` (string)
+
+## v4 experiment state
++ status (enum[string])
+  + Members
+    + `IN_PROGRESS`
+    + `SUCCESSFUL`
+    + `FAILURE`
++ message: `string` (string)
++ recordedAt: `0` (number)
+
+## v4 experiment group
++ name: `string` (string)
++ projectId: `string` (string)
+
+## v4 hardware tier with capacity
++ hardwareTier (v4 hardware tier)
++ capacity (v4 hardware capacity)
+
+## v4 hardware tier
++ _id: `string` (string)
++ id: `string` (string)
++ name: `string` (string)
++ cores: `0` (number)
++ memory: `0` (number)
++ runMemoryLimit (v4 run memory limit)
++ isDefault: true (boolean)
++ isAllowedDuringTrial: true (boolean)
++ isVisible: true (boolean)
++ isGlobal: false (boolean)
++ centsPerMinute: `0` (number)
++ isFree: false (boolean)
+
+## v4 run memory limit
++ memoryLimitMegabytes: `0` (number)
++ memorySwapLimitMegabytes: `0` (number)
+
+## v4 hardware capacity
++ currentNumberOfExecutors: `0` (number)
++ maximumNumberOfExecutors: `0` (number)
++ numberOfCurrentlyExecutingRuns: `0` (number)
++ numberOfQueuedRuns: `0` (number)
++ maximumConcurrentRuns: `0` (number)
++ availableCapacityWithoutLaunching: `0` (number)
++ maximumAvailableCapacity: `0` (number)
++ capacityLevel (object)
+
+## Git ref
++ type (enum[string])
+  + Members
+    + `branches`
+    + `tags`
+    + `head`
+    + `commitId`
+    + `ref`
++ value: `master` (string)
+
+
+
+## project Git repository
++ name: `repo1` (string)
++ uri: `git@github.com:user/repo1.git` (string)
++ ref (Git ref)
+
+## create dataset request
++ datasetName: `myDataset` (string, required)
++ description: `A dataset for my useful data.` (string)
++ projectId: `5ac42816e4b0e9a0a82bbe8f` (string, required)
+
+## update dataset request
++ datasetName: `myDataset` (string)
++ description: `A dataset for my useful data.` (string)
+
+## add tag to dataset request
++ snapshotId: `5d35b6cfc9e77c000834d3d6` (string, required)
++ tag: `Production` (string, required)
+
+## update snapshot request
++ status: `Active` (string)
+
+## create snapshot request
++ relativeFilePaths: array(string) - Array of filepaths relative to the dataset directory
++ datasetId: `5d35b6cfc9e77c000834d3d6` (string)
+
+## dataset response
++ datasetName: `myDataset` (string)
++ datasetId: `5d35b6dec9e77c000834d3da` (string)
++ projectId: `5ac42816e4b0e9a0a82bbe8f` (string)
+
+## dataset details response
++ datasetName: `myDataset` (string)
++ description: `A dataset for my useful data.` (string)
++ datasetId: `5d35b6dec9e77c000834d3da` (string)
++ projectId: `5ac42816e4b0e9a0a82bbe8f` (string)
++ created: `01012019` (string)
++ snapshots (array[string]) - Array of snapshot IDs
++ tags (array[string, string]) - Array of tag name / tag ID pairs
+
+## snapshot response
++ snapshotId: `5d35b6cfc9e77c000834d3d6` (string)
++ datasetId: `5d35b6dec9e77c000834d3da` (string)
+
+## snapshot details response
++ snapshotId: `5d35b6cfc9e77c000834d3d6` (string)
++ datasetId: `5d35b6dec9e77c000834d3da` (string)
++ creatorId: `5ac42816e4b0e9a0a82bbe8f` (string)
++ created: `01012019` (string)
++ status: `Active` (string)
++ lastMounted: `01012019` (string)
++ origin: `CLI Upload` (string)
+
+## rw snapshot response
++ id: `5d35b6cfc9e77c000834d3d6` (string),
++ resourceId: `5d35b6cfc9e75c050834dbe6` (string),
++ datasetId: `5d35b6dec9e77c000834d3da` (string),
++ author: `5d531bdee09329f0f83932a6` (string, optional),
++ version: `1` (number),
++ description: `my first snapshot` (string),
++ creationTime: `1622148562901` (number),
++ lifecycleStatus: `Active` (string),
++ statusLastUpdatedBy: `000000000000000000000000` (string),
++ statusLastUpdatedTime: `1622148567541` (number),
++ storageSize: `52908706` (number),
++ isPartialSize: false (boolean),
++ lastUsedTime: `0` (number, optional),
++ isReadWrite: false (boolean)
+
+## rw dataset view response
++ id: `5d35b6dec9e77c000834d3da` (string),
++ name: `dataset name` (string),
++ description: `dataset description` (string, optional),
++ snapshotIds (array[string]),
++ tags (array[string, string]),
++ createdTime (number),
++ projectId (string, optional),
++ projectOwner (string),
++ projectName (string)
+
+
+
+
+## domino.common.gateway.runs.RunsGatewaySummary (object)
+
+
+### Properties
++ `batchId` (string, required) 
++ `runId` (string, required) 
++ `title` (string, required) 
++ `command` (string, required) 
++ `status` (string, required) 
++ `runType` (string, required) 
++ `userName` (string, required) 
++ `userId` (string, required) 
++ `projectOwnerName` (string, required) 
++ `projectOwnerId` (string, required) 
++ `projectName` (string, required) 
++ `projectId` (string, required) 
++ `runDurationSec` (number, required) 
++ `hardwareTier` (string, required) 
++ `hardwareTierCostCurrency` (string, required) 
++ `hardwareTierCostAmount` (number, required) 
++ `queuedTime` (number, required) 
++ `startTime` (number, optional) 
++ `endTime` (number, optional) 
++ `totalCostCurrency` (string, required) 
++ `totalCostAmount` (number, required) 
+
+
+## domino.common.gateway.runs.RunsGatewaySequence (object)
+
+## definitions/domino.api.ErrorResponse
+
++ message (optional)
+
+## definitions/domino.modelmanager.web.BuildModelImageApiRequest
+
++ description (optional)
++ environmentId (optional)
++ inferenceFunctionFile (required)
++ inferenceFunctionToCall (required)
++ logHttpRequestResponse (boolean, required)
++ modelId (optional)
++ modelName (required)
++ projectId (required)
+
+## definitions/domino.modelmanager.web.BuildModelImageApiResponse
+
++ buildStatus (required)
++ description (optional)
++ environmentId (required)
++ modelId (required)
++ modelVersionId (required)
++ modelVersionNumber (number, required)
++ name (required)
++ projectId (required)
++ projectName (required)
+
+## definitions/domino.modelmanager.web.ExportModelImageApiRequest
+
++ password (optional)
++ registryUrl (required)
++ repository (required)
++ tag (optional)
++ username (optional)
+
+## definitions/domino.modelmanager.web.ModelBuildLogsApiResponse
+
++ logs (required)
++ modelId (required)
++ modelVersionId (required)
++ status (required)
+
+## definitions/domino.modelmanager.web.ModelBuildStatusApiResponse
+
++ modelId (required)
++ modelVersionId (required)
++ status (required)
+
+## definitions/domino.modelmanager.web.ModelExportLogsApiResponse
+
++ exportId (required)
++ logs (required)
++ modelId (required)
++ modelVersionId (required)
++ status (required)
+
+## definitions/domino.modelmanager.web.ModelExportStatusApiResponse
+
++ exportId (required)
++ modelId (required)
++ modelVersionId (required)
++ status (required)
+
+## definitions/domino.modelmanager.web.ExportImageForSagemakerApiRequest
+
++ registryUrl (optional)
++ repository (optional)
++ tag (optional)
++ username (optional)
++ password (optional)
+
+## domino.api.ErrorResponse (object)
+
+## domino.notifications.MarkReadRequest (object)
+### Properties
++ `ids` (array[string], required) - IDs of notifications to be marked as read
+
+## domino.notifications.ListNotificationsResult (object)
+
+### Properties
++ `pagination` (domino.notifications.Pagination, optional) 
++ `notifications` (array[domino.notifications.UserNotification], optional) 
+
+## domino.notifications.NameAndDescription (object)
+
+### Properties
++ `name`: `abc123` (string, optional) - object ID
++ `description` (string, optional) - Descriptive name for presentation
+
+## domino.notifications.Pagination (object)
+### Properties
++ `offset` (number, optional) - offset in the underlying data
++ `count` (number, optional) - total number of matching records
+
+## domino.notifications.Label (object)
+A label, with attached priority
+
+### Properties
++ `priority` (number, required) - numeric priority, low is more critical
++ `name`: `Critical` (string, required) - label to display
+
+## domino.notifications.UserNotification (object)
+
+### Properties
++ `notification` (domino.notifications.Notification, optional) 
++ `read` (boolean, optional) - has this notification been read by the current user?
++ `expired` (boolean, optional) - has this notification expired?
+
+## domino.notifications.HasNotifications (object)
+### Properties
++ `unread` (boolean, optional) 
+
+## domino.notifications.Notification (object)
+
+### Properties
++ `id`: `abc123` (string, optional) - Message ID, not displayed anywhere
++ `title`: `Important notification` (string, optional) 
++ `message`: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.` (string, optional) 
++ `created` (string, optional) 
++ `origin` (domino.notifications.Origin, optional) - Message source or author. Modeled as object for future extensibility
++ `labels` (array[domino.notifications.Label], optional) 
+
+## domino.notifications.ListAdminNotificationsResult (object)
+
+### Properties
++ `pagination` (domino.notifications.Pagination, optional) 
++ `notifications` (array[domino.notifications.AdminNotification], optional) 
+
+## domino.notifications.Metadata (object)
+
+### Properties
++ `read` (boolean, optional) - Has the message already been read by this user? Only set in user-specific contexts.
++ `expired` (boolean, required) - Has the message been marked as expired by the admin?
+
+## domino.notifications.Origin (object)
+Message source or author. Modeled as object for future extensibility
+
+### Properties
++ `name`: `Admin` (string, required) - author or origin name
++ `initials`: `SF` (string, optional) - 2 letter initials to display in a bubble
+
+## domino.notifications.NameAndId (object)
+
+### Properties
++ `id`: `abc123` (string, optional) - object ID
++ `name` (string, optional) - Descriptive name for presentation
+
+## domino.notifications.LimitedAudience (object)
+Definition of a limited audience for a notification. If present, a notification will be shown to users who are mentioned directly, or part of a mentioned org, or have one of the mentioned roles (at least one of these criteria must apply).
+
+### Properties
++ `users` (array[string], optional) - DominoIds of users who will receive this notification
++ `orgs` (array[string], optional) - DominoIds of orgs whose users will receive this notification
++ `roles` (array[string], optional) - Users that have any of these Roles will receive this notification
+
+## domino.notifications.Timeframe (object)
+
+### Properties
++ `from`: `2021-12-12T09:12:33.001Z` (string, optional) - Start time from which to display the notification, optional
++ `to`: `2021-12-16T09:12:33.001Z` (string, optional) - End time at which the notification expires, optional
+
+## domino.notifications.LimitedAudienceWithNames (object)
+Definition of a limited audience for a notification. If present, a notification will be shown to users who are mentioned directly, or part of a mentioned org, or have one of the mentioned roles (at least one of these criteria must apply).
+
+### Properties
++ `users` (array[domino.notifications.NameAndId], optional) - DominoIds of users who will receive this notification
++ `orgs` (array[domino.notifications.NameAndId], optional) - DominoIds of orgs whose users will receive this notification
++ `roles` (array[domino.notifications.NameAndDescription], optional) - Users that have any of these Roles will receive this notification
+
+## domino.notifications.CreateNotificationRequest (object)
+
+
+### Properties
++ `title` (string, required) - the notification title
++ `message` (string, required) - the notification body
++ `priority` (enum[string], required) - Priority, internally mapped to labels
+    + `Critical`
+    + `Default`
++ `start`: `2022-12-03T10:15:30+01:00` (string, optional) - optional start date/time in ISO-8601 offset format
++ `end`: `2022-12-03T10:15:30+01:00` (string, optional) - optional end date/time in ISO-8601 offset format
++ `limitedAudience` (domino.notifications.LimitedAudience, optional) - Definition of a limited audience for a notification. If present, a notification will be shown to users who are mentioned directly, or part of a mentioned org, or have one of the mentioned roles (at least one of these criteria must apply).
+
+## domino.notifications.UpdateNotificationRequest (object)
+
+
+### Properties
++ `expired` (boolean, optional) - mark the notification as expired (only true is supported)
+
+## domino.notifications.AdminNotification (object)
+
+
+### Properties
++ `notification` (domino.notifications.Notification, optional) 
++ `timeframe` (domino.notifications.Timeframe, optional) 
++ `expired` (boolean, optional) - has this notification expired?
++ `limitedAudience` (domino.notifications.LimitedAudienceWithNames, optional) - Definition of a limited audience for a notification. If present, a notification will be shown to users who are mentioned directly, or part of a mentioned org, or have one of the mentioned roles (at least one of these criteria must apply).
+
 
 ## v4 experiment commands
 + args (array[string])
