@@ -4009,6 +4009,618 @@ This endpoint can be used to batch extract Runs level data to be used in analizi
 
         An internal error prevented the server from performing this action
 
+        # Group Notifications
+
+        ## Users Notifications UnreadStatus [/users/notifications/unreadStatus]
+
+        ### hasUserNotifications [GET]
+        Checks whether the current user has unread notifications.
+
+        + Response 401 (application/json)
+
+                The current user cannot perform this operation because they are not logged in
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 500 (application/json)
+
+                An internal error prevented the server from performing this action
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 200 (application/json)
+
+                success
+
+            + Attributes (domino.notifications.HasNotifications)
+
+
+
+
+        ## Users Notifications [/users/notifications{?priority,offset,limit,sort,dir,defaultSort,expired}]
+
+        ### displayUserNotifications [GET]
+        Display all notifications for the current user.
+        + Parameters
+            + priority (enum[string], optional)
+
+                Filter by Priority (optional)
+
+                + Members
+                    + `Critical`
+                    + `Default`
+
+            + offset (number, optional)
+
+                Offset in Data (optional)
+
+            + limit (number, optional)
+
+                Maximum number of records to display (optional)
+
+            + sort (enum[string], optional)
+
+                Specify sort criteria (optional, incompatible with defaultSort=true)
+
+                + Members
+                    + `title`
+                    + `message`
+                    + `priority`
+                    + `created`
+                    + `start`
+                    + `end`
+
+            + dir (enum[string], optional)
+
+                Specify sort direction (optional, incompatible with defaultSort=true)
+
+                + Members
+                    + `asc`
+                    + `desc`
+
+            + defaultSort (boolean, optional)
+
+                If true, use the frontend's default sorting and return 400 if either 'sort' or 'dir' are set.
+
+            + expired (boolean, optional)
+
+                Limit to either expired or non-expired notifications (optional, defaults to all)
+
+
+        + Response 400 (application/json)
+
+                The server could not understand the request due to malformed syntax
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 401 (application/json)
+
+                The current user cannot perform this operation because they are not logged in
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 500 (application/json)
+
+                An internal error prevented the server from performing this action
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 200 (application/json)
+
+                success
+
+            + Attributes (domino.notifications.ListNotificationsResult)
+
+
+
+
+        ## Users Notifications Read [/users/notifications/read]
+
+        ### markUserNotificationsRead [POST]
+        Mark one or more notifications as read.
+
+        + Request (<<Add Header Value>>)
+
+            + Attributes (domino.notifications.MarkReadRequest)
+
+
+
+        + Response 401 (application/json)
+
+                The current user cannot perform this operation because they are not logged in
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 500 (application/json)
+
+                An internal error prevented the server from performing this action
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 200
+
+                success
+
+
+
+
+
+        ## Admin Notifications [/admin/notifications]
+
+        ### createAdminNotification [POST]
+        Creates a new notification.
+
+        + Request (<<Add Header Value>>)
+
+            + Attributes (domino.notifications.CreateNotificationRequest)
+
+
+
+        + Response 401 (application/json)
+
+                The current user cannot perform this operation because they are not logged in
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 500 (application/json)
+
+                An internal error prevented the server from performing this action
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 200
+
+                success
+
+
+
+
+
+        ## Admin Notifications [/admin/notifications{?priority,expired,sort,dir,offset,limit}]
+
+        ### displayAdminNotifications [GET]
+        Lists all current notificatons with paging.
+        + Parameters
+            + priority (enum[string], optional)
+
+                Filter by Priority (optional, defaults to all)
+
+                + Members
+                    + `Critical`
+                    + `Default`
+
+            + expired (boolean, optional)
+
+                Filter by expired status (optional, defaults to all)
+
+            + sort (enum[string], optional)
+
+                Specify sort criteria (optional, defaults to created)
+
+                + Members
+                    + `title`
+                    + `message`
+                    + `priority`
+                    + `created`
+                    + `start`
+                    + `end`
+
+            + dir (enum[string], optional)
+
+                Specify sort direction (optional, defaults to desc)
+
+                + Members
+                    + `asc`
+                    + `desc`
+
+            + offset (number, optional)
+
+                Offset of record in Data (optional)
+
+            + limit (number, optional)
+
+                Maximum number of records to display (optional)
+
+
+        + Response 400 (application/json)
+
+                The server could not understand the request due to malformed syntax
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 401 (application/json)
+
+                The current user cannot perform this operation because they are not logged in
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 500 (application/json)
+
+                An internal error prevented the server from performing this action
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 200 (application/json)
+
+                success
+
+            + Attributes (domino.notifications.ListAdminNotificationsResult)
+
+
+
+
+        ## Admin Notifications Expired By Id [/admin/notifications/{id}/expired]
+
+        + Parameters
+            + id (string, required)
+
+                Notification ID
+
+
+        ### updateAdminNotifications [PUT]
+        Updates an existing notification.
+
+        + Request (<<Add Header Value>>)
+
+            + Attributes (domino.notifications.UpdateNotificationRequest)
+
+
+
+        + Response 401 (application/json)
+
+                The current user cannot perform this operation because they are not logged in
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 500 (application/json)
+
+                An internal error prevented the server from performing this action
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 200
+
+                success
+
+
+
+
+
+        ## Admin Notifications By Id [/admin/notifications/{id}]
+
+        + Parameters
+            + id (string, required)
+
+                Notification ID
+
+
+        ### deleteAdminNotification [DELETE]
+        Deletes an existing notification.
+
+        + Response 401 (application/json)
+
+                The current user cannot perform this operation because they are not logged in
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 500 (application/json)
+
+                An internal error prevented the server from performing this action
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 200
+
+                success
+
+
+
+
+
+
+        # Group Gateway
+
+        ## Gateway Projects [/gateway/projects{?relationship,showCompleted}]
+
+        ### list [GET]
+        Retrieves projects for the Project List UI, ordered from most to least recently updated
+        + Parameters
+            + relationship (enum[string], required)
+
+                The relationship between the current user and the projects to be returned
+
+                + Members
+                    + `Owned`
+                    + `Collaborating`
+                    + `Suggested`
+                    + `Popular`
+
+            + showCompleted (boolean, optional) -
+
+                include projects that are completed
+
+                + Default: true
+
+        + Response 403 (application/json)
+
+                The current user is not authorized to perform this operation
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 500 (application/json)
+
+                An internal error prevented the server from performing this action
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 200 (application/json)
+
+                success
+
+            + Attributes (array[domino.server.projects.api.ProjectGatewaySummary])
+
+
+
+
+        ## Gateway Projects ExecutingResources [/gateway/projects/executingResources/{ownerName}/{projectName}]
+
+        + Parameters
+            + projectName (string, required)
+
+                the project's name
+
+            + ownerName (string, required)
+
+                the project owner's name
+
+
+        ### getExecutingRunsForProject [GET]
+        Gets the executing runs grouped by type for this project
+
+        + Response 403 (application/json)
+
+                The current user is not authorized to perform this operation
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 500 (application/json)
+
+                An internal error prevented the server from performing this action
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 200 (application/json)
+
+                success
+
+            + Attributes (array[domino.server.projects.api.ProjectGatewayExecutingRunsByType])
+
+
+
+
+        ## Gateway Projects FindProjectByOwnerAndName [/gateway/projects/findProjectByOwnerAndName{?ownerName,projectName}]
+
+        ### findProjectByOwnerAndName [GET]
+        Retrieves a project for the Project Overview UI
+        + Parameters
+            + ownerName (string, required)
+
+                Username of the Owner
+
+            + projectName (string, required)
+
+                Name of the Project
+
+
+        + Response 403 (application/json)
+
+                The current user is not authorized to perform this operation
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 500 (application/json)
+
+                An internal error prevented the server from performing this action
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 200 (application/json)
+
+                success
+
+            + Attributes (domino.server.projects.api.ProjectGatewayOverview)
+
+
+
+
+        ## Gateway Search [/gateway/search{?query,area}]
+
+        ### search [GET]
+        searches for the specified terms in the relevant areas with a limit on the number of results
+        + Parameters
+            + query (string, required)
+
+                Search term.
+
+            + area (string, optional)
+
+
+        + Response 200 (application/json)
+
+                success
+
+            + Attributes (array[domino.common.gateway.search.SearchResultGatewayDTO])
+
+
+
+        + Response 400 (application/json)
+
+                The server could not understand the request due to malformed syntax
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 401 (application/json)
+
+                The current user cannot perform this operation because they are not logged in
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 403 (application/json)
+
+                The current user is not authorized to perform this operation
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 500 (application/json)
+
+                An internal error prevented the server from performing this action
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+
+        ## Gateway Runs GetByBatchId [/gateway/runs/getByBatchId{?batchId,limit}]
+
+        ### listToJson [GET]
+        API to batch extract Runs data for import into a 3rd party tool
+        + Parameters
+            + batchId (string, required)
+
+                Starting id of the batch query
+
+            + limit (number, optional)
+
+                The desired size of the batch to be returned
+
+
+        + Response 200 (application/json)
+
+                success
+
+            + Attributes (domino.common.gateway.runs.RunsGatewaySequence)
+
+
+
+        + Response 400 (application/json)
+
+                The server could not understand the request due to malformed syntax
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 401 (application/json)
+
+                The current user cannot perform this operation because they are not logged in
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 403 (application/json)
+
+                The current user is not authorized to perform this operation
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 500 (application/json)
+
+                An internal error prevented the server from performing this action
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+
+        ## Gateway Users ProjectsDependencyGraph [/gateway/users/projectsDependencyGraph{?ownerUsername,projectName}]
+
+        ### projectsDependencyGraph [GET]
+        Retrieves projects dependency graph for a user, and optionally for a specific project
+        + Parameters
+            + ownerUsername (string, optional)
+
+                Owner username of the project, if dependency graph is being requested for a specific project.
+
+            + projectName (string, optional)
+
+                Project name for which a dependency graph is being requested. When not provided, the dependency graph is for all projects for the current user.
+
+
+        + Response 401 (application/json)
+
+                The current user cannot perform this operation because they are not logged in
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 500 (application/json)
+
+                An internal error prevented the server from performing this action
+
+            + Attributes (domino.api.ErrorResponse)
+
+
+
+        + Response 200 (application/json)
+
+                success
+
+            + Attributes (domino.nucleus.gateway.users.models.ProjectsDependencyGraph)
+
 # Data Structures
 
 ## Runs Data Response
@@ -4569,3 +5181,444 @@ This endpoint can be used to batch extract Runs level data to be used in analizi
 + tag (optional)
 + username (optional)
 + password (optional)
+
+
+
+
+## domino.common.gateway.runs.RunsGatewaySummary (object)
+
+
+### Properties
++ `batchId` (string, required)
++ `runId` (string, required)
++ `title` (string, required)
++ `command` (string, required)
++ `status` (string, required)
++ `runType` (string, required)
++ `userName` (string, required)
++ `userId` (string, required)
++ `projectOwnerName` (string, required)
++ `projectOwnerId` (string, required)
++ `projectName` (string, required)
++ `projectId` (string, required)
++ `runDurationSec` (number, required)
++ `hardwareTier` (string, required)
++ `hardwareTierCostCurrency` (string, required)
++ `hardwareTierCostAmount` (number, required)
++ `queuedTime` (number, required)
++ `startTime` (number, optional)
++ `endTime` (number, optional)
++ `totalCostCurrency` (string, required)
++ `totalCostAmount` (number, required)
+
+
+## domino.common.gateway.runs.RunsGatewaySequence (object)
+
+## definitions/domino.api.ErrorResponse
+
++ message (optional)
+
+## definitions/domino.modelmanager.web.BuildModelImageApiRequest
+
++ description (optional)
++ environmentId (optional)
++ inferenceFunctionFile (required)
++ inferenceFunctionToCall (required)
++ logHttpRequestResponse (boolean, required)
++ modelId (optional)
++ modelName (required)
++ projectId (required)
+
+## definitions/domino.modelmanager.web.BuildModelImageApiResponse
+
++ buildStatus (required)
++ description (optional)
++ environmentId (required)
++ modelId (required)
++ modelVersionId (required)
++ modelVersionNumber (number, required)
++ name (required)
++ projectId (required)
++ projectName (required)
+
+## definitions/domino.modelmanager.web.ExportModelImageApiRequest
+
++ password (optional)
++ registryUrl (required)
++ repository (required)
++ tag (optional)
++ username (optional)
+
+## definitions/domino.modelmanager.web.ModelBuildLogsApiResponse
+
++ logs (required)
++ modelId (required)
++ modelVersionId (required)
++ status (required)
+
+## definitions/domino.modelmanager.web.ModelBuildStatusApiResponse
+
++ modelId (required)
++ modelVersionId (required)
++ status (required)
+
+## definitions/domino.modelmanager.web.ModelExportLogsApiResponse
+
++ exportId (required)
++ logs (required)
++ modelId (required)
++ modelVersionId (required)
++ status (required)
+
+## definitions/domino.modelmanager.web.ModelExportStatusApiResponse
+
++ exportId (required)
++ modelId (required)
++ modelVersionId (required)
++ status (required)
+
+## definitions/domino.modelmanager.web.ExportImageForSagemakerApiRequest
+
++ registryUrl (optional)
++ repository (optional)
++ tag (optional)
++ username (optional)
++ password (optional)
+
+## domino.server.projects.api.ProjectGatewayOverview (object)
+Project Overview entity returned by the API gateway
+
+### Properties
++ `owner` (domino.server.projects.api.Owner, required)
++ `visibility` (enum[string], required)
+    + `Public`
+    + `Searchable`
+    + `Private`
++ `mainRepositoryUri` (string, optional, nullable)
++ `lastStatusChangeInMillis` (number, optional, nullable)
++ `lastStageChangeInMillis` (number, optional, nullable)
++ `hardwareTierName` (string, required)
++ `description` (string, required)
++ `hardwareTierId` (string, required)
++ `requestingUserRole` (enum[string], required)
+    + `Admin`
+    + `ProjectImporter`
+    + `Contributor`
+    + `Viewer`
+    + `ResultsConsumer`
+    + `LauncherUser`
+    + `Owner`
++ `totalRunTime` (string, required) - sum of run times of all executions in the project, in ISO8601 duration format including only seconds and milliseconds
++ `tags` (array[domino.server.projects.api.ProjectGatewayTag], required)
++ `numComments` (number, required)
++ `enabledGitRepositories` (array[domino.repoman.domain.GitRepository], optional)
++ `allowedOperations` (array, required)
+    + (enum[string])
+        + Members
+            + `ChangeProjectSettings`
+            + `Run`
+            + `ConsumeApiEndpoint`
+            + `Edit`
+            + `ViewWorkspaces`
+            + `UpdateProjectDescription`
+            + `ProjectSearchPreview`
+            + `BrowseReadFiles`
+            + `EditTags`
+            + `RunLauncher`
+            + `ViewRuns`
++ `runsCountByType` (array[domino.server.projects.api.ProjectGatewayExecutingRunsByType], required)
++ `environmentName` (string, required)
++ `name` (string, required)
++ `serviceProvider` (enum[string], optional, nullable)
+    + `github`
+    + `gitlab`
+    + `githubEnterprise`
+    + `unknown`
+    + `gitlabEnterprise`
+    + `bitbucket`
+    + `bitbucketServer`
++ `id` (string, required)
++ `updatedAt` (string, required)
++ `stageId` (string, required)
++ `status` (domino.server.projects.api.ProjectStatus, required)
+
+## domino.projects.api.ProjectStatus (object)
+
+
+### Properties
++ `status` (enum[string], required)
+    + `active`
+    + `complete`
++ `isBlocked` (boolean, required)
++ `blockedReason` (string, optional, nullable)
++ `completedMessage` (string, optional, nullable)
+
+## domino.server.projects.api.ProjectStatus (object)
+
+
+### Properties
++ `status` (enum[string], required)
+    + `active`
+    + `complete`
++ `isBlocked` (boolean, required)
++ `blockedReason` (string, optional, nullable)
++ `completedMessage` (string, optional, nullable)
+
+## domino.server.projects.api.ProjectGatewayExecutingRunsByType (object)
+
+
+### Properties
++ `runType` (enum[string], required)
+    + `Other`
+    + `SSHProxy`
+    + `Endpoint`
+    + `App`
+    + `Scheduled`
+    + `Launcher`
+    + `Batch`
+    + `Workspace`
++ `count` (number, required)
+
+## domino.repoman.domain.GitRepository (object)
+
+
+### Properties
++ `id` (string, required)
++ `name` (string, required)
++ `uriHost` (string, required)
++ `uriPort` (string, optional, nullable)
++ `uriPath` (string, required)
++ `serviceProvider` (enum[string], required)
+    + `github`
+    + `gitlab`
+    + `githubEnterprise`
+    + `unknown`
+    + `gitlabEnterprise`
+    + `bitbucket`
+    + `bitbucketServer`
+
+## domino.server.projects.api.ProjectGatewayTag (object)
+
+
+### Properties
++ `id` (string, required)
++ `name` (string, required)
++ `isApproved` (boolean, required)
+
+
+## domino.server.projects.api.Owner (object)
+
+
+### Properties
++ `id` (string, optional, nullable)
++ `userName` (string, required)
+
+
+## domino.notifications.UpdateNotificationRequest (object)
+
+
+### Properties
++ `expired` (boolean, optional) - mark the notification as expired (only true is supported)
+
+## domino.notifications.ListAdminNotificationsResult (object)
+
+
+### Properties
++ `pagination` (domino.notifications.Pagination, optional)
++ `notifications` (array[domino.notifications.AdminNotification], optional)
+
+## domino.notifications.AdminNotification (object)
+
+
+### Properties
++ `notification` (domino.notifications.Notification, optional)
++ `timeframe` (domino.notifications.Timeframe, optional)
++ `expired` (boolean, optional) - has this notification expired?
++ `limitedAudience` (domino.notifications.LimitedAudience, optional) - Definition of a limited audience for a notification. If present, a notification will be shown to users who are mentioned directly, or part of a mentioned org, or have one of the mentioned roles (at least one of these criteria must apply).
+
+
+
+## domino.notifications.LimitedAudience (object)
+Definition of a limited audience for a notification. If present, a notification will be shown to users who are mentioned directly, or part of a mentioned org, or have one of the mentioned roles (at least one of these criteria must apply).
+
+### Properties
++ `users` (array[string], optional) - DominoIds of users who will receive this notification
++ `orgs` (array[string], optional) - DominoIds of orgs whose users will receive this notification
++ `roles` (array[string], optional) - Ids of Roles. Users that have any of these Roles will receive this notification
+
+## domino.notifications.Timeframe (object)
+
+
+### Properties
++ `start`: `2021-12-12T09:12:33.001Z` (string, optional) - Start time from which to display the notification, optional
++ `end`: `2021-12-16T09:12:33.001Z` (string, optional) - End time at which the notification expires, optional
+
+
+## domino.notifications.Notification (object)
+
+
+### Properties
++ `id`: `abc123` (string, optional) - Message ID, not displayed anywhere
++ `title`: `Important notification` (string, optional)
++ `message`: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.` (string, optional)
++ `created` (string, optional)
++ `origin` (domino.notifications.Origin, optional) - Message source or author. Modeled as object for future extensibility
++ `priority` (enum[string], optional)
+    + `Critical`
+    + `Default`
+
+## domino.notifications.Origin (object)
+Message source or author. Modeled as object for future extensibility
+
+### Properties
++ `name`: `Admin` (string, required) - author or origin name
++ `initials`: `SF` (string, optional) - 2 letter initials to display in a bubble
+
+## domino.notifications.Pagination (object)
+
+
+### Properties
++ `offset` (number, optional) - offset in the underlying data
++ `totalCount` (number, optional) - total number of matching records
+
+## domino.notifications.CreateNotificationRequest (object)
+
+
+### Properties
++ `title` (string, required) - the notification title
++ `message` (string, optional) - the notification body
++ `priority` (enum[string], required)
+    + `Critical`
+    + `Default`
++ `start`: `2022-12-03T10:15:30Z` (string, optional) - optional start date/time
++ `end`: `2022-12-03T10:15:30Z` (string, optional) - optional end date/time
++ `limitedAudience` (domino.notifications.LimitedAudience, optional) - Definition of a limited audience for a notification. If present, a notification will be shown to users who are mentioned directly, or part of a mentioned org, or have one of the mentioned roles (at least one of these criteria must apply).
+
+
+## domino.notifications.MarkReadRequest (object)
+
+
+### Properties
++ `ids` (array[string], required) - IDs of notifications to be marked as read
+
+
+## domino.notifications.ListNotificationsResult (object)
+
+
+### Properties
++ `pagination` (domino.notifications.Pagination, optional)
++ `notifications` (array[domino.notifications.UserNotification], optional)
+
+
+## domino.notifications.UserNotification (object)
+
+
+### Properties
++ `notification` (domino.notifications.Notification, optional)
++ `read` (boolean, optional) - has this notification been read by the current user?
++ `expired` (boolean, optional) - has this notification expired?
+
+## domino.notifications.HasNotifications (object)
+
+
+### Properties
++ `unread` (boolean, optional)
++ `priority` (enum[string], optional)
+    + `Critical`
+    + `Default`
+
+
+## domino.api.ErrorResponse (object)
+
+
+### Properties
++ `message` (string, optional) - Error message
+
+## domino.nucleus.gateway.users.models.ProjectsDependencyGraph (object)
+
+
+### Properties
++ `selectedProjectId` (domino.common.ProjectId, optional)
++ `nodes` (array[domino.nucleus.gateway.users.models.ProjectDependencyView], required)
+
+## domino.nucleus.gateway.users.models.ProjectDependencyView (object)
+
+### Properties
++ `projectId` (domino.common.ProjectId, required)
++ `projectType` (enum[string], required)
+    + `Analytic`
+    + `DataSet`
++ `dependencies` (array[domino.common.ProjectId], required)
+
+## domino.common.ProjectId (object)
+
+
+### Properties
++ `ownerUsername` (string, required)
++ `projectName` (string, required)
+
+
+## domino.server.projects.api.ProjectGatewaySummary (object)
+
+
+### Properties
++ `id` (string, required)
++ `name` (string, required)
++ `ownerId` (string, required)
++ `ownerName` (string, required)
++ `description` (string, required)
++ `visibility` (enum[string], required)
+    + `Public`
+    + `Searchable`
+    + `Private`
++ `tags` (array[domino.server.projects.api.ProjectGatewayTag], required)
++ `runCounts` (array[domino.server.projects.api.ProjectGatewayRunCountForType], required)
++ `latestResultTimestamp` (string, optional, nullable)
++ `latestResultRunId` (string, optional, nullable)
++ `relationship` (enum[string], required)
+    + `Owned`
+    + `Collaborating`
+    + `Suggested`
+    + `Popular`
++ `projectType` (enum[string], required)
+    + `Analytic`
+    + `DataSet`
++ `stageId` (string, required)
++ `status` (domino.server.projects.api.ProjectStatus, required)
++ `mainGitRepositoryUri` (string, optional, nullable)
++ `serviceProvider` (enum[string], optional, nullable)
+    + `github`
+    + `gitlab`
+    + `githubEnterprise`
+    + `unknown`
+    + `gitlabEnterprise`
+    + `bitbucket`
+    + `bitbucketServer`
+
+## domino.server.projects.api.ProjectGatewayRunCountForType (object)
+
+
+### Properties
++ `runType` (enum[string], required)
+    + `Other`
+    + `SSHProxy`
+    + `Endpoint`
+    + `App`
+    + `Scheduled`
+    + `Launcher`
+    + `Batch`
+    + `Workspace`
++ `executingCount` (number, required)
++ `stoppedCount` (number, required)
+
+# domino.common.gateway.search.SearchResultGatewayDTO (object)
+
+
+### Properties
++ `id` (string, optional, nullable)
++ `projectId` (string, optional, nullable)
++ `displayText` (string, optional, nullable)
++ `ownerId` (string, optional, nullable)
++ `path` (string, optional, nullable)
++ `link` (string, required)
++ `area` (string, required)
