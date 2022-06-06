@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0331db5e-658c-46e6-a426-0bda24512eb5" name="Changes" comment="" />
+    <list default="true" id="0331db5e-658c-46e6-a426-0bda24512eb5" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/apiary.apib" beforeDir="false" afterPath="$PROJECT_DIR$/apiary.apib" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
